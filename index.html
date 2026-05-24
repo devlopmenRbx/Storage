@@ -37,6 +37,7 @@
             touch-action: manipulation;
             -webkit-font-smoothing: antialiased;
             overscroll-behavior-y: none;
+            transition: filter 0.3s ease;
         }
         
         .serif { font-family: 'Playfair Display', serif; }
@@ -92,7 +93,7 @@
             border-color: var(--gold-light);
         }
         
-        /* Cinematic Photo Card */
+        /* Cinematic Photo Card with Cascading Entry Animation & Shimmer */
         .photo-card { 
             aspect-ratio: 4/5; 
             border-radius: 24px; 
@@ -103,7 +104,9 @@
             cursor: pointer; 
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
             transform: translateZ(0);
-            will-change: transform;
+            will-change: transform, opacity;
+            opacity: 0;
+            animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .photo-card:active { transform: scale(0.94); }
         .photo-card::after {
@@ -114,18 +117,35 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.5s;
+            z-index: 5;
         }
         .photo-card.loaded::after { opacity: 1; }
         
         .photo-card img {
             opacity: 0;
-            transition: opacity 0.8s ease-in-out, transform 0.8s ease-out;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-out;
             will-change: opacity, transform;
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
         .photo-card img.loaded {
             opacity: 1;
             transform: scale(1);
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Premium Shimmer Skeleton Loading */
+        .shimmer-bg {
+            background: linear-gradient(90deg, #f0ebe1 25%, #faf9f6 50%, #f0ebe1 75%);
+            background-size: 200% 100%;
+            animation: shimmerEffect 1.5s infinite linear;
+        }
+        @keyframes shimmerEffect {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         /* Luxury Heart Animation */
@@ -140,7 +160,7 @@
         .shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; transform: translate3d(0, 0, 0); }
         @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
         
-        /* Premium Nav Bar */
+        /* FITUR 4: iOS Premium Spring Bounce Tab Bar Navigation */
         .ios-tab-bar { 
             position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateZ(0); 
             width: 85%; max-width: 380px; height: 4.5rem; 
@@ -150,8 +170,8 @@
             background: rgba(255, 255, 255, 0.8);
             box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(255,255,255,1) inset;
         }
-        .nav-item { transition: all 0.3s ease; opacity: 0.4; }
-        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-2px); }
+        .nav-item { transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0.4; }
+        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-5px) scale(1.18); filter: drop-shadow(0 4px 6px rgba(197,160,89,0.15)); }
         
         /* Deep Blur Lightbox */
         #lightbox { 
@@ -175,22 +195,134 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #yt-player { position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+        /* FITUR 7: Signature Creator Line */
+        .creator-signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            color: #1a1a1a;
+            opacity: 0.35;
+            letter-spacing: 0.05em;
+            text-align: center;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        /* FITUR 27: Ambient Music Equalizer Animations */
+        @keyframes eqPulse1 { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+        @keyframes eqPulse2 { 0%, 100% { height: 14px; } 50% { height: 6px; } }
+        @keyframes eqPulse3 { 0%, 100% { height: 8px; } 50% { height: 18px; } }
+        .eq-bar { width: 2px; background-color: var(--gold); border-radius: 1px; }
+        .eq-active-1 { animation: eqPulse1 0.7s ease-in-out infinite; }
+        .eq-active-2 { animation: eqPulse2 0.5s ease-in-out infinite; }
+        .eq-active-3 { animation: eqPulse3 0.6s ease-in-out infinite; }
+
+        /* Dynamic Equalizer Frame Pulse */
+        @keyframes frameGlow {
+            0%, 100% { box-shadow: inset 0 0 20px rgba(197, 160, 89, 0.1); }
+            50% { box-shadow: inset 0 0 45px rgba(197, 160, 89, 0.25); }
+        }
+        .music-frame-glow { animation: frameGlow 3s ease-in-out infinite; pointer-events: none; }
+
+        /* Micro Multi-Selection Style */
+        .photo-card.selected {
+            transform: scale(0.92) translateY(5px);
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+        }
+        .select-badge {
+            position: absolute; top: 12px; left: 12px; z-index: 15;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: white; border: 2px solid var(--gold);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .photo-card.selected .select-badge { opacity: 1; transform: scale(1); }
     </style>
 </head>
 <body class="fixed inset-0 overflow-hidden">
 
+    <!-- FITUR 27: Frame Glow Efek -->
+    <div id="ambientFrame" class="fixed inset-0 z-[60] transition-all duration-700 pointer-events-none"></div>
+
     <!-- Hidden YouTube Player -->
     <div id="yt-player"></div>
 
-    <!-- Lightbox Modal -->
-    <div id="lightbox" onclick="closeLightbox()">
-        <button class="absolute top-12 right-8 text-white opacity-50 hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-8 h-8"></i></button>
-        <img id="lightboxImg" src="" alt="Enlarged" onclick="event.stopPropagation()">
-        <!-- DITAMBAHKAN TOMBOL DOWNLOAD DISINI (Sama percis desainnya dengan tombol lain) -->
-        <div class="mt-8 flex space-x-6 transform translate-y-8 opacity-0 transition-all duration-500 delay-100" id="lightboxControls">
+    <!-- Lightbox Modal (FITUR 3: Ambient Glow & FITUR 15: Drag to Dismiss) -->
+    <div id="lightbox" onclick="closeLightbox()" class="transition-all duration-300">
+        <button class="absolute top-12 right-8 text-white opacity-50 hover:opacity-100 transition-opacity z-[110]"><i data-lucide="x" class="w-8 h-8"></i></button>
+        
+        <!-- Media container wrapper for touch gesture drag dismissal -->
+        <div id="lightboxMediaContainer" class="relative max-w-full max-h-[85vh] flex items-center justify-center select-none" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="Enlarged" class="pointer-events-none select-none">
+            
+            <!-- FITUR 12: Private Note Typing Effect Container -->
+            <div id="privateNoteDisplay" class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass text-center border border-white/20 transform translate-y-2 opacity-0 transition-all duration-500 pointer-events-none">
+                <p class="text-[9px] uppercase tracking-[0.2em] text-gold font-bold mb-1"><i data-lucide="lock" class="w-3 h-3 inline pb-0.5 mr-1"></i> Private Journal</p>
+                <p id="privateNoteText" class="serif italic text-sm text-[#1a1a1a] min-h-[1.5rem]"></p>
+            </div>
+        </div>
+        
+        <div class="mt-8 flex space-x-6 transform translate-y-8 opacity-0 transition-all duration-500 delay-100 z-[110]" id="lightboxControls">
             <button id="lightboxDownload" title="Download Image" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="download" class="w-5 h-5"></i></button>
             <button id="lightboxLike" title="Favorite" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="heart" id="lightboxLikeIcon" class="w-5 h-5"></i></button>
             <button id="lightboxDelete" title="Delete Image" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+        </div>
+    </div>
+
+    <!-- Custom Elegant Alert/Confirm Modal (No Alert Guardrail) -->
+    <div id="customDialog" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 bg-black/60 backdrop-blur-md transition-opacity duration-300 select-none">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border border-white/30 shadow-2xl text-center transform scale-95 transition-transform duration-300" id="dialogBox">
+            <div class="w-14 h-14 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-md">
+                <i id="dialogIcon" data-lucide="shield-alert" class="w-7 h-7 text-gold animate-pulse"></i>
+            </div>
+            <h4 id="dialogTitle" class="serif text-2xl font-semibold mb-2 text-[#1a1a1a]">Secure Prompt</h4>
+            <p id="dialogMessage" class="text-xs text-gray-500 mb-8 leading-relaxed"></p>
+            <div class="flex gap-4">
+                <button id="dialogBtnCancel" class="flex-1 py-4 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold">Batal</button>
+                <button id="dialogBtnConfirm" class="flex-1 py-4 bg-[#1a1a1a] text-white hover:bg-black transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold">Ya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FITUR 19: Privacy Glass Blur Shield Overlay -->
+    <div id="privacyShield" class="fixed inset-0 z-[300] hidden bg-white/20 backdrop-blur-[45px] flex-col items-center justify-center text-center select-none">
+        <div class="p-10 glass rounded-[3rem] border border-white/40 shadow-2xl max-w-xs">
+            <div class="w-16 h-16 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-md">
+                <i data-lucide="eye-off" class="w-8 h-8 text-gold animate-pulse"></i>
+            </div>
+            <h4 class="serif text-2xl font-semibold mb-2 text-[#1a1a1a]">Secure Overlay</h4>
+            <p class="text-[10px] uppercase tracking-widest text-gold font-bold mb-4">Privasi Dilindungi</p>
+            <p class="text-xs text-gray-400 leading-relaxed">Sesi Vault dikunci demi menjaga rahasia visual Anda.</p>
+        </div>
+    </div>
+
+    <!-- FITUR 23: Aesthetic Daily Quote Greeting Banner -->
+    <div id="quoteGreeting" class="fixed top-8 left-1/2 -translate-x-1/2 z-[70] pointer-events-none transform -translate-y-4 opacity-0 transition-all duration-700 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/80 shadow-lg max-w-xs w-[90%] text-center">
+        <p class="text-[8px] uppercase tracking-[0.25em] text-gold mb-1.5 font-bold">Daily Insight</p>
+        <p id="quoteText" class="serif italic text-xs text-[#1a1a1a] leading-relaxed"></p>
+    </div>
+
+    <!-- FITUR 24: Smooth Context Menu (Gaya iOS 3D Touch) -->
+    <div id="3dContextMenu" class="fixed z-[120] hidden bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-xl w-44 p-2 transform scale-95 opacity-0 transition-all duration-200 select-none">
+        <button onclick="executeContextAction('like')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-700">
+            <i data-lucide="heart" class="w-4 h-4 text-gold"></i> Favorite
+        </button>
+        <button onclick="executeContextAction('download')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-700">
+            <i data-lucide="download" class="w-4 h-4"></i> Download
+        </button>
+        <button onclick="executeContextAction('delete')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-red-50 rounded-xl transition-colors text-red-500">
+            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i> Delete
+        </button>
+    </div>
+
+    <!-- FITUR 30: Multi-Photo Micro Selection Action Bar -->
+    <div id="selectionBar" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-[45] hidden bg-[#1a1a1a]/95 text-white backdrop-blur-xl rounded-full px-6 py-3 items-center gap-6 shadow-xl w-[85%] max-w-sm transition-all duration-300 select-none">
+        <span id="selectionCount" class="text-[10px] uppercase tracking-[0.15em] text-gold font-bold">0 Selected</span>
+        <div class="flex gap-4 ml-auto items-center">
+            <button onclick="batchAction('like')" class="p-2 hover:text-gold transition-colors" title="Favorite All"><i data-lucide="heart" class="w-4 h-4"></i></button>
+            <button onclick="batchAction('delete')" class="p-2 hover:text-red-400 transition-colors" title="Delete All"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            <button onclick="cancelMultiSelect()" class="p-2 hover:text-gray-400 transition-colors" title="Cancel"><i data-lucide="x" class="w-4 h-4"></i></button>
         </div>
     </div>
 
@@ -199,6 +331,7 @@
         <div class="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-white to-transparent opacity-60"></div>
         
         <div class="text-center mt-8 relative z-10">
+            <!-- FITUR 8: Hidden Gesture Command - Mengetuk teks judul 3x mengaktifkan Brankas Rahasia -->
             <p id="dateDisplay" class="text-xs font-medium tracking-[0.2em] text-gold mb-3 uppercase"></p>
             <h2 id="timeDisplay" class="text-7xl font-light tracking-tighter text-[#1a1a1a]">00:00</h2>
             <div class="mt-10 flex justify-center">
@@ -231,12 +364,13 @@
     <!-- Main Content -->
     <main id="appContent" class="hidden opacity-0 transition-all duration-700 h-screen-dvh overflow-y-auto pb-36">
         <header class="sticky top-0 z-40 glass px-6 py-4 flex items-center justify-between mx-4 mt-4 rounded-3xl">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#1a1a1a] to-[#3a3a3a] text-gold flex items-center justify-center shadow-md">
+            <div class="flex items-center space-x-3 select-none">
+                <!-- FITUR 8: Hidden Gesture Command (Secret Toggle) di Trigger lewat ketukan 3x pada logo brankas -->
+                <div onclick="triggerSecretShortcut()" class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#1a1a1a] to-[#3a3a3a] text-gold flex items-center justify-center shadow-md active:scale-90 transition-transform cursor-pointer">
                     <i data-lucide="diamond" class="w-4 h-4"></i>
                 </div>
                 <div>
-                    <h1 class="serif text-xl italic font-semibold leading-none text-[#1a1a1a]">Bas Storage</h1>
+                    <h1 onclick="triggerSecretShortcut()" class="serif text-xl italic font-semibold leading-none text-[#1a1a1a] cursor-pointer">The Vault</h1>
                     <div class="flex items-center space-x-1.5 mt-1.5">
                         <div id="cloudIndicator" class="w-1.5 h-1.5 rounded-full bg-red-400 transition-colors duration-500 shadow-[0_0_5px_rgba(248,113,113,0.5)]"></div>
                         <p id="cloudStatus" class="text-[8px] uppercase tracking-[0.2em] opacity-50 font-medium">Connecting</p>
@@ -244,8 +378,14 @@
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <button onclick="toggleMusic()" id="musicBtn" class="w-10 h-10 rounded-full bg-white border border-gray-100 shadow-sm flex items-center justify-center text-gray-400 transition-all duration-300 hover:text-gold">
+                <!-- FITUR 27: Musik Equalizer yang menyala dinamis di dalam tombol musik -->
+                <button onclick="toggleMusic()" id="musicBtn" class="h-10 px-4 rounded-full bg-white border border-gray-100 shadow-sm flex items-center gap-2 text-gray-400 transition-all duration-300 hover:text-gold">
                     <i data-lucide="music" class="w-4 h-4"></i>
+                    <div id="eqContainer" class="hidden items-end gap-[2px] h-3">
+                        <div class="eq-bar h-1"></div>
+                        <div class="eq-bar h-2"></div>
+                        <div class="eq-bar h-1"></div>
+                    </div>
                 </button>
                 <button onclick="document.getElementById('fileInput').click()" class="w-10 h-10 rounded-full bg-[#1a1a1a] text-white flex items-center justify-center shadow-lg active:scale-90 transition-transform">
                     <i data-lucide="plus" class="w-5 h-5"></i>
@@ -260,8 +400,20 @@
         </div>
 
         <div id="tab-gallery" class="tab-content active px-6 mt-10">
-            <h2 class="serif text-4xl italic mb-2 text-[#1a1a1a] font-medium">Memories</h2>
-            <p class="text-[10px] tracking-[0.2em] uppercase text-gray-400 mb-8 font-medium">The Archive</p>
+            <div class="flex justify-between items-end mb-4 select-none">
+                <div>
+                    <h2 class="serif text-4xl italic mb-2 text-[#1a1a1a] font-medium">Memories</h2>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium">The Archive</p>
+                </div>
+                <!-- FITUR 7: Memutar tayangan Slideshow Favorit -->
+                <button onclick="playAestheticSlideshow()" class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-100 rounded-full shadow-sm text-[10px] tracking-widest uppercase font-bold text-gold flex items-center gap-2 active:scale-95 transition-transform">
+                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Slideshow
+                </button>
+            </div>
+            <!-- Dynamic Category Filters -->
+            <div id="secretHeader" class="hidden mb-6 p-4 glass rounded-2xl border border-red-200/50 text-center animate-pulse">
+                <span class="text-[9px] font-bold uppercase tracking-[0.3em] text-red-500"><i data-lucide="eye-off" class="w-3 h-3 inline pb-0.5 mr-1"></i> Classified Mode Active</span>
+            </div>
             <div id="galleryGrid" class="grid grid-cols-2 gap-4 md:grid-cols-3"></div>
         </div>
 
@@ -271,17 +423,18 @@
             <div id="favoritesGrid" class="grid grid-cols-2 gap-4 md:grid-cols-3"></div>
         </div>
 
+        <!-- Tab Profile with Signature -->
         <div id="tab-profile" class="tab-content px-6 mt-12">
-            <div class="glass rounded-[2.5rem] p-10 text-center relative overflow-hidden group">
+            <div class="glass rounded-[2.5rem] p-10 text-center relative overflow-hidden group border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.03)]">
                 <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-40 group-hover:left-[200%] transition-all duration-1000 ease-in-out"></div>
                 
                 <div class="w-24 h-24 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-xl relative z-10">
                     <i data-lucide="shield" class="w-10 h-10 text-gold"></i>
                 </div>
                 <h3 class="serif text-3xl font-medium mb-1 text-[#1a1a1a]">Private Vault</h3>
-                <p class="text-[9px] tracking-[0.4em] uppercase text-gold mb-10 font-medium">Premium Access</p>
+                <p class="text-[9px] tracking-[0.4em] uppercase text-gold mb-8 font-medium">Premium Access</p>
                 
-                <div class="grid grid-cols-2 gap-4 relative z-10">
+                <div class="grid grid-cols-2 gap-4 relative z-10 mb-6">
                     <div class="bg-white/60 backdrop-blur-md p-6 rounded-[2rem] border border-white/80 shadow-sm">
                         <p class="text-[9px] uppercase text-gray-400 mb-2 font-bold tracking-widest">Assets</p>
                         <p id="stats-total" class="serif text-3xl italic text-[#1a1a1a]">0</p>
@@ -292,10 +445,26 @@
                     </div>
                 </div>
 
-                <button onclick="location.reload()" class="mt-12 w-full py-5 bg-[#1a1a1a] text-white rounded-full text-xs tracking-widest uppercase font-medium flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] relative z-10">
+                <!-- FITUR 22: Switch Sakelar Estetik HD vs Save Mode -->
+                <div class="bg-white/60 backdrop-blur-md p-5 rounded-[2rem] border border-white/80 shadow-sm flex items-center justify-between relative z-10 mb-8">
+                    <div class="text-left">
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-600">Storage Mode</p>
+                        <p id="compressionStatus" class="text-[9px] text-gold uppercase tracking-wider font-semibold mt-0.5">Luxury Save Active</p>
+                    </div>
+                    <button onclick="toggleCompressionMode()" class="px-4 py-2 bg-gold hover:bg-[#b08e4d] text-white text-[9px] tracking-widest font-bold uppercase rounded-full transition-colors active:scale-95">
+                        Change Mode
+                    </button>
+                </div>
+
+                <button onclick="location.reload()" class="w-full py-5 bg-[#1a1a1a] text-white rounded-full text-xs tracking-widest uppercase font-medium flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] relative z-10">
                     <i data-lucide="lock" class="w-4 h-4 text-gold"></i>
                     <span>Secure Exit</span>
                 </button>
+
+                <!-- FITUR 7: Signature Credit Line -->
+                <div class="creator-signature relative z-10">
+                    The Vault Premium &bull; Crafted by BAS Development
+                </div>
             </div>
         </div>
 
@@ -306,9 +475,81 @@
         </nav>
     </main>
 
+    <!-- SlideShow Modal Overlay (FITUR 7) -->
+    <div id="slideshowModal" onclick="stopAestheticSlideshow()" class="fixed inset-0 bg-black/95 z-[150] hidden flex-col justify-between items-center py-12 transition-opacity duration-1000">
+        <div class="w-full max-w-sm flex justify-between px-6 text-white/50 text-[10px] tracking-widest uppercase z-10">
+            <span>Aesthetic Loop</span>
+            <span id="slideshowCounter">1 / 1</span>
+        </div>
+        <div class="w-full h-[60vh] flex items-center justify-center relative px-6">
+            <img id="slideshowImg" src="" alt="Slideshow" class="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-[2000ms] opacity-0 scale-95 transform">
+        </div>
+        <div class="text-white/40 text-[9px] tracking-widest uppercase text-center select-none z-10">
+            <p class="animate-pulse">Tap anywhere to close slideshow</p>
+        </div>
+    </div>
+
     <script>
         window.onerror = function (msg, url, line, col, error) {
             return true; 
+        };
+
+        // Custom Sleek Modal Dialogs replacing Window.Alert & Window.Confirm
+        let activeDialogCallback = null;
+
+        function showCustomConfirm(message, callback) {
+            activeDialogCallback = callback;
+            document.getElementById('dialogTitle').innerText = "Security Confirm";
+            document.getElementById('dialogMessage').innerText = message;
+            document.getElementById('dialogIcon').className = "w-7 h-7 text-gold animate-bounce";
+            document.getElementById('dialogBtnCancel').classList.remove('hidden');
+            
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 50);
+        }
+
+        function showCustomAlert(message) {
+            activeDialogCallback = null;
+            document.getElementById('dialogTitle').innerText = "Vault Notice";
+            document.getElementById('dialogMessage').innerText = message;
+            document.getElementById('dialogIcon').className = "w-7 h-7 text-gold animate-pulse";
+            document.getElementById('dialogBtnCancel').classList.add('hidden');
+            
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 50);
+        }
+
+        document.getElementById('dialogBtnConfirm').onclick = () => {
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                dialog.classList.remove('flex');
+                if (activeDialogCallback) {
+                    activeDialogCallback();
+                    activeDialogCallback = null;
+                }
+            }, 150);
+        };
+
+        document.getElementById('dialogBtnCancel').onclick = () => {
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                dialog.classList.remove('flex');
+                activeDialogCallback = null;
+            }, 150);
         };
 
         let audioCtx = null;
@@ -352,6 +593,28 @@
             } catch(e) {}
         }
 
+        // --- FITUR 19: Privacy Glass Shield Focus Detector ---
+        window.addEventListener('blur', () => {
+            const lockState = document.getElementById('lockScreen').style.display;
+            if (lockState === 'none') {
+                document.getElementById('privacyShield').classList.remove('hidden');
+                document.getElementById('privacyShield').classList.add('flex');
+            }
+        });
+
+        window.addEventListener('focus', () => {
+            document.getElementById('privacyShield').classList.add('hidden');
+            document.getElementById('privacyShield').classList.remove('flex');
+        });
+
+        // --- FITUR 35: One-Touch Ghost Mode (Penyamaran Instan 3 Jari) ---
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 3) {
+                // Instan lock kembali tanpa transisi
+                location.reload();
+            }
+        });
+
         (function() {
             const originalError = console.error;
             const originalWarn = console.warn;
@@ -381,6 +644,7 @@
             };
         })();
 
+        // Konfigurasi Database Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBFDBKLmV-51mh7ztLmLMhFHB547EaZcZQ",
             authDomain: "newapp-27599.firebaseapp.com",
@@ -413,6 +677,184 @@
         let isUsingCloud = false;
         let cloudUnsubscribe = null;
 
+        // --- FITUR 1: INDEXEDDB TURBO STORAGE SETUP (Non-blocking, infinite space) ---
+        const DB_NAME = 'TheVaultTurboDB';
+        const DB_VERSION = 1;
+        let turboDB = null;
+
+        function initIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('photos')) {
+                        db.createObjectStore('photos', { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = (e) => {
+                    turboDB = e.target.result;
+                    resolve(turboDB);
+                };
+                request.onerror = (e) => {
+                    reject(e);
+                };
+            });
+        }
+
+        function savePhotoToIDB(photo) {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve(); return; }
+                const tx = turboDB.transaction(['photos'], 'readwrite');
+                const store = tx.objectStore('photos');
+                store.put(photo);
+                tx.oncomplete = () => resolve();
+                tx.onerror = (err) => reject(err);
+            });
+        }
+
+        function getPhotosFromIDB() {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve([]); return; }
+                const tx = turboDB.transaction(['photos'], 'readonly');
+                const store = tx.objectStore('photos');
+                const request = store.getAll();
+                request.onsuccess = () => {
+                    const list = request.result || [];
+                    list.sort((a,b) => {
+                        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                        return timeB - timeA;
+                    });
+                    resolve(list);
+                };
+                request.onerror = (err) => reject(err);
+            });
+        }
+
+        function deletePhotoFromIDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve(); return; }
+                const tx = turboDB.transaction(['photos'], 'readwrite');
+                const store = tx.objectStore('photos');
+                store.delete(id);
+                tx.oncomplete = () => resolve();
+                tx.onerror = (err) => reject(err);
+            });
+        }
+
+        // --- FITUR 12: Private Note Encryption Engine (b64 reverse) ---
+        function encryptNoteText(text) {
+            if (!text) return "";
+            return btoa(unescape(encodeURIComponent(text))).split('').reverse().join('');
+        }
+
+        function decryptNoteText(encrypted) {
+            if (!encrypted) return "";
+            try {
+                const reversed = encrypted.split('').reverse().join('');
+                return decodeURIComponent(escape(atob(reversed)));
+            } catch(e) {
+                return encrypted; // Fallback jika tidak terenkripsi
+            }
+        }
+
+        // --- FITUR 22: Smart Image Compression Mode State ---
+        let storageCompressionMode = localStorage.getItem('vault_compression_mode') || 'luxury';
+
+        function toggleCompressionMode() {
+            playClickSound();
+            if (storageCompressionMode === 'luxury') {
+                storageCompressionMode = 'ultra';
+                showCustomAlert("Mode penyimpanan beralih ke: Ultra HD (Menjaga foto beresolusi super tajam)");
+            } else {
+                storageCompressionMode = 'luxury';
+                showCustomAlert("Mode penyimpanan beralih ke: Luxury Save (Mengompresi secara cerdas agar hemat ruang)");
+            }
+            localStorage.setItem('vault_compression_mode', storageCompressionMode);
+            updateCompressionUI();
+        }
+
+        function updateCompressionUI() {
+            const statusText = document.getElementById('compressionStatus');
+            if (statusText) {
+                if (storageCompressionMode === 'luxury') {
+                    statusText.innerText = "Luxury Save Active";
+                } else {
+                    statusText.innerText = "Ultra HD Active";
+                }
+            }
+        }
+
+        // --- FITUR 23: Aesthetic Daily Quote Greeting List ---
+        const aestheticQuotes = [
+            "Kemewahan sejati adalah kebebasan untuk menyimpan momen indah secara intim.",
+            "Waktu memudar, namun memori yang tersimpan abadi di dalam brankas ini.",
+            "Setiap gambar menceritakan rahasia kecil yang tak lekang oleh waktu.",
+            "Sebuah seni menyimpan perjalanan hidup dalam balutan ivory yang hangat.",
+            "Selamat datang kembali di pelukan memori terindah Anda."
+        ];
+
+        function showDailyQuoteGreeting() {
+            const randIndex = Math.floor(Math.random() * aestheticQuotes.length);
+            const quoteTextEl = document.getElementById('quoteText');
+            const quoteGreetingEl = document.getElementById('quoteGreeting');
+            
+            if (quoteTextEl && quoteGreetingEl) {
+                quoteTextEl.innerText = aestheticQuotes[randIndex];
+                quoteGreetingEl.classList.remove('opacity-0', '-translate-y-4');
+                quoteGreetingEl.classList.add('opacity-100', 'translate-y-0');
+                
+                setTimeout(() => {
+                    quoteGreetingEl.classList.add('opacity-0', '-translate-y-4');
+                    quoteGreetingEl.classList.remove('opacity-100', 'translate-y-0');
+                }, 5000);
+            }
+        }
+
+        // --- FITUR 8: Hidden Gesture Command Secret State ---
+        let secretClicks = 0;
+        let isSecretModeActive = false;
+
+        function triggerSecretShortcut() {
+            playClickSound();
+            secretClicks++;
+            if (secretClicks >= 3) {
+                secretClicks = 0;
+                isSecretModeActive = !isSecretModeActive;
+                const header = document.getElementById('secretHeader');
+                if (isSecretModeActive) {
+                    header.classList.remove('hidden');
+                    showCustomAlert("Classified Mode Aktif! Foto-foto dengan teks catatan 'classified' kini disembunyikan dari grid normal.");
+                } else {
+                    header.classList.add('hidden');
+                    showCustomAlert("Classified Mode Nonaktif! Semua koleksi ditampilkan kembali.");
+                }
+                renderGalleryFast();
+            }
+        }
+
+        // --- FITUR 3: ANTI-LAG INTERSECTION OBSERVER FOR LAZY-LOADING IMAGES ---
+        const lazyLoadObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const img = card.querySelector('img');
+                    if (img) {
+                        const dataSrc = img.getAttribute('data-src');
+                        if (dataSrc) {
+                            img.src = dataSrc;
+                            img.removeAttribute('data-src');
+                        }
+                    }
+                    observer.unobserve(card);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '120px 0px',
+            threshold: 0.01
+        });
+
         function safeCreateIcons() {
             try {
                 if (window.lucide && typeof window.lucide.createIcons === 'function') {
@@ -430,14 +872,17 @@
             });
         }
 
+        // --- FITUR 27: Ambient Equalizer Visualizer Toggle & Glow Frame ---
         function toggleMusic() {
             if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
             isMusicPlaying = !isMusicPlaying;
             
-            playClickSound(); // Umpan balik suara klik
+            playClickSound(); 
             
             const btn = document.getElementById('musicBtn');
             const icon = btn ? btn.querySelector('svg, i') : null;
+            const eqContainer = document.getElementById('eqContainer');
+            const ambientFrame = document.getElementById('ambientFrame');
 
             if (isMusicPlaying) {
                 ytPlayer.playVideo();
@@ -448,6 +893,17 @@
                 if (icon) {
                     icon.classList.add('fill-current', 'heart-burst');
                 }
+                if (eqContainer) {
+                    eqContainer.classList.remove('hidden');
+                    eqContainer.classList.add('flex');
+                    const bars = eqContainer.querySelectorAll('.eq-bar');
+                    bars[0].classList.add('eq-active-1');
+                    bars[1].classList.add('eq-active-2');
+                    bars[2].classList.add('eq-active-3');
+                }
+                if (ambientFrame) {
+                    ambientFrame.classList.add('music-frame-glow');
+                }
             } else {
                 ytPlayer.pauseVideo();
                 if (btn) {
@@ -457,13 +913,24 @@
                 if (icon) {
                     icon.classList.remove('fill-current', 'heart-burst');
                 }
+                if (eqContainer) {
+                    eqContainer.classList.add('hidden');
+                    eqContainer.classList.remove('flex');
+                    const bars = eqContainer.querySelectorAll('.eq-bar');
+                    bars[0].classList.remove('eq-active-1');
+                    bars[1].classList.remove('eq-active-2');
+                    bars[2].classList.remove('eq-active-3');
+                }
+                if (ambientFrame) {
+                    ambientFrame.classList.remove('music-frame-glow');
+                }
             }
         }
 
         function handleInput(key) {
             if (isProcessingInput) return; 
             
-            playClickSound(); // Efek suara klik taktil saat tombol keypad ditekan
+            playClickSound(); 
             
             if (key === '⌫') {
                 currentPin = currentPin.slice(0, -1);
@@ -507,7 +974,7 @@
         }
 
         function unlock() {
-            playSuccessSound(); // Nada penyambutan dimainkan saat PIN benar
+            playSuccessSound(); 
             const lock = document.getElementById('lockScreen');
             lock.style.opacity = '0';
             lock.style.transform = 'translateY(-10%) scale(1.05)';
@@ -520,6 +987,7 @@
                 requestAnimationFrame(() => {
                     app.classList.add('opacity-100');
                     initGallery();
+                    showDailyQuoteGreeting(); // FITUR 23: Tampilkan kuote harian estetik saat unlock
                 });
             }, 600); 
         }
@@ -528,6 +996,11 @@
             console.warn("Firestore timed out or was blocked. Falling back to Local Storage mode.");
             useLocalFallback();
         }, 3000); 
+
+        window.addEventListener('load', () => {
+            initIndexedDB().catch(err => console.error("Could not bootstrap Turbo IDB Engine:", err));
+            updateCompressionUI();
+        });
 
         function initGallery() {
             try {
@@ -575,11 +1048,192 @@
             loadLocalPhotos();
         }
 
-        function loadLocalPhotos() {
-            const localData = localStorage.getItem('vault_photos_v2');
-            photos = localData ? JSON.parse(localData) : [];
+        async function loadLocalPhotos() {
+            try {
+                const oldLocalData = localStorage.getItem('vault_photos_v2');
+                if (oldLocalData) {
+                    const parsed = JSON.parse(oldLocalData);
+                    for (const item of parsed) {
+                        await savePhotoToIDB(item);
+                    }
+                    localStorage.removeItem('vault_photos_v2'); 
+                }
+            } catch(e) {
+                console.warn("Storage migration failed or already processed:", e);
+            }
+
+            try {
+                photos = await getPhotosFromIDB();
+            } catch (err) {
+                console.error("IndexedDB fetch failed, sliding to memory fallback:", err);
+                photos = [];
+            }
             renderGalleryFast();
         }
+
+        // --- FITUR 30: Multi-Selection State & Gesture Variables ---
+        let isMultiSelectMode = false;
+        let selectedPhotoIds = new Set();
+
+        function enterMultiSelectMode(photoId) {
+            isMultiSelectMode = true;
+            selectedPhotoIds.clear();
+            selectedPhotoIds.add(photoId);
+            
+            const bar = document.getElementById('selectionBar');
+            if (bar) {
+                bar.classList.remove('hidden');
+                bar.classList.add('flex');
+            }
+            
+            renderGalleryFast();
+        }
+
+        function toggleSelectPhoto(photoId) {
+            playClickSound();
+            if (selectedPhotoIds.has(photoId)) {
+                selectedPhotoIds.delete(photoId);
+            } else {
+                selectedPhotoIds.add(photoId);
+            }
+            
+            if (selectedPhotoIds.size === 0) {
+                cancelMultiSelect();
+            } else {
+                updateSelectionBarUI();
+                renderGalleryFast();
+            }
+        }
+
+        function updateSelectionBarUI() {
+            const countText = document.getElementById('selectionCount');
+            if (countText) {
+                countText.innerText = `${selectedPhotoIds.size} Selected`;
+            }
+        }
+
+        function cancelMultiSelect() {
+            isMultiSelectMode = false;
+            selectedPhotoIds.clear();
+            const bar = document.getElementById('selectionBar');
+            if (bar) {
+                bar.classList.add('hidden');
+                bar.classList.remove('flex');
+            }
+            renderGalleryFast();
+        }
+
+        async function batchAction(action) {
+            playClickSound();
+            if (selectedPhotoIds.size === 0) return;
+            
+            if (action === 'delete') {
+                showCustomConfirm(`Hapus ${selectedPhotoIds.size} aset terpilih dari Vault permanen?`, async () => {
+                    for (let id of selectedPhotoIds) {
+                        if (isUsingCloud && !id.startsWith('local_')) {
+                            try {
+                                await db.collection("vault_photos").doc(id).delete();
+                            } catch (error) { console.error("Batch Delete sync failed", error); }
+                        } else {
+                            photos = photos.filter(p => p.id !== id);
+                            await deletePhotoFromIDB(id);
+                        }
+                    }
+                    cancelMultiSelect();
+                    renderGalleryFast();
+                });
+            } else if (action === 'like') {
+                for (let id of selectedPhotoIds) {
+                    const photo = photos.find(p => p.id === id);
+                    if (photo) {
+                        const newStatus = !photo.liked;
+                        if (isUsingCloud && !id.startsWith('local_')) {
+                            try {
+                                await db.collection("vault_photos").doc(id).update({ liked: newStatus });
+                            } catch (error) { console.error("Batch Like sync failed", error); }
+                        } else {
+                            photos = photos.map(p => p.id === id ? { ...p, liked: newStatus } : p);
+                            const targetedPhoto = photos.find(p => p.id === id);
+                            if (targetedPhoto) {
+                                await savePhotoToIDB(targetedPhoto);
+                            }
+                        }
+                    }
+                }
+                cancelMultiSelect();
+                renderGalleryFast();
+            }
+        }
+
+        // --- FITUR 24: Long-Press Context Menu Setup (3D Touch iOS) ---
+        let pressTimer;
+        let activeContextPhoto = null;
+
+        function startPress(e, photo) {
+            if (isMultiSelectMode) return;
+            
+            const cardEl = e.currentTarget;
+            pressTimer = setTimeout(() => {
+                triggerContextMenu(e, photo, cardEl);
+            }, 700); // 700ms Long Press
+        }
+
+        function endPress() {
+            clearTimeout(pressTimer);
+        }
+
+        function triggerContextMenu(e, photo, cardEl) {
+            playClickSound();
+            if (window.navigator.vibrate) window.navigator.vibrate([15, 10, 15]);
+            activeContextPhoto = photo;
+            
+            const menu = document.getElementById('3dContextMenu');
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            if (menu) {
+                menu.style.left = `${Math.min(x, window.innerWidth - 180)}px`;
+                menu.style.top = `${Math.min(y, window.innerHeight - 180)}px`;
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('scale-95', 'opacity-0');
+                    menu.classList.add('scale-100', 'opacity-100');
+                }, 50);
+            }
+        }
+
+        function executeContextAction(action) {
+            playClickSound();
+            const menu = document.getElementById('3dContextMenu');
+            if (menu) {
+                menu.classList.add('scale-95', 'opacity-0');
+                menu.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => menu.classList.add('hidden'), 200);
+            }
+            
+            if (!activeContextPhoto) return;
+            const photo = activeContextPhoto;
+            
+            if (action === 'like') {
+                toggleLike(photo.id, photo.liked);
+            } else if (action === 'download') {
+                downloadImage(photo.image);
+            } else if (action === 'delete') {
+                deletePhoto(photo.id);
+            }
+            
+            activeContextPhoto = null;
+        }
+
+        // Tutup Context Menu jika klik di area mana saja
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('3dContextMenu');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('scale-95', 'opacity-0');
+                menu.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => menu.classList.add('hidden'), 200);
+            }
+        });
 
         function renderGalleryFast() {
             const grid = document.getElementById('galleryGrid');
@@ -590,30 +1244,67 @@
             const fragFav = document.createDocumentFragment();
             let likedCount = 0;
 
-            photos.forEach(photo => {
+            // Filter rahasia jika Secret Mode aktif
+            const visiblePhotos = photos.filter(p => {
+                if (isSecretModeActive) {
+                    const decryptedNote = decryptNoteText(p.note || "").toLowerCase();
+                    return !decryptedNote.includes('classified');
+                }
+                return true;
+            });
+
+            visiblePhotos.forEach((photo, idx) => {
                 const div = document.createElement('div');
-                div.className = "photo-card group";
-                div.onclick = () => openLightbox(photo);
+                
+                // Cek status multiselection
+                const isSelected = selectedPhotoIds.has(photo.id);
+                div.className = `photo-card group shimmer-bg ${isSelected ? 'selected' : ''}`;
+                div.style.animationDelay = `${(idx % 15) * 0.05}s`;
+                
+                // Event Handling untuk Double-Tap, Long Press, dan Click normal
+                div.addEventListener('mousedown', (e) => startPress(e, photo));
+                div.addEventListener('touchstart', (e) => startPress(e, photo));
+                div.addEventListener('mouseup', endPress);
+                div.addEventListener('mouseleave', endPress);
+                div.addEventListener('touchend', endPress);
+                
+                div.onclick = () => {
+                    if (isMultiSelectMode) {
+                        toggleSelectPhoto(photo.id);
+                    } else {
+                        openLightbox(photo);
+                    }
+                };
                 
                 const heartClass = photo.liked ? 'text-red-500 fill-current' : 'text-gray-400';
                 const btnBg = photo.liked ? 'bg-white/90' : 'bg-white/50';
                 
                 div.innerHTML = `
+                    <div class="select-badge"><i data-lucide="check" class="w-3.5 h-3.5 text-gold"></i></div>
                     <div class="absolute top-3 right-3 z-10 transition-transform duration-300 opacity-90 group-hover:opacity-100">
                         <button onclick="toggleLike('${photo.id}', ${photo.liked}, event, this)" class="${btnBg} backdrop-blur-md p-2.5 rounded-full shadow-sm active:scale-90 transition-all border border-white/50">
                             <i data-lucide="heart" class="w-4 h-4 ${heartClass} transition-colors"></i>
                         </button>
                     </div>
-                    <img src="${photo.image}" class="w-full h-full object-cover" loading="lazy" onload="this.parentElement.classList.add('loaded'); this.classList.add('loaded')">
+                    <img data-src="${photo.image}" class="w-full h-full object-cover" loading="lazy" onload="this.parentElement.classList.remove('shimmer-bg'); this.parentElement.classList.add('loaded'); this.classList.add('loaded')">
                 `;
                 
                 fragAll.appendChild(div);
+                lazyLoadObserver.observe(div); 
                 
                 if(photo.liked) {
                     const favDiv = div.cloneNode(true);
-                    favDiv.onclick = () => openLightbox(photo);
+                    favDiv.style.animationDelay = `${(likedCount % 15) * 0.05}s`;
+                    favDiv.onclick = () => {
+                        if (isMultiSelectMode) {
+                            toggleSelectPhoto(photo.id);
+                        } else {
+                            openLightbox(photo);
+                        }
+                    };
                     favDiv.querySelector('button').onclick = (e) => toggleLike(photo.id, photo.liked, e, favDiv.querySelector('button'));
                     fragFav.appendChild(favDiv);
+                    lazyLoadObserver.observe(favDiv);
                     likedCount++;
                 }
             });
@@ -628,23 +1319,24 @@
 
         async function toggleLike(id, currentStatus, event, btnElement) {
             if(event) event.stopPropagation();
-            if(!btnElement) return;
             
-            playClickSound(); // Suara sentuhan saat menekan tombol like
+            playClickSound(); 
             
-            const icon = btnElement.querySelector('svg, i');
-            if (icon) {
-                icon.classList.add('heart-burst');
-                setTimeout(() => icon.classList.remove('heart-burst'), 400);
+            if (btnElement) {
+                const icon = btnElement.querySelector('svg, i');
+                if (icon) {
+                    icon.classList.add('heart-burst');
+                    setTimeout(() => icon.classList.remove('heart-burst'), 400);
 
-                if (!currentStatus) {
-                    btnElement.classList.replace('bg-white/50', 'bg-white/90');
-                    icon.classList.replace('text-gray-400', 'text-red-500');
-                    icon.classList.add('fill-current');
-                } else {
-                    btnElement.classList.replace('bg-white/90', 'bg-white/50');
-                    icon.classList.replace('text-red-500', 'text-gray-400');
-                    icon.classList.remove('fill-current');
+                    if (!currentStatus) {
+                        btnElement.classList.replace('bg-white/50', 'bg-white/90');
+                        icon.classList.replace('text-gray-400', 'text-red-500');
+                        icon.classList.add('fill-current');
+                    } else {
+                        btnElement.classList.replace('bg-white/90', 'bg-white/50');
+                        icon.classList.replace('text-red-500', 'text-gray-400');
+                        icon.classList.remove('fill-current');
+                    }
                 }
             }
             
@@ -654,13 +1346,16 @@
                 } catch (error) { console.error("Like sync failed", error); }
             } else {
                 photos = photos.map(p => p.id === id ? { ...p, liked: !currentStatus } : p);
-                localStorage.setItem('vault_photos_v2', JSON.stringify(photos));
+                const targetedPhoto = photos.find(p => p.id === id);
+                if (targetedPhoto) {
+                    await savePhotoToIDB(targetedPhoto);
+                }
                 renderGalleryFast();
             }
         }
 
         async function deletePhoto(id) {
-            if(confirm("Hapus aset ini dari Vault permanen?")) {
+            showCustomConfirm("Hapus aset ini dari Vault permanen?", async () => {
                 closeLightbox();
                 if (isUsingCloud && !id.startsWith('local_')) {
                     try {
@@ -668,13 +1363,12 @@
                     } catch (error) { console.error("Delete sync failed", error); }
                 } else {
                     photos = photos.filter(p => p.id !== id);
-                    localStorage.setItem('vault_photos_v2', JSON.stringify(photos));
+                    await deletePhotoFromIDB(id);
                     renderGalleryFast();
                 }
-            }
+            });
         }
 
-        // --- TAMBAHAN FUNGSI DOWNLOAD ---
         function downloadImage(photoData) {
             const a = document.createElement('a');
             a.href = photoData;
@@ -683,7 +1377,6 @@
             a.click();
             document.body.removeChild(a);
             
-            // Efek visual lembut pada tombol download untuk feedback sukses
             const dlBtn = document.getElementById('lightboxDownload');
             if (dlBtn) {
                 dlBtn.classList.add('scale-110', 'bg-white/35');
@@ -691,15 +1384,129 @@
             }
         }
 
+        // --- FITUR 12: Private Note elegant typewriter animation ---
+        let privateNoteInterval;
+        function runNoteTypewriter(text) {
+            const privateNoteText = document.getElementById('privateNoteText');
+            if (!privateNoteText) return;
+            
+            privateNoteText.innerText = "";
+            let charIndex = 0;
+            clearInterval(privateNoteInterval);
+            
+            privateNoteInterval = setInterval(() => {
+                if (charIndex < text.length) {
+                    privateNoteText.innerText += text.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(privateNoteInterval);
+                }
+            }, 35);
+        }
+
+        // --- FITUR 15: Fluid Drag-To-Dismiss (Geser untuk Tutup Lightbox) ---
+        let startTouchY = 0;
+        let activeDragDismiss = false;
+        const dragMediaContainer = document.getElementById('lightboxMediaContainer');
+
+        if (dragMediaContainer) {
+            dragMediaContainer.addEventListener('mousedown', dragStartGesture);
+            dragMediaContainer.addEventListener('mousemove', dragMoveGesture);
+            dragMediaContainer.addEventListener('mouseup', dragEndGesture);
+            dragMediaContainer.addEventListener('mouseleave', dragEndGesture);
+
+            dragMediaContainer.addEventListener('touchstart', (e) => dragStartGesture(e.touches[0]), { passive: true });
+            dragMediaContainer.addEventListener('touchmove', (e) => dragMoveGesture(e.touches[0]), { passive: true });
+            dragMediaContainer.addEventListener('touchend', dragEndGesture, { passive: true });
+        }
+
+        function dragStartGesture(e) {
+            startTouchY = e.clientY;
+            activeDragDismiss = true;
+            dragMediaContainer.style.transition = 'none';
+        }
+
+        function dragMoveGesture(e) {
+            if (!activeDragDismiss) return;
+            const deltaY = e.clientY - startTouchY;
+            const scale = Math.max(0.72, 1 - Math.abs(deltaY) / 1200);
+            
+            dragMediaContainer.style.transform = `translateY(${deltaY}px) scale(${scale})`;
+            
+            // Redupkan opacity dari background lightbox secara dinamis saat digeser
+            const opacityIntensity = Math.max(0.2, 1 - Math.abs(deltaY) / 500);
+            document.getElementById('lightbox').style.opacity = opacityIntensity;
+        }
+
+        function dragEndGesture(e) {
+            if (!activeDragDismiss) return;
+            activeDragDismiss = false;
+            
+            dragMediaContainer.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            
+            const currentY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
+            const deltaY = currentY - startTouchY;
+            
+            if (Math.abs(deltaY) > 160) {
+                closeLightbox();
+            } else {
+                dragMediaContainer.style.transform = 'translateY(0px) scale(1)';
+                document.getElementById('lightbox').style.opacity = '1';
+            }
+        }
+
+        // --- FITUR 3: Dynamic Ambient Glow Lighting ---
+        function applyDynamicAmbientGlow(imageSrc) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            const ctx = canvas.getContext('2d');
+            
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = imageSrc;
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 1, 1);
+                try {
+                    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                    const lightbox = document.getElementById('lightbox');
+                    // Radial gradient dari warna dominan foto meluruh ke gradasi gelap luxury
+                    lightbox.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.38) 0%, rgba(10, 10, 10, 0.96) 80%)`;
+                } catch(e) {
+                    document.getElementById('lightbox').style.background = 'rgba(10, 10, 10, 0.85)';
+                }
+            };
+        }
+
+        // --- LIGHTBOX CONTROLLER ---
         function openLightbox(photo) {
             const lb = document.getElementById('lightbox');
             const lbImg = document.getElementById('lightboxImg');
             const controls = document.getElementById('lightboxControls');
+            const noteDisplay = document.getElementById('privateNoteDisplay');
             
             playClickSound();
             
             lbImg.src = photo.image;
             lb.classList.add('visible');
+            lb.style.opacity = '1';
+            
+            // FITUR 3: Aktifkan ambient glow pencahayaan mewah
+            applyDynamicAmbientGlow(photo.image);
+            
+            // Reset drag transform
+            if (dragMediaContainer) dragMediaContainer.style.transform = 'translateY(0px) scale(1)';
+
+            // FITUR 12: Jalankan typewriter untuk deskripsi private note jika ada
+            const rawNote = photo.note ? decryptNoteText(photo.note) : "";
+            if (rawNote) {
+                noteDisplay.classList.remove('opacity-0', 'translate-y-2');
+                noteDisplay.classList.add('opacity-100', 'translate-y-0');
+                runNoteTypewriter(rawNote);
+            } else {
+                noteDisplay.classList.add('opacity-0', 'translate-y-2');
+                noteDisplay.classList.remove('opacity-100', 'translate-y-0');
+            }
             
             let lastTap = 0;
             lbImg.ondblclick = () => {
@@ -720,13 +1527,11 @@
                 controls.classList.add('translate-y-0', 'opacity-100');
             }, 50);
 
-            // Set aksi tombol-tombol
             document.getElementById('lightboxDelete').onclick = (e) => {
                 e.stopPropagation();
                 deletePhoto(photo.id);
             };
 
-            // Set aksi tombol Download yang baru
             document.getElementById('lightboxDownload').onclick = (e) => {
                 e.stopPropagation();
                 downloadImage(photo.image);
@@ -760,6 +1565,7 @@
             playClickSound();
             const lb = document.getElementById('lightbox');
             const controls = document.getElementById('lightboxControls');
+            clearInterval(privateNoteInterval); // Stop typewriter jika sedang jalan
             
             controls.classList.add('translate-y-8', 'opacity-0');
             controls.classList.remove('translate-y-0', 'opacity-100');
@@ -767,6 +1573,60 @@
             setTimeout(() => {
                 lb.classList.remove('visible');
             }, 300);
+        }
+
+        // --- FITUR 7: Custom Memory Slideshow Editor with Fade ---
+        let slideshowTimer;
+        let slideshowIndex = 0;
+        let favoritePhotos = [];
+
+        function playAestheticSlideshow() {
+            playClickSound();
+            favoritePhotos = photos.filter(p => p.liked);
+            if (favoritePhotos.length === 0) {
+                showCustomAlert("Silakan sukai (Love) beberapa foto terlebih dahulu untuk mengaktifkan Slideshow.");
+                return;
+            }
+            
+            const modal = document.getElementById('slideshowModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            slideshowIndex = 0;
+            
+            runSlideshowCycle();
+        }
+
+        function runSlideshowCycle() {
+            const imgEl = document.getElementById('slideshowImg');
+            const counterEl = document.getElementById('slideshowCounter');
+            
+            if (!imgEl) return;
+            
+            // Fade out
+            imgEl.classList.remove('opacity-100', 'scale-100');
+            imgEl.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                const currentPhoto = favoritePhotos[slideshowIndex];
+                imgEl.src = currentPhoto.image;
+                counterEl.innerText = `${slideshowIndex + 1} / ${favoritePhotos.length}`;
+                
+                // Fade in
+                imgEl.classList.remove('opacity-0', 'scale-95');
+                imgEl.classList.add('opacity-100', 'scale-100');
+                
+                slideshowIndex = (slideshowIndex + 1) % favoritePhotos.length;
+                
+                slideshowTimer = setTimeout(runSlideshowCycle, 4000); // Ganti gambar setiap 4 detik
+            }, 1000);
+        }
+
+        function stopAestheticSlideshow() {
+            playClickSound();
+            clearTimeout(slideshowTimer);
+            const modal = document.getElementById('slideshowModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         document.getElementById('fileInput').onchange = async (e) => {
@@ -780,20 +1640,27 @@
                     await new Promise(resolve => setTimeout(resolve, 50)); 
                     const base64 = await convertAndCompressAsync(file);
                     
+                    // Demo teks catatan enkripsi untuk diuji
+                    const secureNote = encryptNoteText("Moment captured at " + new Date().toLocaleTimeString());
+
                     if (isUsingCloud) {
                         await db.collection("vault_photos").add({
                             image: base64,
                             liked: false,
+                            note: secureNote,
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     } else {
-                        photos.unshift({
-                            id: 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        const localId = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        const newPhoto = {
+                            id: localId,
                             image: base64,
                             liked: false,
+                            note: secureNote,
                             timestamp: new Date().toISOString()
-                        });
-                        localStorage.setItem('vault_photos_v2', JSON.stringify(photos));
+                        };
+                        photos.unshift(newPhoto);
+                        await savePhotoToIDB(newPhoto);
                         renderGalleryFast();
                     }
                 } catch (err) { console.error("Upload error:", err); }
@@ -805,6 +1672,7 @@
             e.target.value = "";
         };
 
+        // --- FITUR 2: Smart HD Downscaler (Menjaga kejelasan HD & memperingan ukuran file) ---
         function convertAndCompressAsync(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -816,7 +1684,13 @@
                         requestAnimationFrame(() => {
                             setTimeout(() => {
                                 const canvas = document.createElement('canvas');
-                                const MAX_W = 800;
+                                
+                                // Pilih skala HD berdasarkan status kompresi (Fitur 22)
+                                let MAX_W = 1200; // Default HD
+                                if (storageCompressionMode === 'ultra') {
+                                    MAX_W = 2048; // Ultra HD tanpa kompresi berat
+                                }
+                                
                                 let w = img.width, h = img.height;
                                 if (w > MAX_W) { h *= MAX_W / w; w = MAX_W; }
                                 
@@ -825,7 +1699,10 @@
                                 ctx.imageSmoothingEnabled = true;
                                 ctx.imageSmoothingQuality = 'high';
                                 ctx.drawImage(img, 0, 0, w, h);
-                                resolve(canvas.toDataURL('image/jpeg', 0.6));
+                                
+                                // Gunakan kompresi 0.85 untuk Save Mode, dan 0.95 untuk Ultra HD
+                                const qualityFactor = storageCompressionMode === 'luxury' ? 0.82 : 0.94;
+                                resolve(canvas.toDataURL('image/jpeg', qualityFactor));
                             }, 10);
                         });
                     };
@@ -836,7 +1713,7 @@
         }
 
         function switchTab(tab) {
-            playClickSound(); // Umpan balik suara klik saat mengganti tab
+            playClickSound(); 
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${tab}`);
             if (activeTab) activeTab.classList.add('active');
