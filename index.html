@@ -271,9 +271,6 @@
             <button onclick="switchTab('latency')" id="tab-btn-latency" class="flex-1 min-w-[110px] py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:text-white hover:bg-white/5">
                 <i class="fa-solid fa-gauge-high text-ios-green"></i> Latency
             </button>
-            <button onclick="switchTab('simulator')" id="tab-btn-simulator" class="flex-1 min-w-[100px] py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:text-white hover:bg-white/5">
-                <i class="fa-solid fa-user-ninja text-ios-red"></i> Simulator
-            </button>
             <button onclick="switchTab('logs')" id="tab-btn-logs" class="flex-1 min-w-[90px] py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:text-white hover:bg-white/5">
                 <i class="fa-solid fa-terminal text-ios-cyan"></i> Logs
             </button>
@@ -690,35 +687,7 @@
             </div>
         </div>
 
-        <!-- TAB 6: Hacker Clone Simulator -->
-        <div id="tab-simulator" class="tab-content hidden space-y-4">
-            <div class="ios-card p-5 space-y-4">
-                <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-user-secret text-ios-red"></i> Simulasi Akses Ilegal oleh Hacker
-                    </h3>
-                </div>
-
-                <div class="p-5 rounded-2xl bg-ios-red/10 border border-ios-red/30 space-y-3.5 text-xs">
-                    <p class="text-ios-gray leading-relaxed">
-                        Fitur ini menguji bagaimana Firebase merespon ketika ada skrip asing yang mencoba mengakses API Key milikmu dari domain yang **TIDAK TERDAFTAR** di Whitelist Google Cloud Console.
-                    </p>
-                    <div class="bg-black/60 p-3.5 rounded-xl font-mono text-[11px] text-ios-red border border-ios-red/30 shadow-inner">
-                        Pesan Diharapkan: <br>
-                        <span class="text-white font-semibold">"Requests from this HTTP referrer [domain] are blocked." (Error 403)</span>
-                    </div>
-                    <button onclick="simulateHackerAttack()" class="w-full py-3 bg-gradient-to-r from-ios-red to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-extrabold rounded-xl transition duration-200 shadow-lg shadow-ios-red/30 hover:scale-[1.01] active:scale-[0.98]">
-                        <i class="fa-solid fa-shield-virus"></i> Jalankan Simulasi Penolakan Hacker
-                    </button>
-                </div>
-
-                <div id="simulator-output" class="p-4 rounded-2xl bg-black/60 border border-white/10 text-xs font-mono min-h-[90px] text-ios-gray leading-relaxed">
-                    Klik tombol di atas untuk menjalankan simulasi...
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 7: Console Logs -->
+        <!-- TAB 6: Console Logs -->
         <div id="tab-logs" class="tab-content hidden space-y-3">
             <div class="ios-card p-5 space-y-3">
                 <div class="flex justify-between items-center border-b border-white/10 pb-3">
@@ -811,9 +780,9 @@
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             const activeTab = document.getElementById(`tab-${tabName}`);
-            activeTab.classList.remove('hidden');
+            if (activeTab) activeTab.classList.remove('hidden');
 
-            const buttons = ['audit', 'custom-key', 'web-checker', 'services', 'latency', 'simulator', 'logs'];
+            const buttons = ['audit', 'custom-key', 'web-checker', 'services', 'latency', 'logs'];
             buttons.forEach(btn => {
                 const el = document.getElementById(`tab-btn-${btn}`);
                 if (el) {
@@ -1377,23 +1346,6 @@
             measure("https://b4s-storage-default-rtdb.asia-southeast1.firebasedatabase.app/.json", "ping-rtdb");
             measure("https://firebasestorage.googleapis.com", "ping-storage");
             showToast("Latency ping updated!", "fa-solid fa-stopwatch text-ios-green");
-        }
-
-        // Clone Simulator
-        function simulateHackerAttack() {
-            const output = document.getElementById('simulator-output');
-            output.innerHTML = `<span class="text-ios-yellow flex items-center gap-2"><i class="fa-solid fa-spinner animate-spin"></i> Mensimulasikan request dari domain asing (hacker-site.com)...</span>`;
-            
-            setTimeout(() => {
-                output.innerHTML = `
-                    <span class="text-ios-red font-extrabold text-sm glow-text-red">❌ SIMULASI PENOLAKAN BERHASIL!</span><br><br>
-                    <span class="text-white font-semibold">Request Origin:</span> https://unauthorized-hacker-site.com<br>
-                    <span class="text-white font-semibold">Google Cloud Response:</span> HTTP 403 Forbidden<br>
-                    <span class="text-ios-gray">Reason: "Requests from this HTTP referrer are blocked."</span>
-                `;
-                writeLog('error', 'Simulasi Penolakan Hacker Selesai: Respon HTTP 403 Forbidden berhasil terpicu.');
-                showToast("Simulasi selesai: Respon 403 Forbidden", "fa-solid fa-user-ninja text-ios-red");
-            }, 1000);
         }
 
         // Initialize on load
