@@ -1,1900 +1,747 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050608">
-<meta name="description" content="FotoVault — Premium personal photo storage">
-
-<title>FotoVault</title>
-
-<style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    min-height:100vh;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "SF Pro Text",
-        "Segoe UI",
-        sans-serif;
-
-    color:#f5f5f7;
-
-    background:
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(86,100,255,.16),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 85% 20%,
-            rgba(0,210,255,.10),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 50% 100%,
-            rgba(100,80,255,.12),
-            transparent 35%
-        ),
-        #050608;
-
-    overflow-x:hidden;
-}
-
-
-/* =========================================================
-   BACKGROUND EFFECT
-========================================================= */
-
-body::before{
-    content:"";
-    position:fixed;
-    inset:-30%;
-    pointer-events:none;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,255,255,.035) 1px,
-            transparent 1px
-        );
-
-    background-size:35px 35px;
-
-    opacity:.35;
-
-    animation:
-        backgroundMove 30s linear infinite;
-
-    z-index:-2;
-}
-
-body::after{
-    content:"";
-    position:fixed;
-
-    width:500px;
-    height:500px;
-
-    border-radius:50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(89,95,255,.12),
-            transparent 65%
-        );
-
-    filter:blur(20px);
-
-    left:-150px;
-    top:20%;
-
-    animation:
-        orbMove 12s ease-in-out infinite alternate;
-
-    pointer-events:none;
-
-    z-index:-1;
-}
-
-@keyframes backgroundMove{
-
-    from{
-        transform:translate3d(0,0,0);
-    }
-
-    to{
-        transform:translate3d(35px,35px,0);
-    }
-}
-
-@keyframes orbMove{
-
-    from{
-        transform:translate3d(0,0,0) scale(1);
-    }
-
-    to{
-        transform:translate3d(220px,-80px,0) scale(1.2);
-    }
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-    width:8px;
-}
-
-::-webkit-scrollbar-track{
-    background:#050608;
-}
-
-::-webkit-scrollbar-thumb{
-    background:#292b32;
-    border-radius:20px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-    background:#454852;
-}
-
-
-/* =========================================================
-   COMMON
-========================================================= */
-
-.hidden{
-    display:none !important;
-}
-
-button,
-input{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-button:active{
-    transform:scale(.97);
-}
-
-input{
-    outline:none;
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.auth{
-    min-height:100vh;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:30px;
-
-    position:relative;
-}
-
-.auth::before{
-    content:"";
-
-    position:absolute;
-
-    width:650px;
-    height:650px;
-
-    border-radius:50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(95,100,255,.16),
-            transparent 65%
-        );
-
-    filter:blur(30px);
-
-    animation:
-        authGlow 8s ease-in-out infinite alternate;
-}
-
-@keyframes authGlow{
-
-    from{
-        transform:translate(-100px,-30px) scale(1);
-    }
-
-    to{
-        transform:translate(100px,40px) scale(1.18);
-    }
-}
-
-
-.card{
-    width:min(470px,100%);
-
-    padding:42px;
-
-    position:relative;
-
-    z-index:2;
-
-    border:1px solid rgba(255,255,255,.10);
-
-    border-radius:34px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.10),
-            rgba(255,255,255,.035)
-        );
-
-    backdrop-filter:
-        blur(35px)
-        saturate(150%);
-
-    -webkit-backdrop-filter:
-        blur(35px)
-        saturate(150%);
-
-    box-shadow:
-        0 40px 100px rgba(0,0,0,.45),
-        inset 0 1px 0 rgba(255,255,255,.08);
-
-    animation:
-        cardEntrance .8s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes cardEntrance{
-
-    from{
-        opacity:0;
-        transform:
-            translateY(30px)
-            scale(.96);
-    }
-
-    to{
-        opacity:1;
-        transform:
-            translateY(0)
-            scale(1);
-    }
-}
-
-
-.logo{
-    width:64px;
-    height:64px;
-
-    border-radius:20px;
-
-    display:grid;
-    place-items:center;
-
-    font-size:18px;
-    font-weight:800;
-    letter-spacing:-.5px;
-
-    color:white;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #aeb4ff
-        );
-
-    color:#090a0d;
-
-    box-shadow:
-        0 15px 35px rgba(130,135,255,.25);
-
-    animation:
-        logoFloat 5s ease-in-out infinite;
-}
-
-@keyframes logoFloat{
-
-    0%,100%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-5px);
-    }
-}
-
-
-.card h1{
-    margin-top:30px;
-
-    font-size:42px;
-    line-height:1;
-
-    letter-spacing:-2px;
-
-    background:
-        linear-gradient(
-            100deg,
-            #ffffff,
-            #aeb4ff
-        );
-
-    -webkit-background-clip:text;
-    background-clip:text;
-
-    color:transparent;
-}
-
-.card p{
-    margin-top:14px;
-
-    color:#92959e;
-
-    font-size:15px;
-
-    line-height:1.7;
-}
-
-
-.card label{
-    display:block;
-
-    margin-top:25px;
-    margin-bottom:9px;
-
-    color:#c8cad0;
-
-    font-size:13px;
-    font-weight:600;
-}
-
-
-.card input{
-    width:100%;
-
-    padding:15px 16px;
-
-    color:white;
-
-    background:
-        rgba(255,255,255,.055);
-
-    border:
-        1px solid rgba(255,255,255,.09);
-
-    border-radius:15px;
-
-    transition:
-        .25s ease;
-}
-
-.card input::placeholder{
-    color:#666a73;
-}
-
-.card input:focus{
-    border-color:
-        rgba(160,165,255,.65);
-
-    background:
-        rgba(255,255,255,.075);
-
-    box-shadow:
-        0 0 0 4px
-        rgba(105,110,255,.10);
-}
-
-
-.card button{
-    width:100%;
-
-    margin-top:24px;
-
-    padding:15px;
-
-    border:0;
-
-    border-radius:15px;
-
-    color:#08090b;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #b9bdff
-        );
-
-    font-weight:700;
-
-    box-shadow:
-        0 12px 30px
-        rgba(130,135,255,.18);
-
-    transition:
-        transform .25s ease,
-        box-shadow .25s ease;
-}
-
-.card button:hover{
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 18px 40px
-        rgba(130,135,255,.28);
-}
-
-.card small{
-    display:block;
-
-    margin-top:22px;
-
-    text-align:center;
-
-    color:#575b64;
-
-    font-size:11px;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header{
-    height:78px;
-
-    position:sticky;
-    top:0;
-
-    z-index:30;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:
-        0 28px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.07);
-
-    background:
-        rgba(5,6,8,.68);
-
-    backdrop-filter:
-        blur(25px)
-        saturate(160%);
-
-    -webkit-backdrop-filter:
-        blur(25px)
-        saturate(160%);
-}
-
-
-header b{
-    font-size:18px;
-
-    letter-spacing:-.5px;
-}
-
-
-header span{
-    margin-left:auto;
-    margin-right:18px;
-
-    color:#858891;
-
-    font-size:13px;
-}
-
-
-header button{
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    border-radius:12px;
-
-    padding:
-        9px 14px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    color:#dfe1e6;
-
-    transition:
-        .25s ease;
-}
-
-header button:hover{
-    background:
-        rgba(255,255,255,.09);
-
-    border-color:
-        rgba(255,255,255,.18);
-}
-
-
-/* =========================================================
-   MAIN LAYOUT
-========================================================= */
-
-main{
-    min-height:
-        calc(100vh - 78px);
-
-    display:flex;
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-nav{
-    width:245px;
-
-    padding:24px 18px;
-
-    border-right:
-        1px solid
-        rgba(255,255,255,.07);
-
-    background:
-        rgba(7,8,11,.62);
-
-    backdrop-filter:
-        blur(25px);
-
-    -webkit-backdrop-filter:
-        blur(25px);
-
-    flex-shrink:0;
-}
-
-
-.nav-item{
-    width:100%;
-
-    border:0;
-
-    background:transparent;
-
-    color:#777b84;
-
-    text-align:left;
-
-    padding:13px 15px;
-
-    margin-bottom:6px;
-
-    border-radius:13px;
-
-    font-size:14px;
-
-    transition:
-        .25s ease;
-}
-
-.nav-item:hover{
-    color:#e7e8eb;
-
-    background:
-        rgba(255,255,255,.045);
-}
-
-.nav-item.active{
-    color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.11),
-            rgba(255,255,255,.045)
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    box-shadow:
-        inset 0 1px 0
-        rgba(255,255,255,.05);
-}
-
-
-/* =========================================================
-   STORAGE
-========================================================= */
-
-nav > div{
-    margin-top:35px;
-
-    padding:17px;
-
-    border-radius:17px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    background:
-        rgba(255,255,255,.035);
-
-    color:#8e929a;
-
-    font-size:12px;
-}
-
-
-.bar{
-    height:6px;
-
-    margin-top:12px;
-
-    overflow:hidden;
-
-    border-radius:10px;
-
-    background:
-        rgba(255,255,255,.08);
-}
-
-
-.bar i{
-    display:block;
-
-    width:0;
-    height:100%;
-
-    border-radius:10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #777cff,
-            #b7bbff
-        );
-
-    box-shadow:
-        0 0 15px
-        rgba(120,125,255,.45);
-
-    transition:
-        width 1s cubic-bezier(.2,.8,.2,1);
-}
-
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-article{
-    width:100%;
-
-    max-width:1400px;
-
-    margin:auto;
-
-    padding:42px;
-}
-
-
-.head{
-    display:flex;
-
-    align-items:flex-end;
-
-    justify-content:space-between;
-
-    gap:25px;
-
-    margin-bottom:30px;
-}
-
-
-#pageTitle{
-    font-size:38px;
-
-    letter-spacing:-1.8px;
-
-    line-height:1;
-}
-
-
-#pageSubtitle{
-    margin-top:9px;
-
-    color:#777b84;
-
-    font-size:14px;
-}
-
-
-/* =========================================================
-   UPLOAD
-========================================================= */
-
-.upload{
-    position:relative;
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    padding:
-        13px 19px;
-
-    border-radius:14px;
-
-    color:#08090b;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff,
-            #babdff
-        );
-
-    font-size:13px;
-    font-weight:700;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 12px 30px
-        rgba(120,125,255,.15);
-
-    transition:
-        .25s ease;
-}
-
-.upload:hover{
-    transform:
-        translateY(-2px);
-
-    box-shadow:
-        0 18px 40px
-        rgba(120,125,255,.25);
-}
-
-
-/* =========================================================
-   DROP AREA
-========================================================= */
-
-.drop{
-    position:relative;
-
-    border:
-        1px dashed
-        rgba(255,255,255,.13);
-
-    border-radius:20px;
-
-    padding:35px;
-
-    text-align:center;
-
-    color:#737781;
-
-    background:
-        rgba(255,255,255,.025);
-
-    transition:
-        .3s ease;
-
-    overflow:hidden;
-}
-
-.drop::before{
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-        linear-gradient(
-            110deg,
-            transparent,
-            rgba(255,255,255,.05),
-            transparent
-        );
-
-    transform:
-        translateX(-100%);
-
-    transition:
-        .6s ease;
-}
-
-.drop:hover::before{
-    transform:
-        translateX(100%);
-}
-
-.drop:hover{
-    border-color:
-        rgba(180,185,255,.35);
-
-    background:
-        rgba(255,255,255,.04);
-}
-
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-#searchInput{
-    width:100%;
-
-    max-width:400px;
-
-    padding:14px 17px;
-
-    margin:
-        20px 0;
-
-    color:white;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius:14px;
-
-    background:
-        rgba(255,255,255,.045);
-
-    transition:
-        .25s ease;
-}
-
-#searchInput::placeholder{
-    color:#5f636c;
-}
-
-#searchInput:focus{
-    border-color:
-        rgba(160,165,255,.45);
-
-    box-shadow:
-        0 0 0 4px
-        rgba(110,115,255,.08);
-}
-
-
-/* =========================================================
-   PHOTO GRID
-========================================================= */
-
-.grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(190px,1fr)
-        );
-
-    gap:17px;
-
-    margin-top:15px;
-}
-
-
-.photo-card{
-    position:relative;
-
-    height:225px;
-
-    overflow:hidden;
-
-    padding:0;
-
-    border:0;
-
-    border-radius:20px;
-
-    background:#111;
-
-    isolation:isolate;
-
-    transform:
-        translateZ(0);
-
-    box-shadow:
-        0 12px 30px
-        rgba(0,0,0,.22);
-
-    transition:
-        transform .4s cubic-bezier(.2,.8,.2,1),
-        box-shadow .4s ease;
-}
-
-.photo-card::after{
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 45%,
-            rgba(0,0,0,.62)
-        );
-
-    opacity:.65;
-
-    z-index:1;
-}
-
-.photo-card img{
-    width:100%;
-    height:100%;
-
-    display:block;
-
-    object-fit:cover;
-
-    transition:
-        transform .7s
-        cubic-bezier(.2,.8,.2,1),
-        filter .5s ease;
-}
-
-
-.photo-card:hover{
-    transform:
-        translateY(-7px)
-        scale(1.015);
-
-    box-shadow:
-        0 25px 55px
-        rgba(0,0,0,.42);
-}
-
-.photo-card:hover img{
-    transform:
-        scale(1.08);
-
-    filter:
-        brightness(1.05);
-}
-
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty{
-    padding:90px 20px;
-
-    text-align:center;
-
-    color:#676b74;
-}
-
-.empty h3{
-    color:#d4d6db;
-
-    font-size:17px;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal{
-    position:fixed;
-
-    inset:0;
-
-    z-index:100;
-
-    display:grid;
-
-    place-items:center;
-
-    padding:25px;
-
-    background:
-        rgba(0,0,0,.72);
-
-    backdrop-filter:
-        blur(20px);
-
-    -webkit-backdrop-filter:
-        blur(20px);
-
-    animation:
-        modalBackground .3s ease;
-}
-
-@keyframes modalBackground{
-
-    from{
-        opacity:0;
-    }
-
-    to{
-        opacity:1;
-    }
-}
-
-
-.modalbox{
-    position:relative;
-
-    width:min(900px,100%);
-
-    padding:16px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    border-radius:25px;
-
-    background:
-        rgba(17,18,22,.88);
-
-    box-shadow:
-        0 40px 100px
-        rgba(0,0,0,.65);
-
-    animation:
-        modalCard .4s
-        cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes modalCard{
-
-    from{
-        opacity:0;
-        transform:
-            translateY(25px)
-            scale(.96);
-    }
-
-    to{
-        opacity:1;
-        transform:
-            translateY(0)
-            scale(1);
-    }
-}
-
-
-.modalbox > button:first-child{
-    position:absolute;
-
-    top:13px;
-    right:13px;
-
-    z-index:5;
-
-    width:38px;
-    height:38px;
-
-    border:0;
-
-    border-radius:50%;
-
-    color:white;
-
-    background:
-        rgba(0,0,0,.55);
-
-    backdrop-filter:
-        blur(10px);
-
-    font-size:20px;
-}
-
-
-#viewerImage{
-    width:100%;
-
-    max-height:70vh;
-
-    display:block;
-
-    object-fit:contain;
-
-    border-radius:17px;
-
-    background:#050608;
-}
-
-
-#viewerName{
-    margin:17px 3px 5px;
-
-    color:white;
-
-    font-size:17px;
-}
-
-
-#viewerMeta{
-    margin-left:3px;
-
-    color:#777b84;
-
-    font-size:12px;
-}
-
-
-#downloadBtn,
-#deleteBtn,
-#newAlbumBtn,
-#createAlbumBtn{
-    border:0;
-
-    border-radius:12px;
-
-    padding:12px 17px;
-
-    font-weight:600;
-
-    transition:
-        .25s ease;
-}
-
-
-#downloadBtn,
-#newAlbumBtn,
-#createAlbumBtn{
-    color:#090a0d;
-
-    background:
-        linear-gradient(
-            135deg,
-            #fff,
-            #babdff
-        );
-}
-
-
-#deleteBtn{
-    color:white;
-
-    background:
-        rgba(255,70,80,.14);
-
-    border:
-        1px solid
-        rgba(255,70,80,.25);
-}
-
-#downloadBtn:hover,
-#deleteBtn:hover,
-#newAlbumBtn:hover,
-#createAlbumBtn:hover{
-    transform:
-        translateY(-2px);
-}
-
-
-/* =========================================================
-   ALBUM
-========================================================= */
-
-.album-card{
-    padding:23px;
-
-    border-radius:19px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    background:
-        rgba(255,255,255,.035);
-
-    transition:
-        .3s ease;
-}
-
-.album-card:hover{
-    transform:
-        translateY(-5px);
-
-    border-color:
-        rgba(255,255,255,.14);
-
-    background:
-        rgba(255,255,255,.055);
-
-    box-shadow:
-        0 20px 45px
-        rgba(0,0,0,.25);
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-#progressArea{
-    margin:15px 0;
-}
-
-.progress-row{
-    padding:14px;
-
-    margin-bottom:8px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    border-radius:14px;
-
-    background:
-        rgba(255,255,255,.035);
-
-    color:#bfc1c7;
-}
-
-.progress-row .small{
-    margin:6px 0;
-
-    color:#777b84;
-
-    font-size:12px;
-}
-
-.line{
-    height:5px;
-
-    overflow:hidden;
-
-    border-radius:10px;
-
-    background:
-        rgba(255,255,255,.08);
-}
-
-.line i{
-    display:block;
-
-    width:0;
-    height:100%;
-
-    border-radius:10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #777cff,
-            #c0c3ff
-        );
-
-    transition:
-        width .5s ease;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-    position:fixed;
-
-    left:50%;
-    bottom:28px;
-
-    z-index:200;
-
-    transform:
-        translate(-50%,20px);
-
-    padding:
-        13px 18px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.10);
-
-    border-radius:14px;
-
-    color:white;
-
-    background:
-        rgba(25,26,30,.85);
-
-    backdrop-filter:
-        blur(20px);
-
-    box-shadow:
-        0 15px 40px
-        rgba(0,0,0,.35);
-
-    font-size:13px;
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transition:
-        .3s ease;
-}
-
-.toast.show{
-    opacity:1;
-
-    transform:
-        translate(-50%,0);
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:800px){
-
-    header{
-        padding:
-            0 17px;
-    }
-
-    header span{
-        display:none;
-    }
-
-    main{
-        display:block;
-    }
-
-    nav{
-        width:100%;
-
-        display:flex;
-
-        gap:6px;
-
-        overflow-x:auto;
-
-        padding:
-            12px;
-
-        border-right:0;
-
-        border-bottom:
-            1px solid
-            rgba(255,255,255,.07);
-    }
-
-    .nav-item{
-        min-width:120px;
-
-        margin:0;
-    }
-
-    nav > div{
-        display:none;
-    }
-
-    article{
-        padding:
-            27px 18px;
-    }
-
-    .head{
-        display:block;
-    }
-
-    #pageTitle{
-        font-size:31px;
-    }
-
-    .upload{
-        margin-top:20px;
-    }
-
-    .grid{
-        grid-template-columns:
-            repeat(2,1fr);
-
-        gap:10px;
-    }
-
-    .photo-card{
-        height:175px;
-
-        border-radius:15px;
-    }
-
-    .auth{
-        padding:18px;
-    }
-
-    .card{
-        padding:30px 23px;
-
-        border-radius:27px;
-    }
-
-    .card h1{
-        font-size:36px;
-    }
-}
-
-
-@media(max-width:420px){
-
-    .grid{
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-
-    .photo-card{
-        height:155px;
-    }
-
-    article{
-        padding:
-            22px 14px;
-    }
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media(prefers-reduced-motion:reduce){
-
-    *,
-    *::before,
-    *::after{
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important;
-    }
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#faf9f6">
+    <meta name="description" content="FotoVault — Luxury Photo Vault & Cloud Storage">
+    
+    <title>FotoVault | Luxury Photo Vault & Cloud Storage</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght=0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D5B5;
+            --gold-dark: #A8823B;
+            --bg-warm: #faf9f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-warm); 
+            color: #1a1a1a; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .serif { font-family: 'Playfair Display', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        .border-gold { border-color: var(--gold); }
+
+        /* Custom Elegant Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        /* Glassmorphic Panel Styling */
+        .glass { 
+            background: rgba(255, 255, 255, 0.72); 
+            backdrop-filter: blur(30px) saturate(180%); 
+            -webkit-backdrop-filter: blur(30px) saturate(180%); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(197, 160, 89, 0.12);
+            border-color: rgba(197, 160, 89, 0.4);
+        }
+
+        /* Helper Classes */
+        .hidden { display: none !important; }
+
+        button, input { font: inherit; }
+        button { cursor: pointer; }
+        button:active { transform: scale(0.97); }
+        input { outline: none; }
+
+        /* AUTH / LOGIN SECTION */
+        .auth {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .auth .card {
+            width: min(450px, 100%);
+            padding: 40px;
+            border-radius: 2.5rem;
+            text-align: center;
+        }
+
+        .logo-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .card label {
+            display: block;
+            text-align: left;
+            margin: 16px 0 6px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        .card input {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 1rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.9);
+            font-size: 13px;
+            color: #1a1a1a;
+            transition: all 0.25s ease;
+        }
+
+        .card input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        .card button[type="submit"] {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border-radius: 9999px;
+            border: none;
+            background: #1a1a1a;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card button[type="submit"]:hover {
+            background: #000;
+            transform: translateY(-2px);
+        }
+
+        /* HEADER */
+        header {
+            height: 72px;
+            position: sticky;
+            top: 16px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: calc(100% - 32px);
+            border-radius: 1.5rem;
+        }
+
+        header b {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 20px;
+            color: #1a1a1a;
+        }
+
+        header span {
+            color: #6b7280;
+            font-size: 12px;
+            margin-left: auto;
+            margin-right: 16px;
+        }
+
+        header button#logoutBtn {
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 9999px;
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.8);
+            color: #1a1a1a;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.25s ease;
+        }
+
+        header button#logoutBtn:hover {
+            background: #1a1a1a;
+            color: var(--gold);
+        }
+
+        /* MAIN LAYOUT */
+        main {
+            min-height: calc(100vh - 100px);
+            display: flex;
+            max-width: 1280px;
+            margin: 20px auto 0;
+            width: 100%;
+            padding: 0 16px;
+        }
+
+        /* SIDEBAR NAV */
+        nav {
+            width: 240px;
+            padding: 24px 12px;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            text-align: left;
+            padding: 12px 18px;
+            margin-bottom: 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.25s ease;
+        }
+
+        .nav-item:hover {
+            color: #1a1a1a;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .nav-item.active {
+            color: var(--gold);
+            background: #1a1a1a;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        nav > div {
+            margin-top: 32px;
+            padding: 18px;
+            border-radius: 1.5rem;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.8);
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .bar {
+            height: 6px;
+            margin-top: 10px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .bar i {
+            display: block;
+            width: 0;
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+            transition: width 1s cubic-bezier(.2,.8,.2,1);
+        }
+
+        /* CONTENT AREA */
+        article {
+            width: 100%;
+            padding: 24px 32px;
+        }
+
+        .head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        #pageTitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 36px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        #pageSubtitle {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* UPLOAD BUTTON */
+        .upload {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            color: var(--gold);
+            background: #1a1a1a;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+        }
+
+        .upload:hover {
+            background: #000;
+            transform: translateY(-2px);
+        }
+
+        /* DROP AREA */
+        .drop {
+            border: 2px dashed rgba(197, 160, 89, 0.4);
+            border-radius: 2rem;
+            padding: 32px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .drop:hover {
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.7);
+        }
+
+        /* SEARCH INPUT */
+        #searchInput {
+            width: 100%;
+            max-width: 380px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.8);
+            font-size: 12px;
+            transition: all 0.25s ease;
+        }
+
+        #searchInput::placeholder { color: #9ca3af; }
+        #searchInput:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        /* PHOTO GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .photo-card {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            background: #f0ebe1;
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .photo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(197, 160, 89, 0.15);
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* EMPTY STATE */
+        .empty {
+            padding: 80px 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .empty h3 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #1a1a1a;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .modalbox {
+            position: relative;
+            width: min(750px, 100%);
+            padding: 24px;
+            border-radius: 2.5rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        .modalbox > button[data-close] {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 5;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            color: #1a1a1a;
+            background: rgba(0, 0, 0, 0.05);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modalbox > button[data-close]:hover {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        #viewerImage {
+            width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            border-radius: 1.5rem;
+            background: rgba(0,0,0,0.03);
+        }
+
+        #viewerName {
+            margin: 16px 0 4px;
+            font-family: 'Playfair Display', serif;
+            color: #1a1a1a;
+            font-size: 18px;
+        }
+
+        #viewerMeta {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        #downloadBtn, #deleteBtn, #newAlbumBtn, #createAlbumBtn {
+            border: none;
+            border-radius: 9999px;
+            padding: 10px 22px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.25s ease;
+            margin-right: 8px;
+        }
+
+        #downloadBtn, #newAlbumBtn, #createAlbumBtn {
+            color: var(--gold);
+            background: #1a1a1a;
+        }
+
+        #downloadBtn:hover, #newAlbumBtn:hover, #createAlbumBtn:hover {
+            background: #000;
+            transform: translateY(-2px);
+        }
+
+        #deleteBtn {
+            color: #e11d48;
+            background: rgba(225, 29, 72, 0.1);
+        }
+
+        #deleteBtn:hover {
+            background: #e11d48;
+            color: #fff;
+        }
+
+        /* ALBUMS & PROGRESS */
+        .album-card {
+            padding: 24px;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .album-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(197, 160, 89, 0.1);
+        }
+
+        #albumModal input#albumName {
+            width: 100%;
+            padding: 12px 18px;
+            margin: 16px 0;
+            border-radius: 1rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #fff;
+            font-size: 13px;
+        }
+
+        #progressArea { margin: 16px 0; }
+        .progress-row {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.9);
+            font-size: 12px;
+            color: #1a1a1a;
+        }
+        .progress-row .small { margin: 4px 0; color: #6b7280; font-size: 11px; }
+        .line { height: 4px; overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.05); }
+        .line i { display: block; width: 0; height: 100%; border-radius: 10px; background: var(--gold); transition: width .5s ease; }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            z-index: 200;
+            transform: translate(-50%, 20px);
+            padding: 12px 24px;
+            border-radius: 9999px;
+            color: var(--gold);
+            background: #1a1a1a;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 800px) {
+            header { width: calc(100% - 16px); padding: 0 16px; }
+            header span { display: none; }
+            main { flex-direction: column; padding: 0 8px; }
+            nav { width: 100%; display: flex; gap: 8px; overflow-x: auto; padding: 12px; }
+            .nav-item { min-width: 120px; text-align: center; margin: 0; }
+            nav > div { display: none; }
+            article { padding: 16px; }
+            .head { flex-direction: column; align-items: flex-start; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .photo-card { height: 160px; }
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- =====================================================
+         LOGIN / AUTH VIEW
+    ===================================================== -->
+    <section id="authView" class="auth">
+        <div class="card glass">
+            <div class="logo-box">FV</div>
+            <h1 class="serif text-3xl font-medium text-[#1a1a1a] mb-2">FotoVault</h1>
+            <p class="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
+                Simpan dan kelola foto pribadi Anda dalam satu ruang yang elegan, cepat, dan aman.
+            </p>
 
-<!-- =====================================================
-     LOGIN
-===================================================== -->
+            <form id="authForm">
+                <label>Email</label>
+                <input id="email" type="email" autocomplete="email" placeholder="Masukkan email..." required>
 
-<section id="authView" class="auth">
+                <label>Password</label>
+                <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password..." required>
 
-    <div class="card">
+                <button id="authSubmit" type="submit">Masuk Ke Vault</button>
+            </form>
 
-        <div class="logo">
-            FV
+            <small class="block mt-6 text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
+                FotoVault &bull; Luxury Storage System
+            </small>
         </div>
+    </section>
 
-        <h1>
-            FotoVault
-        </h1>
+    <!-- =====================================================
+         MAIN APPLICATION VIEW
+    ===================================================== -->
+    <section id="appView" class="hidden">
 
-        <p>
-            Simpan dan kelola foto pribadi Anda
-            dalam satu ruang yang elegan,
-            cepat, dan aman.
-        </p>
+        <!-- HEADER / NAVBAR -->
+        <header class="glass">
+            <b>FotoVault</b>
+            <span id="userEmail">User</span>
+            <button id="logoutBtn" type="button">Keluar</button>
+        </header>
 
+        <main>
+            <!-- SIDEBAR NAVIGATION -->
+            <nav>
+                <button class="nav-item active" data-section="photos" type="button">
+                    Foto Saya
+                </button>
+                <button class="nav-item" data-section="albums" type="button">
+                    Album
+                </button>
 
-        <form id="authForm">
+                <!-- STORAGE METER -->
+                <div>
+                    <strong class="text-[#1a1a1a] uppercase text-[9px] tracking-widest font-bold">Penyimpanan</strong>
+                    <br>
+                    <span id="storageText" class="text-xs">0 KB / 1 GB</span>
+                    <div class="bar">
+                        <i id="storageBar"></i>
+                    </div>
+                </div>
+            </nav>
 
-            <label>
-                Email
-            </label>
+            <!-- MAIN CONTENT AREA -->
+            <article>
+                <div class="head">
+                    <div>
+                        <h2 id="pageTitle">Foto Saya</h2>
+                        <p id="pageSubtitle">Semua foto Anda dalam satu tempat yang aman.</p>
+                    </div>
 
-            <input
-                id="email"
-                type="email"
-                autocomplete="email"
-                placeholder="Masukkan email"
-                required
-            >
+                    <label class="upload">
+                        Upload Foto
+                        <input id="fileInput" type="file" accept="image/*" multiple hidden>
+                    </label>
+                </div>
 
+                <!-- PHOTOS SECTION -->
+                <div id="photosSection">
+                    <div id="dropZone" class="drop">
+                        Tarik foto ke sini atau klik tombol Upload Foto di atas
+                    </div>
 
-            <label>
-                Password
-            </label>
+                    <input id="searchInput" type="search" placeholder="Cari nama foto...">
 
-            <input
-                id="password"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Masukkan password"
-                required
-            >
+                    <div id="progressArea" class="hidden"></div>
+                    <div id="photoGrid" class="grid"></div>
 
+                    <div id="emptyState" class="empty">
+                        <h3>Belum ada foto yang disimpan</h3>
+                    </div>
+                </div>
 
-            <button
-                id="authSubmit"
-                type="submit"
-            >
-                Masuk
-            </button>
+                <!-- ALBUMS SECTION -->
+                <div id="albumsSection" class="hidden">
+                    <button id="newAlbumBtn" type="button" class="mb-6">
+                        + Album Baru
+                    </button>
+                    <div id="albumGrid" class="grid"></div>
+                </div>
+            </article>
+        </main>
+    </section>
 
-        </form>
+    <!-- =====================================================
+         PHOTO VIEWER MODAL
+    ===================================================== -->
+    <div id="viewer" class="modal hidden">
+        <div class="modalbox">
+            <button data-close="viewer" type="button">&times;</button>
+            <img id="viewerImage" alt="Foto Viewer">
+            <h3 id="viewerName">Detail Foto</h3>
+            <p id="viewerMeta"></p>
 
-
-        <small>
-            FotoVault v1.0
-        </small>
-
-    </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     APPLICATION
-===================================================== -->
-
-<section
-    id="appView"
-    class="hidden"
->
-
-
-<header>
-
-    <b>
-        FotoVault
-    </b>
-
-
-    <span id="userEmail">
-        User
-    </span>
-
-
-    <button
-        id="logoutBtn"
-        type="button"
-    >
-        Keluar
-    </button>
-
-</header>
-
-
-
-<main>
-
-
-<!-- SIDEBAR -->
-
-<nav>
-
-    <button
-        class="nav-item active"
-        data-section="photos"
-        type="button"
-    >
-        Foto Saya
-    </button>
-
-
-    <button
-        class="nav-item"
-        data-section="albums"
-        type="button"
-    >
-        Album
-    </button>
-
-
-    <div>
-
-        <strong>
-            Penyimpanan
-        </strong>
-
-        <br>
-
-        <span id="storageText">
-            0 KB / 1 GB
-        </span>
-
-
-        <div class="bar">
-
-            <i id="storageBar"></i>
-
+            <button id="downloadBtn" type="button">Download</button>
+            <button id="deleteBtn" type="button">Hapus Foto</button>
         </div>
-
     </div>
 
-</nav>
-
-
-
-<!-- CONTENT -->
-
-<article>
-
-
-<div class="head">
-
-    <div>
-
-        <h2 id="pageTitle">
-            Foto Saya
-        </h2>
-
-        <p id="pageSubtitle">
-            Semua foto Anda dalam satu tempat.
-        </p>
-
+    <!-- =====================================================
+         CREATE ALBUM MODAL
+    ===================================================== -->
+    <div id="albumModal" class="modal hidden">
+        <div class="modalbox max-w-sm">
+            <button data-close="albumModal" type="button">&times;</button>
+            <h3 class="serif text-xl font-medium text-[#1a1a1a]">Buat Album Baru</h3>
+            <input id="albumName" type="text" placeholder="Masukkan nama album...">
+            <button id="createAlbumBtn" type="button" class="w-full">Simpan Album</button>
+        </div>
     </div>
 
-
-    <label class="upload">
-
-        Upload Foto
-
-        <input
-            id="fileInput"
-            type="file"
-            accept="image/*"
-            multiple
-            hidden
-        >
-
-    </label>
-
-</div>
-
-
-
-<!-- PHOTOS -->
-
-<div id="photosSection">
-
-
-    <div
-        id="dropZone"
-        class="drop"
-    >
-
-        Tarik foto ke sini atau gunakan
-        tombol Upload Foto
-
-    </div>
-
-
-    <input
-        id="searchInput"
-        type="search"
-        placeholder="Cari foto..."
-    >
-
-
-    <div
-        id="progressArea"
-        class="hidden"
-    ></div>
-
-
-    <div
-        id="photoGrid"
-        class="grid"
-    ></div>
-
-
-    <div
-        id="emptyState"
-        class="empty"
-    >
-
-        <h3>
-            Belum ada foto
-        </h3>
-
-    </div>
-
-</div>
-
-
-
-<!-- ALBUMS -->
-
-<div
-    id="albumsSection"
-    class="hidden"
->
-
-
-    <button
-        id="newAlbumBtn"
-        type="button"
-    >
-        Album Baru
-    </button>
-
-
-    <div
-        id="albumGrid"
-        class="grid"
-    ></div>
-
-</div>
-
-
-</article>
-
-</main>
-
-</section>
-
-
-
-<!-- =====================================================
-     PHOTO VIEWER
-===================================================== -->
-
-<div
-    id="viewer"
-    class="modal hidden"
->
-
-    <div class="modalbox">
-
-
-        <button
-            data-close="viewer"
-            type="button"
-        >
-            ×
-        </button>
-
-
-        <img
-            id="viewerImage"
-            alt="Foto"
-        >
-
-
-        <h3
-            id="viewerName"
-        >
-            Foto
-        </h3>
-
-
-        <p
-            id="viewerMeta"
-        >
-        </p>
-
-
-        <button
-            id="downloadBtn"
-            type="button"
-        >
-            Download
-        </button>
-
-
-        <button
-            id="deleteBtn"
-            type="button"
-        >
-            Hapus
-        </button>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     ALBUM MODAL
-===================================================== -->
-
-<div
-    id="albumModal"
-    class="modal hidden"
->
-
-    <div class="modalbox">
-
-
-        <button
-            data-close="albumModal"
-            type="button"
-        >
-            ×
-        </button>
-
-
-        <h3>
-            Buat Album
-        </h3>
-
-
-        <input
-            id="albumName"
-            type="text"
-            placeholder="Nama album"
-        >
-
-
-        <button
-            id="createAlbumBtn"
-            type="button"
-        >
-            Buat Album
-        </button>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     SUPABASE
-===================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<!-- APP JS TETAP -->
-<script src="app.js?v=1.0.1"></script>
-
+    <!-- =====================================================
+         SUPABASE SDK & CLIENT SCRIPT
+    ===================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js?v=1.0.1"></script>
 
 </body>
 </html>
