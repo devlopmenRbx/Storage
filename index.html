@@ -1069,23 +1069,20 @@
                         checkDbEl.className = "font-bold text-ios-yellow";
                     }
                 } else if (userConfig.projectId) {
-                try {
-                    const tempFs = tempApp.firestore();
-                    await tempFs.collection('ping').limit(1).get();
-                    checkDbEl.textContent = "✅ Terhubung (Firestore)";
-                    checkDbEl.className = "font-bold text-ios-green";
-                } catch (fserr) {
-                    if (fserr.code === 'not-found' || fserr.message.includes('does not exist')) {
-                        checkDbEl.textContent = "⚠️ DB Firestore Belum Dibuat";
-                        checkDbEl.className = "font-bold text-ios-orange";
-                    } else {
-                        checkDbEl.textContent = "⚠️ Aturan Firestore / Rules";
-                        checkDbEl.className = "font-bold text-ios-yellow";
+                    try {
+                        const tempFs = tempApp.firestore();
+                        await tempFs.collection('ping').limit(1).get();
+                        checkDbEl.textContent = "✅ Terhubung (Firestore)";
+                        checkDbEl.className = "font-bold text-ios-green";
+                    } catch (fserr) {
+                        if (fserr.code === 'not-found' || (fserr.message && fserr.message.includes('does not exist'))) {
+                            checkDbEl.textContent = "⚠️ DB Firestore Belum Dibuat";
+                            checkDbEl.className = "font-bold text-ios-orange";
+                        } else {
+                            checkDbEl.textContent = "⚠️ Aturan Firestore / Rules";
+                            checkDbEl.className = "font-bold text-ios-yellow";
+                        }
                     }
-                }
-            } else {
-                checkDbEl.textContent = "Tidak Diuji";
-            }
                 } else {
                     checkDbEl.textContent = "Tidak Diuji";
                 }
