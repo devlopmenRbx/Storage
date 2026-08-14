@@ -1,4 +1,4 @@
-const SUPABASE_URL = "PASTE_YOUR_SUPABASE_URL";
+const SUPABASE_URL = "https://dpvlxxqsipksfiagpxzx.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_uaaaNqNY7KLO3XJURnx03w_4luiz76g";
 const BUCKET = "photos";
 const MAX_FILE_SIZE = 6 * 1024 * 1024;
