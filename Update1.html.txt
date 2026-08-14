@@ -1,0 +1,989 @@
+Update1.html 
+
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FotoCloud | Luxury Photo Vault & Cloud Storage</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght=0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D5B5;
+            --gold-dark: #A8823B;
+            --bg-warm: #faf9f6;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-warm); 
+            color: #1a1a1a; 
+            overflow-x: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .serif { font-family: 'Playfair Display', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        .border-gold { border-color: var(--gold); }
+
+        /* Custom Elegant Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        /* Glassmorphic Panel Styling */
+        .glass { 
+            background: rgba(255, 255, 255, 0.72); 
+            backdrop-filter: blur(30px) saturate(180%); 
+            -webkit-backdrop-filter: blur(30px) saturate(180%); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(197, 160, 89, 0.12);
+            border-color: rgba(197, 160, 89, 0.4);
+        }
+
+        /* Shimmer Loading Skeleton */
+        .shimmer-bg {
+            background: linear-gradient(90deg, #f0ebe1 25%, #faf9f6 50%, #f0ebe1 75%);
+            background-size: 200% 100%;
+            animation: shimmerEffect 2s infinite linear;
+        }
+
+        @keyframes shimmerEffect {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Floating Animation */
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: subtleFloat 6s ease-in-out infinite;
+        }
+
+        /* Gold Pulse Ring */
+        @keyframes goldPulse {
+            0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(197, 160, 89, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+        }
+        .pulse-gold {
+            animation: goldPulse 2.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-[var(--bg-warm)] text-[#1a1a1a] flex flex-col min-h-screen selection:bg-[var(--gold)] selection:text-white">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-50 px-4 sm:px-8 pt-4">
+        <div class="max-w-7xl mx-auto glass rounded-3xl px-6 py-4 flex items-center justify-between border border-white/80 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+            
+            <!-- Logo Branding -->
+            <a href="index.html" class="flex items-center space-x-3 select-none group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#1a1a1a] to-[#3a3a3a] text-[var(--gold)] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <i data-lucide="cloud-lightning" class="w-5 h-5 text-[var(--gold)]"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="serif text-xl italic font-semibold leading-none text-[#1a1a1a] tracking-tight">FotoCloud</span>
+                    <span class="text-[8px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mt-1">Luxury Vault</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs uppercase tracking-[0.15em] font-medium text-gray-500">
+                <a href="#fitur" class="hover:text-[var(--gold)] transition-colors">Fitur Utama</a>
+                <a href="#demo-section" class="hover:text-[var(--gold)] transition-colors">Demo Login</a>
+                <a href="#harga" class="hover:text-[var(--gold)] transition-colors">Paket Storage</a>
+            </nav>
+
+            <!-- Dynamic Right Container (JS Managed) -->
+            <div id="nav-right-container" class="flex items-center space-x-3">
+                <!-- Injected via checkAuthState() -->
+            </div>
+        </div>
+    </header>
+
+    <!-- LOGGED-IN ACTIVE BANNER -->
+    <div id="logged-in-banner" class="hidden max-w-7xl mx-auto px-4 sm:px-8 mt-3">
+        <div class="glass rounded-2xl py-2.5 px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs border border-amber-200/50 bg-amber-50/40">
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--gold)] opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--gold)]"></span>
+                </span>
+                <span class="text-gray-600">Sesi Vault Aktif: <strong id="banner-user-name" class="serif italic text-[#1a1a1a] font-bold text-sm">User</strong></span>
+            </div>
+            <a href="app.html" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] font-semibold text-[10px] uppercase tracking-widest transition-all shadow-sm">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                Buka Penyimpanan Foto Saya
+            </a>
+        </div>
+    </div>
+
+    <main class="flex-grow relative z-10">
+        
+        <!-- HERO SECTION -->
+        <section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Hero Content Left -->
+                    <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                        
+                        <!-- Luxury Badge -->
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-gray-200/80 shadow-sm text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[var(--gold)]"></i>
+                            Digital Archive & Storage Solution
+                        </div>
+                        
+                        <h1 class="serif text-4xl sm:text-5xl lg:text-6xl italic font-medium leading-[1.12] text-[#1a1a1a]">
+                            Simpan Seluruh Kenangan <br class="hidden sm:inline">
+                            <span class="text-[var(--gold)] not-italic font-normal">
+                                Gratis 15GB Selamanya
+                            </span>
+                        </h1>
+                        
+                        <p class="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                            Amankan seluruh album & memori digital Anda dengan enkripsi tingkat tinggi, tampilan visual sinematik, serta kecepatan akses instan dari perangkat manapun.
+                        </p>
+
+                        <!-- CTA Action Buttons -->
+                        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                            <a id="hero-cta-btn" href="app.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] font-medium text-xs tracking-widest uppercase shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                                <i data-lucide="shield" class="w-4 h-4 text-[var(--gold)]"></i>
+                                Buka Vault Saya
+                            </a>
+
+                            <button onclick="scrollToDemo()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white hover:bg-gray-50 text-[#1a1a1a] font-semibold text-xs tracking-wider uppercase border border-gray-200/80 transition shadow-sm">
+                                <i data-lucide="user-check" class="w-4 h-4 text-[var(--gold)]"></i>
+                                Akun Demo
+                            </button>
+                        </div>
+
+                        <!-- Feature Badges Under CTA -->
+                        <div class="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-[10px] uppercase tracking-wider text-gray-400 font-medium">
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[var(--gold)]"></i>
+                                Tanpa Kartu Kredit
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="zap" class="w-4 h-4 text-[var(--gold)]"></i>
+                                Pengunggahan Instan
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <i data-lucide="lock" class="w-4 h-4 text-[var(--gold)]"></i>
+                                Enkripsi Privasi 100%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Visual Card Right -->
+                    <div class="lg:col-span-5 relative animate-float">
+                        <div class="absolute -top-10 -left-10 w-48 h-48 bg-amber-100/60 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-200/40 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div class="glass-card rounded-[2.5rem] p-6 relative border border-white/90 shadow-2xl">
+                            <!-- Visual Header Bar -->
+                            <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                                </div>
+                                <span class="text-[9px] font-mono tracking-widest text-gray-400 uppercase">fotocloud.vault/archive</span>
+                            </div>
+
+                            <!-- Photo Grid Interactive Preview -->
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="relative group overflow-hidden rounded-2xl h-36 bg-[#f0ebe1] border border-white/80 shadow-sm">
+                                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Pantai" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x300/f0ebe1/1a1a1a?text=Beach+Memory'">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                    <span class="absolute bottom-2.5 left-3 text-[10px] font-medium text-white/90 serif italic">Liburan_2026.jpg</span>
+                                </div>
+                                <div class="relative group overflow-hidden rounded-2xl h-36 bg-[#f0ebe1] border border-white/80 shadow-sm">
+                                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80" alt="Gunung" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x300/e8d5b5/1a1a1a?text=Night+Sky'">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                    <span class="absolute bottom-2.5 left-3 text-[10px] font-medium text-white/90 serif italic">Night_Sky.raw</span>
+                                </div>
+                                <div class="relative group overflow-hidden rounded-2xl h-36 bg-[#f0ebe1] border border-white/80 shadow-sm">
+                                    <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=400&q=80" alt="Fotografi" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/400x300/e5e0d8/1a1a1a?text=Portrait'">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                    <span class="absolute bottom-2.5 left-3 text-[10px] font-medium text-white/90 serif italic">Foto_Profil.png</span>
+                                </div>
+                                <div class="relative overflow-hidden rounded-2xl h-36 bg-white/60 border-2 border-dashed border-[var(--gold)]/40 flex flex-col items-center justify-center text-[var(--gold)] hover:border-[var(--gold)] transition cursor-pointer group">
+                                    <div class="w-10 h-10 rounded-full bg-amber-50 group-hover:bg-[var(--gold)] group-hover:text-white transition-colors flex items-center justify-center mb-1 shadow-sm">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider">Unggah Foto</span>
+                                </div>
+                            </div>
+
+                            <!-- Storage Meter Bar -->
+                            <div class="bg-white/80 p-4 rounded-2xl border border-gray-100 shadow-sm">
+                                <div class="flex justify-between items-center text-[10px] font-medium mb-2">
+                                    <span class="uppercase tracking-widest text-gray-400 font-bold">Kapasitas Dipakai</span>
+                                    <span class="text-[var(--gold)] font-bold">3GB / 15GB (20%)</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                    <div class="bg-gradient-to-r from-[var(--gold)] to-[var(--gold-dark)] h-2 rounded-full w-[20%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- DEMO LOGIN SECTION -->
+        <section id="demo-section" class="py-16 my-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass max-w-3xl mx-auto p-8 sm:p-12 rounded-[2.5rem] text-center border border-white/80 shadow-xl relative overflow-hidden">
+                    <div class="w-14 h-14 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-gray-100 shadow-md">
+                        <i data-lucide="key" class="w-6 h-6 text-[var(--gold)]"></i>
+                    </div>
+                    
+                    <span class="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mb-2">
+                        Instan Vault Access
+                    </span>
+                    <h2 class="serif text-3xl sm:text-4xl italic font-medium text-[#1a1a1a] mb-3">Uji Coba Sesi Demo</h2>
+                    <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto leading-relaxed mb-8">
+                        Klik tombol di bawah ini untuk mensimulasikan login langsung ke dalam penyimpanan galeri foto tanpa perlu mendaftar manual.
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="loginDemo('budi', 'Budi')" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] font-medium text-xs tracking-widest uppercase shadow-lg transition active:scale-95">
+                            <i data-lucide="user-check" class="w-4 h-4"></i>
+                            Login Sesi: Budi
+                        </button>
+                        
+                        <button onclick="loginDemo('sari', 'Sari')" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-white hover:bg-gray-50 text-[#1a1a1a] font-medium text-xs tracking-widest uppercase border border-gray-200/80 shadow-sm transition active:scale-95">
+                            <i data-lucide="user-check" class="w-4 h-4 text-[var(--gold)]"></i>
+                            Login Sesi: Sari
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section id="fitur" class="py-16 sm:py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <p class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] font-bold mb-2">Excellence & Privacy</p>
+                    <h2 class="serif text-3xl sm:text-4xl italic font-medium text-[#1a1a1a]">Mengapa Memilih FotoCloud?</h2>
+                    <p class="mt-3 text-xs sm:text-sm text-gray-500 leading-relaxed">Platform penyimpan memori digital yang memadukan estetika tinggi dengan perlindungan enkripsi terbaik.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Feature Card 1 -->
+                    <div class="glass-card p-6 rounded-[2rem] relative group">
+                        <div class="w-12 h-12 rounded-full bg-white text-[var(--gold)] border border-gray-100 flex items-center justify-center mb-5 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-[9px] uppercase tracking-widest text-[var(--gold)] font-bold mb-1">Privasi Mutlak</p>
+                        <h3 class="serif text-xl font-medium text-[#1a1a1a] mb-2">Aman & Privat</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Setiap foto dienkripsi rapat. Hanya Anda yang memegang kendali penuh atas kunci otentikasi & hak akses berkas.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 2 -->
+                    <div class="glass-card p-6 rounded-[2rem] relative group">
+                        <div class="w-12 h-12 rounded-full bg-white text-[var(--gold)] border border-gray-100 flex items-center justify-center mb-5 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="database" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-[9px] uppercase tracking-widest text-[var(--gold)] font-bold mb-1">Tanpa Biaya</p>
+                        <h3 class="serif text-xl font-medium text-[#1a1a1a] mb-2">15GB Gratis Selamanya</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Nikmati ruang penyimpanan besar tanpa bayar atau komitmen kartu kredit sejak pertama kali Anda mendaftar.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 3 -->
+                    <div class="glass-card p-6 rounded-[2rem] relative group">
+                        <div class="w-12 h-12 rounded-full bg-white text-[var(--gold)] border border-gray-100 flex items-center justify-center mb-5 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="smartphone" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-[9px] uppercase tracking-widest text-[var(--gold)] font-bold mb-1">Multi Perangkat</p>
+                        <h3 class="serif text-xl font-medium text-[#1a1a1a] mb-2">Akses di HP & PC</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Buka seluruh arsip foto Anda secara instan di mana saja melalui browser smartphone, tablet, maupun komputer.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 4 -->
+                    <div class="glass-card p-6 rounded-[2rem] relative group">
+                        <div class="w-12 h-12 rounded-full bg-white text-[var(--gold)] border border-gray-100 flex items-center justify-center mb-5 shadow-md group-hover:scale-110 transition-transform">
+                            <i data-lucide="share-2" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-[9px] uppercase tracking-widest text-[var(--gold)] font-bold mb-1">Koleksi Momen</p>
+                        <h3 class="serif text-xl font-medium text-[#1a1a1a] mb-2">Bagikan Mudah</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Buat tautan galeri terlindungi untuk album kenangan acara keluarga atau foto perjalanan dalam satu ketukan.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING SECTION -->
+        <section id="harga" class="py-16 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <p class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] font-bold mb-2">Curated Storage</p>
+                    <h2 class="serif text-3xl sm:text-4xl italic font-medium text-[#1a1a1a]">Pilihan Paket Storage</h2>
+                    <p class="mt-3 text-xs sm:text-sm text-gray-500 leading-relaxed">Mulai dari kapasitas gratis selamanya hingga ruang tak terbatas untuk fotografi profesional.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+                    
+                    <!-- Free Tier Card -->
+                    <div class="glass-card rounded-[2.5rem] p-8 flex flex-col justify-between border-white/80">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="serif text-3xl font-medium text-[#1a1a1a]">Gratis</h3>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[9px] uppercase tracking-widest font-bold">Paket Dasar</span>
+                            </div>
+                            <div class="mb-6">
+                                <span class="serif text-4xl font-semibold text-[#1a1a1a]">Rp 0</span>
+                                <span class="text-xs text-gray-400 font-light">/ selamanya</span>
+                            </div>
+                            <ul class="space-y-4 mb-8 text-xs text-gray-600">
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Kapasitas Storage <strong class="text-[#1a1a1a]">15GB Free</strong></span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Akses Web App Multi-Device</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Fitur Berbagi Album Tautan</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="app.html" class="w-full py-4 rounded-full bg-white hover:bg-gray-50 border border-gray-200 text-[#1a1a1a] text-xs font-bold uppercase tracking-widest text-center block transition shadow-sm">
+                            Gunakan Sekarang
+                        </a>
+                    </div>
+
+                    <!-- Pro Tier Card -->
+                    <div class="glass-card rounded-[2.5rem] p-8 flex flex-col justify-between relative border-[var(--gold)]/50 bg-gradient-to-b from-amber-50/60 to-white shadow-xl">
+                        <div class="absolute -top-3.5 right-8 px-4 py-1 rounded-full bg-[var(--gold)] text-white font-bold text-[9px] uppercase tracking-widest shadow-md">
+                            Rekomendasi
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="serif text-3xl font-medium text-[#1a1a1a]">Pro Vault</h3>
+                                <span class="px-3 py-1 rounded-full bg-amber-100 text-[var(--gold-dark)] text-[9px] uppercase tracking-widest font-bold">Super Storage</span>
+                            </div>
+                            <div class="mb-6">
+                                <span class="serif text-4xl font-semibold text-[#1a1a1a]">Rp 29.000</span>
+                                <span class="text-xs text-gray-400 font-light">/ bulan</span>
+                            </div>
+                            <ul class="space-y-4 mb-8 text-xs text-gray-600">
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Kapasitas Ekstra <strong class="text-[#1a1a1a]">100GB Storage</strong></span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Foto Kualitas Asli (RAW / Uncompressed)</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Backup Otomatis Galeri Kamera</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i data-lucide="check" class="w-4 h-4 text-[var(--gold)] shrink-0"></i>
+                                    <span>Dukungan Prioritas VIP 24/7</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openUpgradeModal()" class="w-full py-4 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] text-xs font-bold uppercase tracking-widest text-center transition shadow-lg">
+                            Upgrade Ke Pro
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Feature Comparison Matrix -->
+                <div class="glass rounded-[2rem] p-6 sm:p-8 max-w-4xl mx-auto border border-white/80 overflow-x-auto">
+                    <h3 class="serif text-xl font-semibold text-[#1a1a1a] mb-6 text-center">Tabel Perbandingan Paket</h3>
+                    <table class="w-full text-xs text-left">
+                        <thead>
+                            <tr class="border-b border-gray-200/60 text-[10px] uppercase tracking-widest text-gray-400">
+                                <th class="py-3 px-4 font-bold">Fitur Storage</th>
+                                <th class="py-3 px-4 font-bold text-center">Gratis</th>
+                                <th class="py-3 px-4 font-bold text-center text-[var(--gold-dark)]">Pro Vault</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-700">Kapasitas Penyimpanan</td>
+                                <td class="py-3 px-4 text-center font-semibold text-gray-600">15 GB</td>
+                                <td class="py-3 px-4 text-center font-bold text-[var(--gold-dark)]">100 GB</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-700">Enkripsi End-to-End</td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-700">Akses Multi-Device</td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-700">Simpan Foto RAW & Uncompressed</td>
+                                <td class="py-3 px-4 text-center text-gray-300">&mdash;</td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-medium text-gray-700">Auto Backup Camera Roll</td>
+                                <td class="py-3 px-4 text-center text-gray-300">&mdash;</td>
+                                <td class="py-3 px-4 text-center"><i data-lucide="check" class="w-4 h-4 text-emerald-500 mx-auto"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-16 sm:py-24 bg-white/40 border-t border-gray-100">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-xl mx-auto mb-12">
+                    <p class="text-[9px] uppercase tracking-[0.3em] text-[var(--gold)] font-bold mb-2">Help Center</p>
+                    <h2 class="serif text-3xl sm:text-4xl italic font-medium text-[#1a1a1a]">Pertanyaan Umum (FAQ)</h2>
+                    <p class="mt-2 text-xs text-gray-500">Temukan jawaban atas pertanyaan yang paling sering diajukan mengenai FotoCloud.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="glass-card rounded-2xl p-5 cursor-pointer select-none transition-all" onclick="toggleFaq(1)">
+                        <div class="flex items-center justify-between">
+                            <h3 class="serif text-sm font-semibold text-[#1a1a1a]">Apakah foto saya aman dan tidak akan bocor?</h3>
+                            <i id="faq-icon-1" data-lucide="chevron-down" class="w-4 h-4 text-[var(--gold)] transition-transform duration-300"></i>
+                        </div>
+                        <div id="faq-content-1" class="hidden mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Sangat aman. Seluruh foto yang diunggah dienkripsi menggunakan protokol keamanan tingkat tinggi. Hanya akun Anda yang memegang hak otentikasi untuk membuka dan mengunduh berkas tersebut.
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="glass-card rounded-2xl p-5 cursor-pointer select-none transition-all" onclick="toggleFaq(2)">
+                        <div class="flex items-center justify-between">
+                            <h3 class="serif text-sm font-semibold text-[#1a1a1a]">Bagaimana jika kapasitas 15GB gratis saya habis?</h3>
+                            <i id="faq-icon-2" data-lucide="chevron-down" class="w-4 h-4 text-[var(--gold)] transition-transform duration-300"></i>
+                        </div>
+                        <div id="faq-content-2" class="hidden mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Anda tetap dapat mengakses seluruh foto yang sudah disimpan tanpa batasan waktu. Jika membutuhkan ruang tambahan, Anda dapat kapan saja mengupgrade ke paket Pro Vault 100GB seharga Rp29.000/bulan.
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="glass-card rounded-2xl p-5 cursor-pointer select-none transition-all" onclick="toggleFaq(3)">
+                        <div class="flex items-center justify-between">
+                            <h3 class="serif text-sm font-semibold text-[#1a1a1a]">Apakah saya bisa mengakses FotoCloud dari HP tanpa aplikasi?</h3>
+                            <i id="faq-icon-3" data-lucide="chevron-down" class="w-4 h-4 text-[var(--gold)] transition-transform duration-300"></i>
+                        </div>
+                        <div id="faq-content-3" class="hidden mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Ya! FotoCloud didesain sebagai Web App responsif tinggi (*Progressive Web Experience*). Anda bisa mengakses galeri dan mengunggah foto langsung dari browser Safari, Chrome, atau Mobile Browser lainnya.
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="glass-card rounded-2xl p-5 cursor-pointer select-none transition-all" onclick="toggleFaq(4)">
+                        <div class="flex items-center justify-between">
+                            <h3 class="serif text-sm font-semibold text-[#1a1a1a]">Format berkas foto apa saja yang didukung?</h3>
+                            <i id="faq-icon-4" data-lucide="chevron-down" class="w-4 h-4 text-[var(--gold)] transition-transform duration-300"></i>
+                        </div>
+                        <div id="faq-content-4" class="hidden mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500 leading-relaxed">
+                            Kami mendukung semua format populer seperti JPG, PNG, WEBP, GIF, HEIC (iPhone), serta format kamera profesional seperti RAW dan DNG pada paket Pro.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto py-12 border-t border-gray-200/60 bg-white/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center">
+                        <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
+                    </div>
+                    <span class="serif text-lg italic font-semibold text-[#1a1a1a]">FotoCloud</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-1">
+                    <div class="serif italic text-xs text-gray-400 text-center">
+                        FotoCloud Luxury Archive &bull; Crafted by FotoCloud Development
+                    </div>
+                    <!-- Server System Status Indicator -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] font-mono text-emerald-700">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Server Online &bull; 99.9% Uptime</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 text-[10px] uppercase tracking-widest text-gray-500 font-medium">
+                    <a href="#" class="hover:text-[var(--gold)] transition">Kebijakan Privasi</a>
+                    <a href="#" class="hover:text-[var(--gold)] transition">Ketentuan Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: AUTH MODAL (LOGIN / REGISTER) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border border-white/40 shadow-2xl relative text-center">
+            <button onclick="closeAuthModal()" class="absolute top-6 right-6 text-gray-400 hover:text-[#1a1a1a]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-12 h-12 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-gray-100 shadow-sm">
+                <i data-lucide="lock" class="w-5 h-5 text-[var(--gold)]"></i>
+            </div>
+            <p class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mb-1">Firebase Authentication</p>
+            <h3 id="modal-title" class="serif text-2xl font-semibold text-[#1a1a1a] mb-6">Masuk ke FotoCloud</h3>
+
+            <!-- Google Sign-In Button (Firebase Auth) -->
+            <button onclick="loginWithGoogle()" class="w-full py-3.5 px-4 mb-4 rounded-2xl bg-white hover:bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 flex items-center justify-center gap-3 transition shadow-sm hover:shadow active:scale-98">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                Lanjutkan dengan Google
+            </button>
+
+            <!-- Demo Quick Options -->
+            <div class="bg-white/60 p-4 rounded-2xl border border-gray-100 mb-5">
+                <p class="text-[9px] text-gray-400 font-bold tracking-widest uppercase mb-2">LOGIN DEMO DENGAN SATU KLIK:</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="loginDemo('budi', 'Budi')" class="py-2.5 px-3 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-[#1a1a1a] flex items-center justify-center gap-1.5 transition shadow-sm">
+                        <i data-lucide="user" class="w-3.5 h-3.5 text-[var(--gold)]"></i> Budi
+                    </button>
+                    <button onclick="loginDemo('sari', 'Sari')" class="py-2.5 px-3 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold text-[#1a1a1a] flex items-center justify-center gap-1.5 transition shadow-sm">
+                        <i data-lucide="user" class="w-3.5 h-3.5 text-[var(--gold)]"></i> Sari
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative flex py-2 items-center mb-4">
+                <div class="flex-grow border-t border-gray-200"></div>
+                <span class="flex-shrink mx-3 text-[9px] text-gray-400 font-bold uppercase tracking-widest">Nama Kustom</span>
+                <div class="flex-grow border-t border-gray-200"></div>
+            </div>
+
+            <!-- Custom Username Input Form -->
+            <form onsubmit="handleCustomLogin(event)" class="space-y-4">
+                <div>
+                    <input type="text" id="custom-username" required placeholder="Masukkan nama pengguna..." class="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 text-[#1a1a1a] placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[var(--gold)] text-xs text-center">
+                </div>
+                <button type="submit" class="w-full py-4 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] font-bold text-xs uppercase tracking-widest shadow-md transition">
+                    Masuk Sekali Klik
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: GANTI NAMA PROFIL -->
+    <div id="rename-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border border-white/40 shadow-2xl relative text-center">
+            <button onclick="closeRenameModal()" class="absolute top-6 right-6 text-gray-400 hover:text-[#1a1a1a]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-12 h-12 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-gray-100 shadow-sm">
+                <i data-lucide="edit-3" class="w-5 h-5 text-[var(--gold)]"></i>
+            </div>
+            <p class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mb-1">Update Identity</p>
+            <h3 class="serif text-2xl font-semibold text-[#1a1a1a] mb-4">Ganti Nama Profil</h3>
+
+            <form onsubmit="saveNewName(event)" class="space-y-4">
+                <div>
+                    <input type="text" id="new-name-input" required class="w-full px-4 py-3 rounded-2xl bg-white border border-gray-200 text-[#1a1a1a] focus:outline-none focus:ring-1 focus:ring-[var(--gold)] text-xs text-center">
+                </div>
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeRenameModal()" class="flex-1 py-3 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold uppercase tracking-wider">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 py-3 bg-[#1a1a1a] text-[var(--gold)] rounded-full text-xs font-semibold uppercase tracking-wider shadow-sm">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: NOTIFIKASI UPGRADE PRO -->
+    <div id="upgrade-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] text-center border border-white/40 shadow-2xl">
+            <div class="w-14 h-14 rounded-full bg-amber-100 text-[var(--gold)] border border-amber-200 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="crown" class="w-7 h-7"></i>
+            </div>
+            <p class="text-[9px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mb-1">VIP Storage Upgrade</p>
+            <h3 class="serif text-2xl font-semibold text-[#1a1a1a] mb-2">Upgrade Pro 100GB</h3>
+            <p class="text-xs text-gray-500 mb-6 leading-relaxed">Fitur upgrade penyimpanan Pro siap dihubungkan ke payment gateway pilihan Anda.</p>
+            <button onclick="closeUpgradeModal()" class="w-full py-4 rounded-full bg-[#1a1a1a] text-[var(--gold)] font-semibold text-xs uppercase tracking-widest shadow-md">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- FIREBASE AUTHENTICATION SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            GoogleAuthProvider, 
+            signInWithPopup, 
+            onAuthStateChanged, 
+            signOut,
+            updateProfile 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Konfigurasi Firebase dari Environment atau Fallback Demo
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : {
+                apiKey: "AIzaSyDemoConfigKeyForFotoCloud2026",
+                authDomain: "fotocloud-demo.firebaseapp.com",
+                projectId: "fotocloud-demo",
+                storageBucket: "fotocloud-demo.appspot.com",
+                messagingSenderId: "123456789",
+                appId: "1:123456789:web:fotocloud2026"
+            };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Auto authenticate dengan token jika ada dari lingkungan server
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            signInWithCustomToken(auth, __initial_auth_token).catch((err) => {
+                console.warn("Custom token auth fallback to anonymous:", err);
+            });
+        }
+
+        // Listen Perubahan Status Autentikasi Firebase
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const displayName = user.displayName || user.email?.split('@')[0] || localStorage.getItem('user_name') || 'Pengguna';
+                localStorage.setItem('user_id', user.uid);
+                localStorage.setItem('user_name', displayName);
+                updateUI(user.uid, displayName);
+            } else {
+                // Jika logout dari Firebase Auth, periksa fallback localStorage
+                const localId = localStorage.getItem('user_id');
+                const localName = localStorage.getItem('user_name');
+                if (localId && localName) {
+                    updateUI(localId, localName);
+                } else {
+                    updateUI(null, '');
+                }
+            }
+        });
+
+        // Handler Login Google Firebase
+        window.loginWithGoogle = async function() {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const name = user.displayName || user.email?.split('@')[0] || 'User Google';
+                localStorage.setItem('user_id', user.uid);
+                localStorage.setItem('user_name', name);
+                closeAuthModal();
+                updateUI(user.uid, name);
+            } catch (error) {
+                console.warn("Google popup error, fallback to demo mode:", error);
+                // Fallback login jika popup google diblokir iFrame
+                window.loginDemo('google_demo', 'Google User');
+            }
+        };
+
+        // Handler Login Demo / Anonymous via Firebase
+        window.loginDemo = async function(id, name) {
+            try {
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+                if (auth.currentUser) {
+                    await updateProfile(auth.currentUser, { displayName: name });
+                    localStorage.setItem('user_id', auth.currentUser.uid);
+                    localStorage.setItem('user_name', name);
+                    updateUI(auth.currentUser.uid, name);
+                }
+            } catch (err) {
+                console.warn("Firebase Anonymous Auth fallback:", err);
+                localStorage.setItem('user_id', id);
+                localStorage.setItem('user_name', name);
+                updateUI(id, name);
+            }
+            closeAuthModal();
+        };
+
+        // Handler Form Custom Username Login
+        window.handleCustomLogin = async function(e) {
+            e.preventDefault();
+            const inputName = document.getElementById('custom-username').value.trim();
+            if (inputName) {
+                const customId = 'user_' + inputName.toLowerCase().replace(/\s+/g, '_');
+                await window.loginDemo(customId, inputName);
+            }
+        };
+
+        // Logout Sesi Firebase & LocalStorage
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+            } catch (e) {
+                console.warn("SignOut error:", e);
+            }
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('user_name');
+            updateUI(null, '');
+        };
+
+        // Simpan Nama Baru
+        window.saveNewName = async function(e) {
+            e.preventDefault();
+            const newName = document.getElementById('new-name-input').value.trim();
+            if (newName) {
+                if (auth.currentUser) {
+                    try {
+                        await updateProfile(auth.currentUser, { displayName: newName });
+                    } catch (err) {
+                        console.warn("Update profile error:", err);
+                    }
+                }
+                localStorage.setItem('user_name', newName);
+                closeRenameModal();
+                updateUI(localStorage.getItem('user_id'), newName);
+            }
+        };
+
+        function updateUI(userId, userName) {
+            const navContainer = document.getElementById('nav-right-container');
+            const banner = document.getElementById('logged-in-banner');
+            const bannerUserName = document.getElementById('banner-user-name');
+            const heroCtaBtn = document.getElementById('hero-cta-btn');
+
+            if (userId) {
+                if (banner) {
+                    banner.classList.remove('hidden');
+                    if (bannerUserName) bannerUserName.textContent = userName;
+                }
+
+                if (navContainer) {
+                    navContainer.innerHTML = `
+                        <div class="hidden sm:flex flex-col items-end mr-1 text-right">
+                            <span class="text-[8px] uppercase tracking-widest text-gray-400 font-bold">Terpakai</span>
+                            <div class="flex items-center gap-1 text-xs font-bold text-[var(--gold)]">
+                                <i data-lucide="hard-drive" class="w-3 h-3"></i>
+                                <span>3GB / 15GB</span>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <button onclick="toggleDropdown()" class="flex items-center space-x-2 p-1.5 pr-3 rounded-full bg-white border border-gray-200/80 shadow-sm hover:border-[var(--gold)] transition">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userName)}" alt="Avatar" class="w-7 h-7 rounded-full bg-amber-50">
+                                <span class="serif text-xs font-semibold text-[#1a1a1a] max-w-[90px] truncate">Halo, ${escapeHtml(userName)}</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400"></i>
+                            </button>
+
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-3 w-52 glass rounded-2xl shadow-xl border border-white/80 py-2 z-50">
+                                <div class="px-4 py-2 border-b border-gray-100">
+                                    <p class="text-[8px] uppercase tracking-widest text-gray-400">Status Sesi Firebase</p>
+                                    <p class="serif text-xs font-bold text-[var(--gold)] truncate">${escapeHtml(userName)}</p>
+                                </div>
+                                
+                                <a href="app.html" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#1a1a1a] hover:bg-amber-50/50 transition">
+                                    <i data-lucide="folder-git-2" class="w-4 h-4 text-[var(--gold)]"></i> Buka Storage Vault
+                                </a>
+
+                                <button onclick="triggerChangeName('${escapeHtml(userName)}')" class="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition">
+                                    <i data-lucide="edit-3" class="w-4 h-4 text-gray-400"></i> Ganti Nama Profil
+                                </button>
+
+                                <div class="border-t border-gray-100 my-1"></div>
+
+                                <button onclick="logout()" class="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-rose-500 hover:bg-rose-50 transition">
+                                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout Sesi
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (heroCtaBtn) {
+                    heroCtaBtn.setAttribute('href', 'app.html');
+                    heroCtaBtn.onclick = null;
+                    heroCtaBtn.innerHTML = `
+                        <i data-lucide="shield" class="w-4 h-4 text-[var(--gold)]"></i>
+                        Buka Vault Saya (${escapeHtml(userName)})
+                    `;
+                }
+
+            } else {
+                if (banner) banner.classList.add('hidden');
+
+                if (navContainer) {
+                    navContainer.innerHTML = `
+                        <button onclick="openAuthModal('login')" class="px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider text-gray-600 hover:text-[#1a1a1a] transition">
+                            Login
+                        </button>
+                        <button onclick="openAuthModal('register')" class="px-5 py-2 rounded-full bg-[#1a1a1a] hover:bg-black text-[var(--gold)] text-xs font-bold uppercase tracking-widest shadow-md transition">
+                            Daftar
+                        </button>
+                    `;
+                }
+
+                if (heroCtaBtn) {
+                    heroCtaBtn.setAttribute('href', '#');
+                    heroCtaBtn.onclick = function(e) {
+                        e.preventDefault();
+                        openAuthModal('login');
+                    };
+                    heroCtaBtn.innerHTML = `
+                        <i data-lucide="shield" class="w-4 h-4 text-[var(--gold)]"></i>
+                        Buka Vault Saya
+                    `;
+                }
+            }
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Global UI Event Helpers
+        window.toggleFaq = function(id) {
+            const content = document.getElementById(`faq-content-${id}`);
+            const icon = document.getElementById(`faq-icon-${id}`);
+            if (content) {
+                const isHidden = content.classList.contains('hidden');
+                document.querySelectorAll('[id^="faq-content-"]').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('[id^="faq-icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
+
+                if (isHidden) {
+                    content.classList.remove('hidden');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            }
+        };
+
+        window.toggleDropdown = function() {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+        };
+
+        window.triggerChangeName = function(currentName) {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+            openRenameModal(currentName);
+        };
+
+        window.openRenameModal = function(currentName) {
+            const modal = document.getElementById('rename-modal');
+            const input = document.getElementById('new-name-input');
+            input.value = currentName || localStorage.getItem('user_name') || '';
+            modal.classList.remove('hidden');
+        };
+
+        window.closeRenameModal = function() {
+            document.getElementById('rename-modal').classList.add('hidden');
+        };
+
+        window.openAuthModal = function(mode) {
+            const modal = document.getElementById('auth-modal');
+            const modalTitle = document.getElementById('modal-title');
+            if (modalTitle) {
+                modalTitle.textContent = mode === 'register' ? 'Daftar Akun FotoCloud' : 'Masuk ke FotoCloud';
+            }
+            modal.classList.remove('hidden');
+        };
+
+        window.closeAuthModal = function() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        };
+
+        window.scrollToDemo = function() {
+            const demoSec = document.getElementById('demo-section');
+            if (demoSec) demoSec.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.openUpgradeModal = function() {
+            document.getElementById('upgrade-modal').classList.remove('hidden');
+        };
+
+        window.closeUpgradeModal = function() {
+            document.getElementById('upgrade-modal').classList.add('hidden');
+        };
+
+        function escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (e) => {
+            const navRight = document.getElementById('nav-right-container');
+            if (navRight && !navRight.contains(e.target)) {
+                const dropdown = document.getElementById('user-dropdown');
+                if (dropdown) dropdown.classList.add('hidden');
+            }
+        });
+
+        // Initialize Lucide icons on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
