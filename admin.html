@@ -23,6 +23,37 @@
 @media(max-width:760px){.side{left:-270px;transition:.25s}.side.open{left:12px}.main{margin-left:0;padding:18px}.mobile{display:block}.top h1{font-size:24px}.photos{grid-template-columns:repeat(2,1fr)}.albums{grid-template-columns:1fr}}
 @media(max-width:420px){.stats{grid-template-columns:1fr}}
 </style>
+
+<style>
+/* Premium refinement */
+:root{
+ --gold:#a9782f;--gold2:#e2c47e;--ink:#27231d;--muted:#7f7768;
+ --glass:rgba(255,253,248,.72);--line:rgba(73,55,26,.11)
+}
+.btn{padding:8px 12px!important;border-radius:11px!important;font-size:12px!important}
+.top .btn{min-height:34px}
+.premium-tools{display:flex;gap:8px;flex-wrap:wrap}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi{padding:17px 18px;border:1px solid var(--line);border-radius:18px;background:var(--glass);
+backdrop-filter:blur(22px);box-shadow:0 12px 35px rgba(50,35,10,.055);position:relative;overflow:hidden}
+.kpi:after{content:"";position:absolute;width:90px;height:90px;right:-35px;top:-35px;border-radius:50%;
+background:radial-gradient(circle,var(--gold2),transparent 68%);opacity:.3}
+.kpi small{color:var(--muted);font-size:11px}.kpi strong{display:block;font-size:24px;margin-top:6px}
+.kpi span{font-size:10px;color:var(--green)}
+.action-row{display:flex;gap:7px;flex-wrap:wrap}
+.select,.input{border:1px solid var(--line);background:#fff9;border-radius:11px;padding:9px 11px;font-size:12px;outline:0}
+.security-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.security-item{padding:15px;border:1px solid var(--line);border-radius:16px;background:#fff7}
+.security-item strong{display:block;font-size:13px;margin-bottom:5px}.security-item small{color:var(--muted);line-height:1.5}
+.good{color:var(--green)}.warn{color:#a87526}.bad{color:var(--red)}
+.user-actions{display:flex;gap:5px;flex-wrap:wrap}
+.user-actions .btn{font-size:10px!important;padding:6px 8px!important}
+.quota-box{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.audit-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:6px}
+@media(max-width:1050px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.kpi-grid,.security-grid,.quota-box{grid-template-columns:1fr}.premium-tools{width:100%}}
+</style>
+
 </head>
 <body>
 <div id="loading"><div class="spin"></div><strong>Memeriksa akses administrator</strong><small id="loadingText">Menghubungkan ke Supabase...</small></div>
@@ -34,7 +65,7 @@
   <nav class="nav">
     <button class="active" data-page="dashboard">Dashboard</button><button data-page="users">Users</button>
     <button data-page="photos">Photos</button><button data-page="albums">Albums</button>
-    <button data-page="storage">Storage</button><button data-page="activity">Activity</button>
+    <button data-page="storage">Storage</button><button data-page="quotas">Quotas</button><button data-page="security">Security</button><button data-page="audit">Audit Log</button><button data-page="settings">Settings</button><button data-page="activity">Activity</button>
   </nav>
   <div class="bottom"><div class="admin"><div class="avatar" id="avatar">A</div><div><b id="email">Admin</b><small>Administrator</small></div></div><button class="btn ghost" style="width:100%" id="logout">Keluar</button></div>
 </aside>
@@ -53,11 +84,70 @@
 <div class="panel"><div class="head"><div><h2>Foto terbaru</h2><small>5 item terakhir</small></div></div><div id="recent" class="empty">Memuat...</div></div></div>
 </section>
 
-<section class="page" id="page-users"><div class="panel"><div class="head"><h2>Users & Roles</h2><small>Data user_roles</small></div><input class="search" id="userSearch" placeholder="Cari user ID atau role..."><div class="table"><table><thead><tr><th>User ID</th><th>Role</th><th>Dibuat</th></tr></thead><tbody id="usersTable"></tbody></table></div></div></section>
+<section class="page" id="page-users"><div class="panel"><div class="head"><h2>Users & Roles</h2><small>Data user_roles</small></div><input class="search" id="userSearch" placeholder="Cari user ID atau role..."><div class="table"><table><thead><tr><th>User ID</th><th>Role</th><th>Dibuat</th><th>Aksi</th></tr></thead><tbody id="usersTable"></tbody></table></div></div></section>
 <section class="page" id="page-photos"><div class="panel"><div class="head"><h2>Photos</h2><small>Thumbnail dan preview</small></div><input class="search" id="photoSearch" placeholder="Cari nama/path..."><div class="photos" id="photos"></div></div></section>
 <section class="page" id="page-albums"><div class="panel"><div class="head"><h2>Albums</h2><small>Album pengguna</small></div><div class="albums" id="albums"></div></div></section>
 <section class="page" id="page-storage"><div class="panel"><div class="head"><h2>Storage</h2><small>Ringkasan berdasarkan tabel photos</small></div><div class="stats"><div class="stat"><small>Total file</small><strong id="stFiles">—</strong></div><div class="stat"><small>Total</small><strong id="stTotal">—</strong></div><div class="stat"><small>Rata-rata</small><strong id="stAvg">—</strong></div><div class="stat"><small>Bucket</small><strong>photos</strong></div></div></div></section>
 <section class="page" id="page-activity"><div class="panel"><div class="head"><h2>Activity</h2><small>Foto dan album terbaru</small></div><div class="table"><table><thead><tr><th>Jenis</th><th>ID</th><th>User</th><th>Waktu</th></tr></thead><tbody id="activity"></tbody></table></div></div></section>
+
+<section class="page" id="page-security">
+  <div class="panel">
+    <div class="head">
+      <div><h2>Security Center</h2><small>Status keamanan dashboard</small></div>
+      <span class="badge">Protected</span>
+    </div>
+    <div class="security-grid">
+      <div class="security-item"><strong>Admin authentication</strong><small class="good">Aktif — role admin diverifikasi melalui server/database.</small></div>
+      <div class="security-item"><strong>Frontend secrets</strong><small class="good">Tidak menggunakan service_role key di browser.</small></div>
+      <div class="security-item"><strong>Password protection</strong><small class="good">Password user tidak pernah ditampilkan atau dibaca admin.</small></div>
+      <div class="security-item"><strong>Session monitoring</strong><small class="good">Perubahan sesi dipantau oleh Supabase Auth listener.</small></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="head"><div><h2>Security checklist</h2><small>Rekomendasi untuk production</small></div></div>
+    <div class="table"><table><tbody>
+      <tr><td>RLS pada tabel aplikasi</td><td><span class="badge">Wajib</span></td></tr>
+      <tr><td>Admin actions melalui Edge Function/RPC</td><td><span class="badge">Wajib</span></td></tr>
+      <tr><td>Audit log untuk tindakan admin</td><td><span class="badge">Disarankan</span></td></tr>
+      <tr><td>Service role hanya di server</td><td><span class="badge">Wajib</span></td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="page" id="page-quotas">
+  <div class="panel">
+    <div class="head"><div><h2>Storage Quotas</h2><small>Panel quota — perubahan aktual harus diproses backend/RPC aman</small></div></div>
+    <div class="quota-box">
+      <div class="kpi"><small>Default quota</small><strong id="defaultQuota">5 GB</strong><span>Contoh konfigurasi UI</span></div>
+      <div class="kpi"><small>Quota terpakai</small><strong id="quotaUsed">—</strong><span>Dari data photos</span></div>
+    </div>
+    <div style="margin-top:14px" class="action-row">
+      <button class="btn primary" onclick="showQuotaNotice()">Atur quota user</button>
+      <button class="btn ghost" onclick="toast('Fitur quota memerlukan Edge Function/RPC admin')">Konfigurasi default</button>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-audit">
+  <div class="panel">
+    <div class="head"><div><h2>Audit Log</h2><small>Aktivitas admin yang tercatat pada dashboard ini</small></div>
+      <button class="btn ghost" onclick="clearLocalAudit()">Bersihkan tampilan</button>
+    </div>
+    <div class="table"><table><thead><tr><th>Event</th><th>Admin</th><th>Waktu</th></tr></thead>
+    <tbody id="auditTable"></tbody></table></div>
+  </div>
+</section>
+
+<section class="page" id="page-settings">
+  <div class="panel">
+    <div class="head"><div><h2>System Settings</h2><small>Pengaturan tampilan dan operasional</small></div></div>
+    <div class="security-grid">
+      <div class="security-item"><strong>Maintenance mode</strong><small>Kontrol ini hanya UI. Untuk produksi, simpan konfigurasi di database/RPC.</small><div style="margin-top:9px"><button class="btn ghost" onclick="toast('Maintenance mode membutuhkan backend')">Kelola</button></div></div>
+      <div class="security-item"><strong>Upload policy</strong><small>Batasi MIME type, ukuran file, dan quota di server.</small><div style="margin-top:9px"><button class="btn ghost" onclick="toast('Upload policy harus divalidasi server-side')">Lihat policy</button></div></div>
+    </div>
+  </div>
+</section>
+
 </main></div>
 
 <div class="modal" id="modal"><div class="modalcard"><div class="head"><h2 id="mTitle">Preview</h2><button class="btn ghost" onclick="closeModal()">Tutup</button></div><img id="mImg" alt="Preview"><div style="display:flex;justify-content:space-between;gap:10px;margin-top:13px"><small id="mMeta" style="color:var(--muted)"></small><button class="btn primary" id="download">Download</button></div></div></div>
@@ -111,7 +201,7 @@ function renderAll(){
 }
 function renderChart(){let d=[];for(let i=6;i>=0;i--){let x=new Date();x.setHours(0,0,0,0);x.setDate(x.getDate()-i);d.push(x)}let c=d.map(x=>{let n=new Date(x);n.setDate(n.getDate()+1);return cache.photos.filter(p=>{let q=new Date(p.created_at);return q>=x&&q<n}).length}),m=Math.max(...c,1);$("chart").innerHTML=c.map((n,i)=>`<div class="bw"><div class="bar" style="height:${Math.max(5,n/m*190)}px"></div><div class="label">${d[i].toLocaleDateString("id-ID",{weekday:"short"})}</div></div>`).join("")}
 function renderRecent(){let a=[...cache.photos].sort((x,y)=>new Date(y.created_at)-new Date(x.created_at)).slice(0,5);$("recent").innerHTML=a.length?a.map(p=>`<div style="padding:9px 0;border-bottom:1px solid var(--line)"><b style="font-size:12px">${esc(name(p))}</b><br><small style="color:var(--muted)">${dt(p.created_at)}</small></div>`).join(""):'<div class="empty">Belum ada foto.</div>'}
-function renderUsers(a){$("usersTable").innerHTML=a.length?a.map(x=>`<tr><td>${esc(sid(x.user_id))}</td><td><span class="badge ${x.role==="admin"?"admin":""}">${esc(x.role||"user")}</span></td><td>${dt(x.created_at)}</td></tr>`).join(""):'<tr><td colspan="3"><div class="empty">Belum ada data.</div></td></tr>'}
+function renderUsers(a){$("usersTable").innerHTML=a.length?a.map(x=>`<tr><td>${esc(sid(x.user_id))}</td><td><span class="badge ${x.role==="admin"?"admin":""}">${esc(x.role||"user")}</span></td><td>${dt(x.created_at)}</td><td><div class="user-actions"><button class="btn ghost" onclick="userInfo('${esc(x.user_id)}')">Detail</button><button class="btn ghost" onclick="adminActionNotice('Ubah role')">Role</button><button class="btn ghost" onclick="adminActionNotice('Nonaktifkan user')">Status</button><button class="btn" style="background:#fff0f0;color:var(--red)" onclick="adminActionNotice('Hapus akun')">Hapus</button></div></td></tr>`).join(""):'<tr><td colspan="4"><div class="empty">Belum ada data.</div></td></tr>'}
 async function renderPhotos(a){
  const g=$("photos");if(!a.length){g.innerHTML='<div class="empty">Belum ada foto.</div>';return}
  g.innerHTML=a.map((p,i)=>`<div class="photo" data-i="${i}"><img alt="${esc(name(p))}"><b>${esc(name(p))}</b></div>`).join("");
@@ -119,9 +209,9 @@ async function renderPhotos(a){
  for(let el of [...g.children]){try{let u=await signed(path(a[+el.dataset.i]));if(u)el.querySelector("img").src=u}catch(e){console.warn(e.message)}}
 }
 function renderAlbums(){$("albums").innerHTML=cache.albums.length?cache.albums.map(a=>`<div class="album"><div class="folder">Album</div><h3>${esc(a.name||"Tanpa nama")}</h3><small>User: ${esc(sid(a.user_id))}<br>${dt(a.created_at)}</small></div>`).join(""):'<div class="empty">Belum ada album.</div>'}
-function renderStorage(t){$("stFiles").textContent=cache.photos.length;$("stTotal").textContent=fmt(t);$("stAvg").textContent=fmt(cache.photos.length?t/cache.photos.length:0)}
+function renderStorage(t){$("stFiles").textContent=cache.photos.length;$("stTotal").textContent=fmt(t);$("stAvg").textContent=fmt(cache.photos.length?t/cache.photos.length:0);if($("quotaUsed"))$("quotaUsed").textContent=fmt(t)}
 function renderActivity(){let a=[...cache.photos.map(p=>({t:"Photo",id:p.id,u:p.user_id,d:p.created_at})),...cache.albums.map(p=>({t:"Album",id:p.id,u:p.user_id,d:p.created_at}))].sort((x,y)=>new Date(y.d)-new Date(x.d)).slice(0,50);$("activity").innerHTML=a.length?a.map(x=>`<tr><td><span class="badge">${x.t}</span></td><td>${esc(sid(x.id))}</td><td>${esc(sid(x.u))}</td><td>${dt(x.d)}</td></tr>`).join(""):'<tr><td colspan="4"><div class="empty">Belum ada aktivitas.</div></td></tr>'}
-function page(p){document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+p));let t={dashboard:["Dashboard","Ringkasan aktivitas FotoVault"],users:["Users","Pengguna dan role"],photos:["Photos","Foto pengguna"],albums:["Albums","Album pengguna"],storage:["Storage","Penyimpanan"],activity:["Activity","Aktivitas sistem"]}[p];$("title").textContent=t[0];$("subtitle").textContent=t[1];$("side").classList.remove("open")}
+function page(p){document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+p));let t={dashboard:["Dashboard","Ringkasan aktivitas FotoVault"],users:["Users","Pengguna dan role"],photos:["Photos","Foto pengguna"],albums:["Albums","Album pengguna"],storage:["Storage","Penyimpanan"],quotas:["Quotas","Kapasitas penyimpanan"],security:["Security","Pusat keamanan"],audit:["Audit Log","Riwayat tindakan admin"],settings:["Settings","Pengaturan sistem"],activity:["Activity","Aktivitas sistem"]}[p];$("title").textContent=t[0];$("subtitle").textContent=t[1];$("side").classList.remove("open")}
 async function openPhoto(p){selected=p;$("mTitle").textContent=name(p);$("mMeta").textContent=fmt(p.size)+" · "+dt(p.created_at);$("mImg").src="";$("modal").classList.add("open");try{$("mImg").src=await signed(path(p))}catch(e){toast("Preview gagal: "+e.message)}}
 function closeModal(){$("modal").classList.remove("open");$("mImg").src=""}
 $("download").onclick=async()=>{if(!selected)return;try{let r=await timeout(db.storage.from(BUCKET).download(path(selected)),15000,"Download");if(r.error)throw r.error;let a=document.createElement("a");a.href=URL.createObjectURL(r.data);a.download=name(selected);a.click()}catch(e){toast("Download gagal: "+e.message)}};
@@ -133,6 +223,36 @@ $("photoSearch").oninput=async e=>{let q=e.target.value.toLowerCase();renderPhot
 $("logout").onclick=async()=>{await db.auth.signOut();location.href="index.html"};
 db.auth.onAuthStateChange((e)=>{if(e==="SIGNED_OUT")location.href="index.html"});
 init();
+
+const auditKey="fotovault_admin_audit";
+function audit(event){
+  try{
+    const arr=JSON.parse(localStorage.getItem(auditKey)||"[]");
+    arr.unshift({event,admin:user?.email||"admin",time:new Date().toISOString()});
+    localStorage.setItem(auditKey,JSON.stringify(arr.slice(0,100)));
+    renderAudit();
+  }catch{}
+}
+function renderAudit(){
+  const arr=JSON.parse(localStorage.getItem(auditKey)||"[]");
+  const el=$("auditTable"); if(!el)return;
+  el.innerHTML=arr.length?arr.map(x=>`<tr><td><span class="audit-dot"></span>${esc(x.event)}</td><td>${esc(x.admin)}</td><td>${dt(x.time)}</td></tr>`).join(""):'<tr><td colspan="3"><div class="empty">Belum ada aktivitas admin.</div></td></tr>';
+}
+function clearLocalAudit(){localStorage.removeItem(auditKey);renderAudit();toast("Audit lokal dibersihkan")}
+function adminActionNotice(action){
+  toast(action+" harus melalui Edge Function/RPC yang memverifikasi admin.");
+  audit("Permintaan: "+action);
+}
+function showQuotaNotice(){
+  toast("Perubahan quota harus dilakukan melalui backend/RPC aman.");
+  audit("Membuka pengaturan quota");
+}
+function userInfo(id){
+  alert("User ID: "+id+"\n\nPassword tidak dapat dilihat oleh admin.\nEmail dapat ditampilkan setelah endpoint admin server dibuat.");
+  audit("Melihat detail user");
+}
+
+renderAudit();
 </script>
 </body>
 </html>
