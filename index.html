@@ -2,894 +2,621 @@
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#FAF9F6">
-    <meta name="description" content="FotoVault — Luxury Personal Photo Storage & Encrypted Vault">
-
-    <title>FotoVault | Luxury Photo Vault & Cloud Storage</title>
-
-    <!-- Preconnect Fonts -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoVault — Privat, Aman, Eksklusif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts: Inter & Playfair Display -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght=0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --gold: #C5A059;
-            --gold-light: #F3E2C8;
-            --gold-dark: #9A7730;
-            --bg-warm: #F8F9FA;
-            --ios-card: rgba(255, 255, 255, 0.78);
-            --ios-glass: rgba(255, 255, 255, 0.65);
-            --ios-border: rgba(255, 255, 255, 0.85);
-            --shadow-ios: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+            --gold-light: #E5C889;
+            --gold-gradient: linear-gradient(135deg, #DFBA73 0%, #C5A059 50%, #9E7B36 100%);
+            --ios-bg: #F2F2F7;
+            --ios-card: rgba(255, 255, 255, 0.72);
+            --ios-ease: cubic-bezier(0.32, 0.72, 0, 1);
+            --ios-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; 
-            background-color: var(--bg-warm); 
-            color: #1c1c1e; 
-            overflow-x: hidden; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", sans-serif;
+            background-color: var(--ios-bg);
+            color: #1c1c1e;
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-        
-        .serif { font-family: 'Playfair Display', Georgia, serif; }
-        .text-gold { color: var(--gold); }
-        .bg-gold { background-color: var(--gold); }
-        .border-gold { border-color: var(--gold); }
 
-        /* Modern iOS Glassmorphism Header */
-        .ios-header { 
-            background: rgba(248, 249, 250, 0.78); 
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+        .serif {
+            font-family: 'Playfair Display', Georgia, serif;
         }
 
-        .ios-card {
-            background: var(--ios-card);
+        /* iOS Glassmorphism (Frosted Glass) */
+        .ios-glass {
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(25px) saturate(190%);
             -webkit-backdrop-filter: blur(25px) saturate(190%);
-            border: 1px solid var(--ios-border);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
-            border-radius: 1.75rem;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
-        @media (hover: hover) {
-            .ios-card:hover {
-                transform: translateY(-4px) scale(1.003);
-                border-color: rgba(197, 160, 89, 0.4);
-                box-shadow: 0 16px 40px rgba(197, 160, 89, 0.12);
-            }
+        .ios-glass-dark {
+            background: rgba(24, 24, 27, 0.85);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .luxury-dark {
-            background: rgba(24, 24, 27, 0.92);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(197, 160, 89, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border-radius: 1.75rem;
+        /* iOS Card & Shadow Aesthetics */
+        .ios-card {
+            background: var(--ios-card);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02);
+            transition: transform 0.4s var(--ios-ease), box-shadow 0.4s var(--ios-ease);
         }
 
-        /* iOS FAQ Accordion */
-        .faq-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        .ios-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* iOS Press & Tactile Feedback Animation */
+        .ios-btn {
+            transition: transform 0.2s var(--ios-spring), background-color 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+        }
+
+        .ios-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* iOS Segmented Switch Control */
+        .ios-segmented {
+            background: rgba(118, 118, 128, 0.12);
+            border-radius: 999px;
+            padding: 3px;
             position: relative;
-            overflow: hidden;
+        }
+
+        .ios-segmented-pill {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            width: calc(50% - 3px);
+            background: #ffffff;
+            border-radius: 999px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
+            transition: transform 0.35s var(--ios-spring);
+        }
+
+        /* Dynamic Island Notification Toast */
+        .dynamic-island {
+            transform: translateY(-120%) scale(0.85);
+            opacity: 0;
+            transition: transform 0.5s var(--ios-spring), opacity 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .dynamic-island.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* iOS Accordion Smooth Height Grid */
+        .faq-card {
+            transition: all 0.35s var(--ios-ease);
         }
 
         .faq-card.open {
-            border-color: rgba(197, 160, 89, 0.5);
-            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.1);
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.06);
         }
 
         .accordion-wrapper {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            opacity: 0;
+            transition: grid-template-rows 0.35s var(--ios-ease);
         }
 
-        .accordion-wrapper > div { overflow: hidden; }
+        .accordion-wrapper > div {
+            overflow: hidden;
+        }
 
         .faq-card.open .accordion-wrapper {
             grid-template-rows: 1fr;
-            opacity: 1;
         }
 
-        .accordion-icon {
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+        .faq-card .accordion-icon {
+            transition: transform 0.4s var(--ios-spring);
         }
 
         .faq-card.open .accordion-icon {
             transform: rotate(180deg);
-            background-color: #121212;
-            color: var(--gold);
         }
 
-        /* Shimmer & Glow Animations */
-        .gold-shine-text {
-            background: linear-gradient(120deg, #1a1a1a 0%, #9A7730 25%, #F3E2C8 50%, #C5A059 75%, #1a1a1a 100%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: metallicShimmer 5s linear infinite;
-        }
-
-        @keyframes metallicShimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-
-        @keyframes orbBreathe {
-            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.4; }
-            50% { transform: scale(1.15) translate(10px, -15px); opacity: 0.7; }
-        }
-
-        .hero-orb-1 { animation: orbBreathe 8s ease-in-out infinite; }
-        .hero-orb-2 { animation: orbBreathe 10s ease-in-out infinite reverse; }
-
-        /* Modal iOS Pop-up Spring */
-        .modal-overlay {
+        /* iOS Sheet / Modal Slide Up Animation */
+        .ios-modal-overlay {
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
             backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
+            transition: opacity 0.4s var(--ios-ease), backdrop-filter 0.4s var(--ios-ease);
         }
-        .modal-overlay.active {
+
+        .ios-modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
         }
 
-        .modal-content {
-            transform: scale(0.9) translateY(20px);
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
+        .ios-modal-content {
+            transform: translateY(100%) scale(0.96);
+            transition: transform 0.5s var(--ios-spring);
+            border-radius: 36px 36px 28px 28px;
         }
 
-        /* iOS Form Input styling */
+        @media (min-width: 640px) {
+            .ios-modal-content {
+                border-radius: 32px;
+                transform: translateY(40px) scale(0.92);
+            }
+        }
+
+        .ios-modal-overlay.active .ios-modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        /* iOS Custom Input Focus */
         .ios-input {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            transition: all 0.25s ease;
+            background: rgba(235, 235, 240, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.25s var(--ios-ease);
         }
+
         .ios-input:focus {
             background: #ffffff;
             border-color: var(--gold);
             box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15);
         }
-
-        .nav-item.active {
-            background-color: #121212 !important;
-            color: var(--gold) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        /* iOS Dynamic Toast Notification */
-        .ios-toast {
-            transform: translateY(120%) scale(0.9);
-            opacity: 0;
-            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: rgba(18, 18, 18, 0.88);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-        }
-
-        .ios-toast.show {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-
-        /* Dash Interactive Items */
-        .photo-card-item {
-            animation: iosPopIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes iosPopIn {
-            0% { opacity: 0; transform: scale(0.92) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-[var(--bg-warm)] text-[#1c1c1e] flex flex-col min-h-screen selection:bg-[var(--gold)] selection:text-white relative">
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-200">
 
-    <!-- LANDING & SHOWCASE VIEW -->
-    <section id="authView" class="min-h-screen flex flex-col justify-between relative z-10">
-        
-        <!-- STICKY iOS NAVBAR -->
-        <nav class="w-full px-4 sm:px-8 py-3.5 sticky top-0 z-40 ios-header">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <div class="flex items-center space-x-2.5 select-none cursor-pointer">
-                    <div class="w-9 h-9 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <b class="serif text-lg italic font-semibold leading-none text-[#121212] tracking-tight">FotoVault</b>
-                        <span class="text-[7px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mt-0.5">Luxury Cloud</span>
-                    </div>
-                </div>
-
-                <div class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-wider text-gray-500">
-                    <a href="#fitur" class="hover:text-[var(--gold)] transition-colors">Fitur Utama</a>
-                    <a href="#harga" class="hover:text-[var(--gold)] transition-colors">Paket Kapasitas</a>
-                    <a href="#faq" class="hover:text-[var(--gold)] transition-colors">Bantuan & FAQ</a>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button type="button" data-open-auth="login"
-                        class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/80 active:scale-95 text-gray-800 border border-gray-200 font-semibold text-[11px] tracking-wider uppercase shadow-sm hover:border-[var(--gold)] transition-all duration-300">
-                        <span>Masuk</span>
-                    </button>
-                    <button type="button" data-open-auth="register"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-[11px] tracking-wider uppercase shadow-md hover:bg-black transition-all duration-300">
-                        <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                        <span>Daftar Vault</span>
-                    </button>
-                </div>
+    <!-- DYNAMIC ISLAND TOAST (iOS STYLE TOP BANNER) -->
+    <div class="fixed top-5 inset-x-0 z-50 flex justify-center pointer-events-none px-4">
+        <div id="toast" class="dynamic-island ios-glass-dark px-6 py-3 rounded-full text-white text-xs sm:text-sm font-medium flex items-center gap-3 pointer-events-auto max-w-md">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shrink-0 shadow-md">
+                <svg class="w-3.5 h-3.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                </svg>
             </div>
-        </nav>
+            <span id="toastMessage">Sistem FotoVault Aktif</span>
+        </div>
+    </div>
+
+    <!-- HEADER / NAVIGATION (iOS Frosted Glass Navigation Bar) -->
+    <header class="ios-glass fixed top-0 left-0 right-0 z-40 border-b border-black/[0.04]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-9 h-9 rounded-2xl bg-[#1c1c1e] flex items-center justify-center shadow-lg group-hover:scale-105 transition duration-300">
+                    <svg class="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <span class="serif text-2xl font-bold tracking-tight text-[#1c1c1e]">Foto<span class="text-[var(--gold)] italic">Vault</span></span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-[12px] uppercase tracking-widest font-bold text-stone-500">
+                <a href="#fitur" class="hover:text-black transition-colors">Fitur Utama</a>
+                <a href="#galeri" class="hover:text-black transition-colors">Pratinjau</a>
+                <a href="#harga" class="hover:text-black transition-colors">Keanggotaan</a>
+                <a href="#faq" class="hover:text-black transition-colors">FAQ</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button data-open-auth="login" class="ios-btn px-5 py-2.5 rounded-full text-xs font-semibold text-stone-700 hover:text-black transition">
+                    Masuk
+                </button>
+                <button data-open-auth="register" class="ios-btn px-6 py-2.5 rounded-full text-xs font-bold bg-[#1c1c1e] text-[var(--gold)] shadow-md hover:bg-black transition">
+                    Buka Vault
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-28 pb-16">
 
         <!-- HERO SECTION -->
-        <header class="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-16 pb-12 w-full text-center relative overflow-hidden">
-            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none w-full max-w-4xl h-[420px] flex items-center justify-center">
-                <div class="hero-orb-1 w-72 sm:w-[480px] h-72 sm:h-[480px] bg-gradient-to-tr from-amber-200/40 via-amber-100/30 to-amber-300/20 rounded-full blur-3xl"></div>
-                <div class="hero-orb-2 absolute w-60 sm:w-[380px] h-60 sm:h-[380px] bg-gradient-to-bl from-amber-400/20 via-amber-200/25 to-yellow-100/30 rounded-full blur-2xl"></div>
+        <section class="max-w-7xl mx-auto px-4 sm:px-8 py-10 md:py-16 text-center">
+            <!-- iOS Status Pill -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-amber-50/80 text-[var(--gold)] border border-amber-200/80 mb-6 shadow-sm backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Enkripsi End-to-End iOS & macOS
             </div>
 
-            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 border border-amber-200/80 shadow-sm backdrop-blur-md mb-6 hover:scale-105 transition-transform duration-300 cursor-default">
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--gold)] opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--gold-dark)]"></span>
-                </span>
-                <svg class="w-3.5 h-3.5 text-[var(--gold-dark)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span class="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-dark)] font-extrabold">Enkripsi Kelas Militer AES 256-Bit</span>
-            </div>
-
-            <h1 class="serif text-4xl sm:text-5xl lg:text-6xl italic font-semibold text-[#121212] leading-[1.18] tracking-tight max-w-4xl mx-auto">
-                Ruang Arsip Foto Pribadi Anda <br class="hidden sm:inline">
-                <span class="gold-shine-text font-bold block sm:inline mt-1 sm:mt-0">Mewah, Aman, & Privat</span>
+            <h1 class="serif text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#1c1c1e] max-w-4xl mx-auto leading-[1.15]">
+                Brankas Digital Khas Apple untuk Kenangan Terindah.
             </h1>
 
-            <p class="mt-5 text-xs sm:text-sm text-gray-600 max-w-xl mx-auto font-light leading-relaxed tracking-wide">
-                Simpan setiap kenangan berharga dalam kubah penyimpanan terenkripsi berkecepatan tinggi dengan privasi eksklusif <strong class="text-[#121212] font-medium">Zero-Knowledge</strong>.
+            <p class="mt-6 text-sm sm:text-base text-stone-600 max-w-2xl mx-auto font-light leading-relaxed">
+                Simpan, tata, dan amankan koleksi foto eksklusif Anda dengan keindahan desain khas iOS. Privasi penuh tanpa kompresi file asli.
             </p>
-
-            <div class="mt-8 flex flex-wrap justify-center items-center gap-3.5">
-                <button type="button" data-open-auth="register"
-                    class="px-8 py-4 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-[0.15em] uppercase shadow-xl inline-flex items-center gap-3 group hover:bg-black transition-all duration-300">
-                    <svg class="w-4 h-4 text-[var(--gold)] group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                    <span>Buat Akun Vault Gratis</span>
-                    <svg class="w-3.5 h-3.5 text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button data-open-auth="register" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest shadow-xl">
+                    Mulai Uji Coba Gratis
                 </button>
-
-                <a href="#fitur" 
-                    class="px-8 py-4 rounded-full bg-white/80 backdrop-blur-md border border-amber-200/60 active:scale-95 text-gray-800 font-semibold text-xs tracking-[0.15em] uppercase shadow-sm inline-flex items-center gap-2.5 hover:bg-white hover:border-[var(--gold)] transition-all duration-300">
-                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                    <span>Jelajahi Fitur</span>
+                <a href="#galeri" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-white/80 border border-black/10 text-[#1c1c1e] font-semibold text-xs uppercase tracking-widest shadow-sm">
+                    Jelajahi Galeri
                 </a>
             </div>
 
-            <div class="mt-12 max-w-4xl mx-auto relative">
-                <div class="ios-card p-4 sm:p-5 rounded-[2.5rem]">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=350&q=70" alt="Liburan" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Summer Moments</div>
-                        </div>
-                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=350&q=70" alt="Pernikahan" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Wedding Vault</div>
-                        </div>
-                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=350&q=70" alt="Seni" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Art & Heritage</div>
-                        </div>
-                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=350&q=70" alt="Pesta" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Private Party</div>
+            <!-- iOS Device Frame Preview -->
+            <div class="mt-14 max-w-5xl mx-auto p-3 sm:p-5 ios-glass rounded-[40px] shadow-2xl relative group">
+                <!-- Face ID Badge -->
+                <div class="absolute top-8 left-8 z-10 hidden sm:flex items-center gap-2.5 px-4 py-2 rounded-2xl ios-glass-dark text-white text-xs font-medium shadow-lg">
+                    <svg class="w-4 h-4 text-amber-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span>Terproteksi Face ID</span>
+                </div>
+
+                <div class="relative rounded-[28px] overflow-hidden bg-stone-900 aspect-[16/9] flex items-center justify-center">
+                    <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1600&auto=format&fit=crop" alt="Vault Preview" class="w-full h-full object-cover opacity-85 group-hover:scale-105 transition duration-700 ease-out">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 sm:p-10">
+                        <div class="text-left text-white">
+                            <span class="text-xs uppercase tracking-widest text-[var(--gold)] font-bold">Album Privat & Enkripsi</span>
+                            <h3 class="serif text-2xl sm:text-3xl font-bold mt-1">Portofolio Fotografi Estetika</h3>
                         </div>
                     </div>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <!-- FEATURES SECTION -->
-        <section id="fitur" class="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full relative">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
-                    <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                    Keunggulan Vault
-                </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Mengapa Memilih FotoVault?</h2>
-                <p class="text-xs sm:text-sm text-gray-500 mt-2 font-light leading-relaxed max-w-xl mx-auto">
-                    Standar privasi tertinggi, kecepatan tanpa tanding, dan estetika eksklusif yang dirancang khusus untuk melindungi koleksi memori paling berharga Anda.
-                </p>
+        <!-- FITUR UTAMA -->
+        <section id="fitur" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="serif text-3xl sm:text-4xl font-bold">Keunggulan Standar iOS Vault</h2>
+                <p class="text-xs sm:text-sm text-stone-500 mt-2 font-normal">Didesain dengan perhatian mendalam pada privasi dan keindahan antarmuka.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div class="ios-card p-6 flex flex-col justify-between">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="ios-card p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Privasi Mutlak</span>
+                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 002-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
-                        <h3 class="serif text-lg font-semibold text-[#121212]">Zero-Knowledge Privacy</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Kunci enkripsi <strong class="text-[#121212] font-medium">AES 256-Bit</strong> diolah khusus di perangkat Anda. Tidak ada pihak ketiga yang memiliki akses ke foto Anda.
+                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Enkripsi AES-256</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                            Seluruh berkas dienkripsi lokal sebelum meninggalkan perangkat Anda. Kunci dekripsi hanya tersimpan di Secure Enclave milik Anda.
                         </p>
                     </div>
                 </div>
 
-                <div class="ios-card p-6 flex flex-col justify-between">
+                <!-- Card 2 -->
+                <div class="ios-card p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">100% Ultra HD</span>
+                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
-                        <h3 class="serif text-lg font-semibold text-[#121212]">Preservasi Kualitas Asli</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Bebas kompresi gambar. Seluruh piksel, kejernihan warna, hingga data <strong class="text-[#121212] font-medium">EXIF & RAW</strong> foto asli Anda disimpan sempurna 100%.
+                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Resolusi Asli & RAW</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                            Tanpa penurunan kualitas sedikitpun. Mendukung file ProRAW, HEIC, TIFF, JPEG, hingga data EXIF secara menyeluruh.
                         </p>
                     </div>
                 </div>
 
-                <div class="ios-card p-6 flex flex-col justify-between">
+                <!-- Card 3 -->
+                <div class="ios-card p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Organisasi Rapi</span>
+                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         </div>
-                        <h3 class="serif text-lg font-semibold text-[#121212]">Album & Galeri Kustom</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Kelompokkan momen pernikahan, liburan, hingga arsip karya seni dalam album kustom berdesain minimalis khas iOS.
+                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Face ID & Passcode</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                            Proteksi akses dua lapis menggunakan autentikasi Biometrik Touch ID / Face ID dengan animasi transisi yang halus.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- PRICING SECTION -->
-        <section id="harga" class="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full relative">
-            <div class="text-center max-w-xl mx-auto mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
-                    <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    Kapasitas & Biaya
-                </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Pilih Paket Storage Eksklusif</h2>
+        <!-- PRATINJAU GALERI -->
+        <section id="galeri" class="max-w-7xl mx-auto px-4 sm:px-8 py-16">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="serif text-3xl sm:text-4xl font-bold">Galeri Foto Responsif</h2>
+                <p class="text-xs sm:text-sm text-stone-500 mt-2">Pratinjau antarmuka album visual yang bersih dan modern.</p>
+            </div>
 
-                <div class="mt-6 inline-flex items-center p-1.5 rounded-full bg-white/80 border border-black/5 shadow-sm backdrop-blur-md">
-                    <button id="btnMonthly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300">
-                        Bulanan
-                    </button>
-                    <button id="btnYearly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212] flex items-center gap-1.5">
-                        <span>Tahunan</span>
-                        <span class="px-2 py-0.5 rounded-full bg-amber-100 text-[var(--gold-dark)] text-[9px] font-extrabold uppercase tracking-wider">Hemat 20%</span>
-                    </button>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 1">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <span class="text-xs font-semibold text-white">Alam & Lanskap</span>
+                    </div>
+                </div>
+
+                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 2">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <span class="text-xs font-semibold text-white">Kabut Pegunungan</span>
+                    </div>
+                </div>
+
+                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 3">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <span class="text-xs font-semibold text-white">Hutan Pinus</span>
+                    </div>
+                </div>
+
+                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                    <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 4">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <span class="text-xs font-semibold text-white">Lembah & Danau</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HARGA / KEANGGOTAAN -->
+        <section id="harga" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="serif text-3xl sm:text-4xl font-bold">Pilih Keanggotaan Vault</h2>
+                <p class="text-xs sm:text-sm text-stone-500 mt-2">Pilih paket sesuai kebutuhan penyimpanan privat Anda.</p>
+
+                <!-- iOS Segmented Control Switcher -->
+                <div class="mt-8 inline-flex items-center">
+                    <div class="ios-segmented flex items-center w-72 h-11">
+                        <div id="segmentedPill" class="ios-segmented-pill"></div>
+                        <button id="btnMonthly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-black">
+                            Bulanan
+                        </button>
+                        <button id="btnYearly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-stone-500 flex items-center justify-center gap-1">
+                            Tahunan <span class="bg-amber-100 text-[var(--gold)] text-[9px] px-1.5 py-0.5 rounded-full uppercase font-black">Hemat 20%</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                <!-- Card 1 -->
-                <div class="ios-card p-6 sm:p-7 flex flex-col justify-between">
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Plan 1 -->
+                <div class="ios-card p-8 sm:p-10 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-bold">Uji Coba Gratis</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-stone-400">Standard Tier</span>
+                        <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Personal Vault</h3>
+                        <div class="mt-4 flex items-baseline">
+                            <span id="priceGold" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 49.000</span>
+                            <span id="periodGold" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
                         </div>
-                        <h3 class="serif text-xl font-semibold text-[#121212]">Essential Vault</h3>
-                        <div class="my-6 pt-4 border-t border-gray-100">
-                            <span class="serif text-3xl sm:text-4xl font-bold text-[#121212]">Rp 0</span>
-                            <span class="text-xs text-gray-400 font-light">/ selamanya</span>
-                        </div>
-                        <ul class="space-y-3.5 text-xs text-gray-600 mb-8 font-light">
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong>1 GB</strong></li>
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Enkripsi AES 256-Bit</li>
+                        <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Penyimpanan Enkripsi 500 GB
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Dukungan Formats HEIC & Live Photo
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Sinkronisasi iCloud & iOS App
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Autentikasi Face ID / Touch ID
+                            </li>
                         </ul>
                     </div>
-                    <button type="button" data-open-auth="register" class="w-full py-3.5 rounded-full bg-gray-100 active:scale-95 text-[#121212] hover:bg-gray-200 text-xs font-bold uppercase tracking-widest transition duration-300">
-                        Mulai Gratis
+                    <button data-open-auth="register" onclick="showToast('Memilih paket Personal Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-stone-200/80 text-[#1c1c1e] font-bold text-xs uppercase tracking-widest hover:bg-stone-300">
+                        Pilih Paket
                     </button>
                 </div>
 
-                <!-- Card 2 VIP -->
-                <div class="luxury-dark p-6 sm:p-7 flex flex-col justify-between relative shadow-2xl border-2 border-[var(--gold)]/80 scale-[1.02]">
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-200 to-[var(--gold)] text-[#121212] text-[9px] uppercase tracking-widest font-black shadow-lg">
-                        Terpopuler VIP
+                <!-- Plan 2 -->
+                <div class="ios-card p-8 sm:p-10 border-2 border-[var(--gold)] flex flex-col justify-between relative overflow-hidden bg-white/90 shadow-2xl">
+                    <div class="absolute top-5 right-5 bg-[#1c1c1e] text-[var(--gold)] text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                        Pilihan Utama
                     </div>
                     <div>
-                        <h3 class="serif text-xl font-semibold text-white mt-2">Gold Privé</h3>
-                        <div class="my-6 pt-4 border-t border-amber-500/20">
-                            <span id="priceGold" class="serif text-3xl sm:text-4xl font-bold text-[var(--gold)]">Rp 49.000</span>
-                            <span id="periodGold" class="text-xs text-gray-400 font-light">/ bulan</span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-[var(--gold)]">Pro Tier</span>
+                        <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Unlimited Vault</h3>
+                        <div class="mt-4 flex items-baseline">
+                            <span id="priceHaute" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 149.000</span>
+                            <span id="periodHaute" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
                         </div>
-                        <ul class="space-y-3.5 text-xs text-gray-200 mb-8 font-light">
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong class="text-[var(--gold)]">100 GB Ultra HD</strong></li>
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Zero-Knowledge Encryption</li>
+                        <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Penyimpanan Tak Terbatas (Unlimited)
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Dukungan ProRAW Kamera & Metadata EXIF
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Multi Perangkat iOS, Mac & Web
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                Layanan Prioritas Concierge 24/7
+                            </li>
                         </ul>
                     </div>
-                    <button type="button" data-open-auth="register" class="w-full py-3.5 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-300 to-[var(--gold)] active:scale-95 text-[#121212] hover:opacity-90 text-xs font-bold uppercase tracking-widest shadow-md transition duration-300">
-                        Pilih Gold Privé
-                    </button>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="ios-card p-6 sm:p-7 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-bold">Kapasitas Maksimal</span>
-                        </div>
-                        <h3 class="serif text-xl font-semibold text-[#121212]">Haute Collection</h3>
-                        <div class="my-6 pt-4 border-t border-gray-100">
-                            <span id="priceHaute" class="serif text-3xl sm:text-4xl font-bold text-[#121212]">Rp 149.000</span>
-                            <span id="periodHaute" class="text-xs text-gray-400 font-light">/ bulan</span>
-                        </div>
-                        <ul class="space-y-3.5 text-xs text-gray-600 mb-8 font-light">
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong>1 TB (1.000 GB)</strong></li>
-                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Support Prioritas 24/7</li>
-                        </ul>
-                    </div>
-                    <button type="button" data-open-auth="register" class="w-full py-3.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] hover:bg-black text-xs font-bold uppercase tracking-widest transition duration-300">
-                        Pilih Haute Vault
+                    <button data-open-auth="register" onclick="showToast('Memilih paket Unlimited Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
+                        Berlangganan Sekarang
                     </button>
                 </div>
             </div>
         </section>
 
         <!-- FAQ SECTION -->
-        <section id="faq" class="py-16 px-4 sm:px-8 max-w-4xl mx-auto w-full relative">
-            <div class="text-center max-w-xl mx-auto mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
-                    FAQ & Bantuan
-                </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Pertanyaan Diajukan</h2>
+        <section id="faq" class="max-w-3xl mx-auto px-4 sm:px-8 py-16">
+            <div class="text-center mb-12">
+                <h2 class="serif text-3xl sm:text-4xl font-bold">Pertanyaan Umum</h2>
+                <p class="text-xs sm:text-sm text-stone-500 mt-2">Segala hal yang perlu Anda ketahui tentang privasi FotoVault.</p>
             </div>
 
-            <div class="space-y-3">
-                <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
-                        <span class="serif text-sm sm:text-base font-semibold text-[#121212]">Apakah foto saya aman & privat?</span>
-                        <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            <div class="space-y-4">
+                <div class="faq-card ios-card rounded-2xl overflow-hidden">
+                    <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                        <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Bagaimana sistem menjaga keamanan foto saya?</span>
+                        <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                     </button>
                     <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed font-light border-t border-gray-100 pt-3">
-                            FotoVault menggunakan enkripsi militer AES 256-Bit Zero-Knowledge. Kunci enkripsi diproses secara lokal pada perangkat Anda.
+                        <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
+                            FotoVault memanfaatkan skema Zero-Knowledge dengan enkripsi AES-256 bit. Kunci enkripsi dibuat secara lokal pada perangkat Anda, sehingga tidak ada siapapun—termasuk pihak FotoVault—yang dapat melihat konten foto Anda.
                         </div>
                     </div>
                 </div>
 
-                <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
-                        <span class="serif text-sm sm:text-base font-semibold text-[#121212]">Apakah ada kompresi resolusi foto?</span>
-                        <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                <div class="faq-card ios-card rounded-2xl overflow-hidden">
+                    <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                        <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Apakah kualitas file foto saya berkurang?</span>
+                        <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                     </button>
                     <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed font-light border-t border-gray-100 pt-3">
-                            Sama sekali tidak. Kami menyimpan format asli JPG, PNG, HEIC, hingga berkas RAW kamera profesional tanpa kompresi.
+                        <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
+                            Tidak sama sekali. Berkas disimpan dalam resolusi bit 100% tanpa kompresi, mempertahankan seluruh metadata EXIF, profil warna, dan format asli (termasuk Apple ProRAW & HEIC).
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- FOOTER -->
-        <footer class="mt-8 py-6 border-t border-gray-200/60 text-center text-xs text-gray-400 font-light">
-            <p>&copy; 2026 FotoVault Inc. All rights reserved.</p>
-        </footer>
-    </section>
+    </main>
 
-    <!-- =====================================================
-         MODAL POP-UP AUTH (LOGIN & DAFTAR TABBED - iOS STYLE)
-    ===================================================== -->
-    <div id="authModal" class="modal-overlay fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-        <div class="modal-content ios-card max-w-sm w-full p-7 rounded-[2.2rem] relative text-center bg-white/90 backdrop-blur-2xl shadow-2xl border border-white/80">
-            
-            <!-- Close Button -->
-            <button id="closeAuthModal" type="button" 
-                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100/80 text-gray-400 hover:text-black hover:bg-gray-200 flex items-center justify-center transition active:scale-90">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+    <!-- FOOTER -->
+    <footer class="border-t border-black/[0.05] bg-white/40 backdrop-blur-md py-10 px-4 sm:px-8 text-center text-xs text-stone-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="serif italic font-semibold text-[#1c1c1e]">FotoVault</span>
+                <span>&copy; 2026. Hak Cipta Dilindungi.</span>
+            </div>
+            <div class="flex gap-6 text-[11px] text-stone-500 font-medium">
+                <a href="#" class="hover:text-[var(--gold)] transition-colors">Privasi & Keamanan</a>
+                <a href="#" class="hover:text-[var(--gold)] transition-colors">Syarat Penggunaan</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AUTH MODAL (iOS Sheet Modal) -->
+    <div id="authModal" class="ios-modal-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
+        <div class="ios-modal-content ios-glass w-full max-w-md p-6 sm:p-8 bg-white/95 relative shadow-2xl border border-white/80">
+            <!-- iOS Sheet Drag Handle Indicator (Mobile) -->
+            <div class="w-10 h-1 rounded-full bg-stone-300 mx-auto mb-5 sm:hidden"></div>
+
+            <button id="btnCloseModal" class="ios-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-black flex items-center justify-center shadow-sm">
+                &times;
             </button>
-
-            <!-- Brand Icon -->
-            <div class="w-14 h-14 rounded-3xl bg-[#121212] text-[var(--gold)] flex items-center justify-center mx-auto mb-4 shadow-xl">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div id="modalHeader" class="mb-6 text-center">
+                <h3 id="modalTitle" class="serif text-2xl font-bold text-[#1c1c1e]">Masuk ke Vault</h3>
+                <p id="modalSubtitle" class="text-xs text-stone-500 mt-1 font-light">Masukkan kredensial akun privat Anda</p>
             </div>
-
-            <!-- iOS Segmented Control Switcher (Login vs Daftar) -->
-            <div class="p-1 bg-gray-200/60 rounded-full flex items-center mb-5 border border-black/5">
-                <button id="tabLoginBtn" type="button" class="flex-1 py-1.5 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition-all duration-300">
-                    Masuk
-                </button>
-                <button id="tabRegisterBtn" type="button" class="flex-1 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-[#121212] transition-all duration-300">
-                    Daftar Akun
-                </button>
-            </div>
-
-            <h2 id="modalAuthTitle" class="serif text-2xl font-bold text-[#121212]">Selamat Datang</h2>
-            <p id="modalAuthSub" class="mt-1 text-xs text-gray-500 leading-relaxed font-light mb-6">
-                Masukkan kredensial terenkripsi Anda untuk membuka vault.
-            </p>
-
-            <!-- SUPABASE AUTH FORM -->
-            <form id="authForm" class="space-y-4 text-left" data-mode="login">
+            <form id="authForm" class="space-y-4" onsubmit="event.preventDefault(); showToast('Otentikasi Berhasil!'); document.getElementById('authModal').classList.remove('active');">
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5 ml-1">Email Vault</label>
-                    <div class="relative">
-                        <input id="email" type="email" autocomplete="email" placeholder="nama@email.com" required 
-                            class="ios-input w-full px-4 py-3 rounded-2xl text-xs text-[#121212] placeholder-gray-400 focus:outline-none">
-                    </div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Alamat Email</label>
+                    <input type="email" required placeholder="nama@icloud.com" class="ios-input w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none">
                 </div>
-
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5 ml-1">Kata Sandi</label>
-                    <div class="relative">
-                        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6" required 
-                            class="ios-input w-full px-4 py-3 rounded-2xl text-xs text-[#121212] placeholder-gray-400 focus:outline-none">
-                    </div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Kata Sandi / Passcode</label>
+                    <input type="password" required placeholder="••••••••" class="ios-input w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none">
                 </div>
-
-                <button id="authSubmit" type="submit" 
-                    class="w-full mt-3 py-3.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-widest uppercase shadow-lg hover:bg-black transition-all duration-300 flex items-center justify-center gap-2">
-                    <svg id="authSubmitIcon" class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                    <span id="authSubmitText">Buka Vault Saya</span>
+                <button type="submit" class="ios-btn w-full py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
+                    Lanjutkan
                 </button>
             </form>
-
-            <small class="block mt-6 text-[9px] uppercase tracking-widest text-gray-400 font-medium">FotoVault &bull; Enkripsi End-to-End</small>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD VIEW (AFTER LOGIN) -->
-    <section id="appView" class="hidden min-h-screen flex flex-col">
-        <header class="sticky top-0 z-40 px-4 sm:px-6 py-3 ios-header">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <div class="flex items-center space-x-2.5 select-none">
-                    <div class="w-8 h-8 rounded-xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <b class="serif text-base italic font-semibold leading-none text-[#121212]">FotoVault</b>
-                        <span class="text-[7px] uppercase tracking-[0.2em] text-[var(--gold)] font-bold mt-0.5">Luxury Cloud</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-3">
-                    <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-black/5 shadow-sm backdrop-blur-md">
-                        <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        <span id="userEmail" class="serif text-xs font-semibold text-[#121212] max-w-[150px] truncate">User</span>
-                    </div>
-
-                    <button id="logoutBtn" type="button" 
-                        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-rose-50/80 active:scale-95 text-rose-600 text-xs font-medium border border-rose-200/60 hover:bg-rose-100 transition shadow-sm">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                        <span class="hidden sm:inline">Keluar</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex flex-col md:flex-row gap-5">
-            <!-- Navigation Sidebar -->
-            <nav class="w-full md:w-56 shrink-0 flex flex-col gap-3">
-                <div class="ios-card p-2 flex flex-row md:flex-col gap-1.5">
-                    <button class="nav-item active flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-medium text-gray-600 active:scale-95 transition-all duration-300" data-section="photos" type="button">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span>Foto Saya</span>
-                    </button>
-
-                    <button class="nav-item flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-medium text-gray-600 active:scale-95 transition-all duration-300" data-section="albums" type="button">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                        <span>Album Kustom</span>
-                    </button>
-                </div>
-
-                <div class="ios-card p-4 hidden md:block">
-                    <div class="flex items-center justify-between text-xs mb-2">
-                        <strong class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Kapasitas Vault</strong>
-                        <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
-                    </div>
-                    
-                    <div id="storageText" class="serif text-xs font-semibold text-[#121212] mb-2">
-                        0 KB / 1 GB
-                    </div>
-
-                    <div class="w-full bg-gray-200/60 rounded-full h-2 overflow-hidden p-0.5 border border-black/5">
-                        <i id="storageBar" class="block h-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-dark)] rounded-full transition-all duration-500 w-0"></i>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Main Content Area -->
-            <article class="flex-1 min-w-0">
-                <div class="ios-card p-5 sm:p-7 min-h-[460px]">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-5">
-                        <div>
-                            <h2 id="pageTitle" class="serif text-2xl font-semibold text-[#121212]">Foto Saya</h2>
-                            <p id="pageSubtitle" class="text-xs text-gray-400 mt-0.5">Semua koleksi memori digital Anda dalam lokasi aman.</p>
-                        </div>
-
-                        <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-wider uppercase shadow-md hover:bg-black transition-all duration-300">
-                            <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                            <span>Unggah Foto</span>
-                            <input id="fileInput" type="file" accept="image/*" multiple hidden>
-                        </label>
-                    </div>
-
-                    <!-- PHOTOS TAB CONTENT -->
-                    <div id="photosSection">
-                        <!-- iOS Interactive Drag & Drop Box -->
-                        <div id="dropZone" class="border-2 border-dashed border-[var(--gold)]/40 rounded-3xl p-7 text-center bg-amber-50/20 transition-all duration-300 cursor-pointer mb-6 hover:border-[var(--gold)] hover:bg-amber-50/40 group">
-                            <div class="w-12 h-12 rounded-2xl bg-amber-100/60 text-[var(--gold-dark)] flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            </div>
-                            <p class="text-xs text-gray-600 font-medium">Tarik & lepas foto Anda ke sini, atau <span class="text-[var(--gold-dark)] underline font-semibold">klik untuk mengunggah</span></p>
-                            <p class="text-[10px] text-gray-400 font-light mt-1">Mendukung format HD PNG, JPG, HEIC hingga RAW</p>
-                        </div>
-
-                        <!-- Search Bar -->
-                        <div class="relative mb-5">
-                            <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            <input id="searchInput" type="search" placeholder="Cari foto dalam vault..." 
-                                class="ios-input w-full pl-10 pr-4 py-2.5 rounded-2xl text-xs text-[#121212] focus:outline-none">
-                        </div>
-
-                        <div id="progressArea" class="hidden mb-4 space-y-2"></div>
-                        <div id="photoGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
-
-                        <div id="emptyState" class="py-14 text-center">
-                            <div class="w-14 h-14 rounded-3xl bg-gray-100/80 text-gray-400 flex items-center justify-center mx-auto mb-3">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            </div>
-                            <h3 class="serif text-lg font-semibold text-gray-700">Vault Masih Kosong</h3>
-                            <p class="text-xs text-gray-400 mt-1">Mulai simpan kenangan terbaik Anda secara aman di cloud.</p>
-                        </div>
-                    </div>
-
-                    <!-- ALBUMS TAB CONTENT -->
-                    <div id="albumsSection" class="hidden">
-                        <div class="flex justify-between items-center mb-5">
-                            <button id="newAlbumBtn" type="button" 
-                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] text-xs font-semibold uppercase tracking-wider shadow-sm transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                                Buat Album Baru
-                            </button>
-                        </div>
-                        <div id="albumGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
-                    </div>
-                </div>
-            </article>
-        </main>
-    </section>
-
-    <!-- MODAL 1: PHOTO VIEWER -->
-    <div id="viewer" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="ios-card max-w-2xl w-full p-5 rounded-3xl relative text-left bg-white/95">
-            <button data-close="viewer" type="button" 
-                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition z-10">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-
-            <div class="rounded-2xl overflow-hidden bg-black max-h-[50vh] flex items-center justify-center mb-4">
-                <img id="viewerImage" alt="Foto" class="max-h-[50vh] w-auto object-contain">
-            </div>
-
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <h3 id="viewerName" class="serif text-lg font-semibold text-[#121212]">Foto</h3>
-                    <p id="viewerMeta" class="text-xs text-gray-500 mt-0.5"></p>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button id="downloadBtn" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#121212] text-[var(--gold)] text-xs font-semibold uppercase tracking-wider active:scale-95 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        Unduh
-                    </button>
-                    <button id="deleteBtn" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-xs font-semibold uppercase tracking-wider active:scale-95 transition">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        Hapus
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: ALBUM CREATION -->
-    <div id="albumModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="ios-card max-w-xs w-full p-6 rounded-3xl relative text-center bg-white/95">
-            <button data-close="albumModal" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-[#121212]">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-
-            <div class="w-10 h-10 bg-amber-50 rounded-2xl mx-auto mb-3 flex items-center justify-center border border-amber-200 text-[var(--gold)]">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-            </div>
-
-            <h3 class="serif text-lg font-semibold text-[#121212] mb-3">Buat Album Baru</h3>
-
-            <div class="space-y-3">
-                <input id="albumName" type="text" placeholder="Masukkan nama album..." 
-                    class="ios-input w-full px-4 py-2.5 rounded-xl text-xs text-[#121212] focus:outline-none">
-
-                <button id="createAlbumBtn" type="button" 
-                    class="w-full py-3 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] text-xs font-bold uppercase tracking-widest transition">
-                    Buat Album
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- =====================================================
-         iOS FLOATING TOAST NOTIFICATION SYSTEM
-    ===================================================== -->
-    <div id="iosToast" class="ios-toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full flex items-center gap-3 shadow-2xl pointer-events-none">
-        <div id="toastIcon" class="w-6 h-6 rounded-full bg-[var(--gold)]/20 text-[var(--gold)] flex items-center justify-center shrink-0">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        <span id="toastMessage" class="text-xs font-medium text-white tracking-wide">Notifikasi FotoVault</span>
-    </div>
-
-    <!-- SUPABASE & APP SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=1.0.3"></script>
-
+    <!-- SCRIPT INTERAKTIVITAS iOS -->
     <script>
-        // Global Toast Notification Helper
-        window.showIosToast = function(message, isSuccess = true) {
-            const toast = document.getElementById('iosToast');
-            const msgEl = document.getElementById('toastMessage');
-            const iconEl = document.getElementById('toastIcon');
-            
-            if (!toast || !msgEl) return;
+        // Segmented Control Switcher Logic
+        const btnMonthly = document.getElementById('btnMonthly');
+        const btnYearly = document.getElementById('btnYearly');
+        const segmentedPill = document.getElementById('segmentedPill');
+        const priceGold = document.getElementById('priceGold');
+        const periodGold = document.getElementById('periodGold');
+        const priceHaute = document.getElementById('priceHaute');
+        const periodHaute = document.getElementById('periodHaute');
 
-            msgEl.textContent = message;
-            
-            if (isSuccess) {
-                iconEl.className = "w-6 h-6 rounded-full bg-[var(--gold)]/20 text-[var(--gold)] flex items-center justify-center shrink-0";
-                iconEl.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>`;
-            } else {
-                iconEl.className = "w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0";
-                iconEl.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>`;
-            }
-
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3500);
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Modal & Tab Handling
-            const authModal = document.getElementById('authModal');
-            const openAuthBtns = document.querySelectorAll('[data-open-auth]');
-            const closeAuthBtn = document.getElementById('closeAuthModal');
-            const tabLoginBtn = document.getElementById('tabLoginBtn');
-            const tabRegisterBtn = document.getElementById('tabRegisterBtn');
-            const authForm = document.getElementById('authForm');
-            const modalAuthTitle = document.getElementById('modalAuthTitle');
-            const modalAuthSub = document.getElementById('modalAuthSub');
-            const authSubmitText = document.getElementById('authSubmitText');
-
-            function setAuthMode(mode) {
-                if (!authForm) return;
-                authForm.setAttribute('data-mode', mode);
-
-                if (mode === 'register') {
-                    tabRegisterBtn.className = "flex-1 py-1.5 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition-all duration-300";
-                    tabLoginBtn.className = "flex-1 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-[#121212] transition-all duration-300";
-                    modalAuthTitle.textContent = "Buat Akun Vault";
-                    modalAuthSub.textContent = "Daftar untuk mulai mengamankan foto Anda dengan enkripsi AES-256.";
-                    authSubmitText.textContent = "Daftar Akun Baru";
-                } else {
-                    tabLoginBtn.className = "flex-1 py-1.5 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition-all duration-300";
-                    tabRegisterBtn.className = "flex-1 py-1.5 rounded-full text-xs font-semibold text-gray-500 hover:text-[#121212] transition-all duration-300";
-                    modalAuthTitle.textContent = "Masuk Ke Vault";
-                    modalAuthSub.textContent = "Masukkan kredensial terenkripsi Anda untuk membuka vault.";
-                    authSubmitText.textContent = "Buka Vault Saya";
-                }
-            }
-
-            function showAuthModal(mode = 'login') {
-                setAuthMode(mode);
-                if (authModal) authModal.classList.add('active');
-            }
-
-            function hideAuthModal() {
-                if (authModal) authModal.classList.remove('active');
-            }
-
-            openAuthBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const mode = btn.getAttribute('data-open-auth') || 'login';
-                    showAuthModal(mode);
-                });
-            });
-
-            if (tabLoginBtn) tabLoginBtn.addEventListener('click', () => setAuthMode('login'));
-            if (tabRegisterBtn) tabRegisterBtn.addEventListener('click', () => setAuthMode('register'));
-            if (closeAuthBtn) closeAuthBtn.addEventListener('click', hideAuthModal);
-
-            if (authModal) {
-                authModal.addEventListener('click', (e) => {
-                    if (e.target === authModal) hideAuthModal();
-                });
-            }
-
-            // Accordions Handler
-            const accordions = document.querySelectorAll('.accordion-header');
-            accordions.forEach(header => {
-                header.addEventListener('click', () => {
-                    const faqCard = header.closest('.faq-card');
-                    const isOpen = faqCard.classList.contains('open');
-                    document.querySelectorAll('.faq-card').forEach(card => card.classList.remove('open'));
-                    if (!isOpen) faqCard.classList.add('open');
-                });
-            });
-
-            // Pricing Switcher
-            const btnMonthly = document.getElementById('btnMonthly');
-            const btnYearly = document.getElementById('btnYearly');
-            const priceGold = document.getElementById('priceGold');
-            const periodGold = document.getElementById('periodGold');
-            const priceHaute = document.getElementById('priceHaute');
-            const periodHaute = document.getElementById('periodHaute');
-
-            if (btnMonthly && btnYearly) {
-                btnMonthly.addEventListener('click', () => {
-                    btnMonthly.className = "px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300";
-                    btnYearly.className = "px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212]";
-                    if (priceGold) priceGold.textContent = "Rp 49.000";
-                    if (periodGold) periodGold.textContent = "/ bulan";
-                    if (priceHaute) priceHaute.textContent = "Rp 149.000";
-                    if (periodHaute) periodHaute.textContent = "/ bulan";
-                });
-
-                btnYearly.addEventListener('click', () => {
-                    btnYearly.className = "px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300";
-                    btnMonthly.className = "px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212]";
-                    if (priceGold) priceGold.textContent = "Rp 39.000";
-                    if (periodGold) periodGold.textContent = "/ bln (ditagih tahunan)";
-                    if (priceHaute) priceHaute.textContent = "Rp 119.000";
-                    if (periodHaute) periodHaute.textContent = "/ bln (ditagih tahunan)";
-                });
-            }
+        btnMonthly?.addEventListener('click', () => {
+            segmentedPill.style.transform = 'translateX(0%)';
+            btnMonthly.classList.replace('text-stone-500', 'text-black');
+            btnYearly.classList.replace('text-black', 'text-stone-500');
+            priceGold.textContent = 'Rp 49.000';
+            periodGold.textContent = '.00 / bulan';
+            priceHaute.textContent = 'Rp 149.000';
+            periodHaute.textContent = '.00 / bulan';
         });
+
+        btnYearly?.addEventListener('click', () => {
+            segmentedPill.style.transform = 'translateX(100%)';
+            btnYearly.classList.replace('text-stone-500', 'text-black');
+            btnMonthly.classList.replace('text-black', 'text-stone-500');
+            priceGold.textContent = 'Rp 470.000';
+            periodGold.textContent = '.00 / tahun';
+            priceHaute.textContent = 'Rp 1.430.000';
+            periodHaute.textContent = '.00 / tahun';
+        });
+
+        // Toggle Accordion FAQ
+        document.querySelectorAll('.accordion-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqCard = button.closest('.faq-card');
+                faqCard.classList.toggle('open');
+            });
+        });
+
+        // Modal Auth Handlers
+        const authModal = document.getElementById('authModal');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+
+        document.querySelectorAll('[data-open-auth]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const type = btn.getAttribute('data-open-auth');
+                if (type === 'login') {
+                    modalTitle.textContent = 'Masuk ke Vault';
+                    modalSubtitle.textContent = 'Masukkan kredensial akun privat Anda';
+                } else {
+                    modalTitle.textContent = 'Daftar Akun Vault';
+                    modalSubtitle.textContent = 'Mulai amankan koleksi foto eksklusif Anda';
+                }
+                authModal.classList.add('active');
+            });
+        });
+
+        btnCloseModal?.addEventListener('click', () => {
+            authModal.classList.remove('active');
+        });
+
+        authModal?.addEventListener('click', (e) => {
+            if (e.target === authModal) authModal.classList.remove('active');
+        });
+
+        // Toast Notification Helper (Dynamic Island Banner)
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            if (toast && toastMessage) {
+                toastMessage.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+            }
+        }
     </script>
 </body>
 </html>
