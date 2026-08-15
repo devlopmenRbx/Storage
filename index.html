@@ -13,9 +13,10 @@
         :root {
             --gold: #C5A059;
             --gold-light: #E5C889;
+            --gold-dark: #9E7B36;
             --gold-gradient: linear-gradient(135deg, #DFBA73 0%, #C5A059 50%, #9E7B36 100%);
             --ios-bg: #F2F2F7;
-            --ios-card: rgba(255, 255, 255, 0.72);
+            --ios-card: rgba(255, 255, 255, 0.75);
             --ios-ease: cubic-bezier(0.32, 0.72, 0, 1);
             --ios-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -34,17 +35,17 @@
 
         /* iOS Glassmorphism (Frosted Glass) */
         .ios-glass {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(25px) saturate(190%);
             -webkit-backdrop-filter: blur(25px) saturate(190%);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.65);
         }
 
         .ios-glass-dark {
-            background: rgba(24, 24, 27, 0.85);
+            background: rgba(24, 24, 27, 0.88);
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         /* iOS Card & Shadow Aesthetics */
@@ -52,14 +53,14 @@
             background: var(--ios-card);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.75);
             border-radius: 28px;
             box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.02);
             transition: transform 0.4s var(--ios-ease), box-shadow 0.4s var(--ios-ease);
         }
 
         .ios-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
         }
 
@@ -70,7 +71,7 @@
         }
 
         .ios-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
 
         /* iOS Segmented Switch Control */
@@ -137,7 +138,7 @@
             transform: rotate(180deg);
         }
 
-        /* iOS Sheet / Modal Slide Up Animation */
+        /* iOS Modal Overlay and Sheet Transitions */
         .ios-modal-overlay {
             opacity: 0;
             pointer-events: none;
@@ -148,11 +149,11 @@
         .ios-modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
         }
 
         .ios-modal-content {
-            transform: translateY(100%) scale(0.96);
+            transform: translateY(100%) scale(0.95);
             transition: transform 0.5s var(--ios-spring);
             border-radius: 36px 36px 28px 28px;
         }
@@ -168,17 +169,42 @@
             transform: translateY(0) scale(1);
         }
 
-        /* iOS Custom Input Focus */
+        /* iOS Inputs */
         .ios-input {
             background: rgba(235, 235, 240, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             transition: all 0.25s var(--ios-ease);
         }
 
         .ios-input:focus {
             background: #ffffff;
             border-color: var(--gold);
-            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15);
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.18);
+        }
+
+        /* Pulse animation for Face ID Scanner simulation */
+        @keyframes scanPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        .face-id-pulse {
+            animation: scanPulse 1.8s ease-in-out infinite;
+        }
+
+        /* Scrollbar aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.25);
         }
     </style>
 </head>
@@ -186,7 +212,7 @@
 
     <!-- DYNAMIC ISLAND TOAST (iOS STYLE TOP BANNER) -->
     <div class="fixed top-5 inset-x-0 z-50 flex justify-center pointer-events-none px-4">
-        <div id="toast" class="dynamic-island ios-glass-dark px-6 py-3 rounded-full text-white text-xs sm:text-sm font-medium flex items-center gap-3 pointer-events-auto max-w-md">
+        <div id="toast" class="dynamic-island ios-glass-dark px-6 py-3 rounded-full text-white text-xs sm:text-sm font-medium flex items-center gap-3 pointer-events-auto max-w-md border border-white/20">
             <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center shrink-0 shadow-md">
                 <svg class="w-3.5 h-3.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -196,10 +222,10 @@
         </div>
     </div>
 
-    <!-- HEADER / NAVIGATION (iOS Frosted Glass Navigation Bar) -->
+    <!-- HEADER / NAVIGATION -->
     <header class="ios-glass fixed top-0 left-0 right-0 z-40 border-b border-black/[0.04]">
         <div class="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2.5 group">
+            <a href="#" onclick="showSection('landing')" class="flex items-center gap-2.5 group">
                 <div class="w-9 h-9 rounded-2xl bg-[#1c1c1e] flex items-center justify-center shadow-lg group-hover:scale-105 transition duration-300">
                     <svg class="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -208,14 +234,28 @@
                 <span class="serif text-2xl font-bold tracking-tight text-[#1c1c1e]">Foto<span class="text-[var(--gold)] italic">Vault</span></span>
             </a>
 
-            <nav class="hidden md:flex items-center space-x-8 text-[12px] uppercase tracking-widest font-bold text-stone-500">
+            <!-- Landing Nav Links -->
+            <nav id="landingNav" class="hidden md:flex items-center space-x-8 text-[12px] uppercase tracking-widest font-bold text-stone-500">
                 <a href="#fitur" class="hover:text-black transition-colors">Fitur Utama</a>
                 <a href="#galeri" class="hover:text-black transition-colors">Pratinjau</a>
                 <a href="#harga" class="hover:text-black transition-colors">Keanggotaan</a>
                 <a href="#faq" class="hover:text-black transition-colors">FAQ</a>
             </nav>
 
-            <div class="flex items-center gap-3">
+            <!-- Dashboard Nav Controls (Shown when Logged In) -->
+            <div id="dashboardNav" class="hidden flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="cloudStatusText">Terhubung ke Awan (AES-256 Cloud Sync)</span>
+                </div>
+                <button onclick="logoutVault()" class="ios-btn px-4 py-2 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-bold border border-rose-200/60 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Kunci Brankas
+                </button>
+            </div>
+
+            <!-- Landing Guest Buttons -->
+            <div id="guestNavBtns" class="flex items-center gap-3">
                 <button data-open-auth="login" class="ios-btn px-5 py-2.5 rounded-full text-xs font-semibold text-stone-700 hover:text-black transition">
                     Masuk
                 </button>
@@ -226,281 +266,368 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="pt-28 pb-16">
+    <!-- MAIN CONTAINER -->
+    <main class="pt-24 pb-16 flex-1">
 
-        <!-- HERO SECTION -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-8 py-10 md:py-16 text-center">
-            <!-- iOS Status Pill -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-amber-50/80 text-[var(--gold)] border border-amber-200/80 mb-6 shadow-sm backdrop-blur-md">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Enkripsi End-to-End iOS & macOS
-            </div>
-
-            <h1 class="serif text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#1c1c1e] max-w-4xl mx-auto leading-[1.15]">
-                Brankas Digital Khas Apple untuk Kenangan Terindah.
-            </h1>
-
-            <p class="mt-6 text-sm sm:text-base text-stone-600 max-w-2xl mx-auto font-light leading-relaxed">
-                Simpan, tata, dan amankan koleksi foto eksklusif Anda dengan keindahan desain khas iOS. Privasi penuh tanpa kompresi file asli.
-            </p>
-            
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button data-open-auth="register" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest shadow-xl">
-                    Mulai Uji Coba Gratis
-                </button>
-                <a href="#galeri" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-white/80 border border-black/10 text-[#1c1c1e] font-semibold text-xs uppercase tracking-widest shadow-sm">
-                    Jelajahi Galeri
-                </a>
-            </div>
-
-            <!-- iOS Device Frame Preview -->
-            <div class="mt-14 max-w-5xl mx-auto p-3 sm:p-5 ios-glass rounded-[40px] shadow-2xl relative group">
-                <!-- Face ID Badge -->
-                <div class="absolute top-8 left-8 z-10 hidden sm:flex items-center gap-2.5 px-4 py-2 rounded-2xl ios-glass-dark text-white text-xs font-medium shadow-lg">
-                    <svg class="w-4 h-4 text-amber-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                    <span>Terproteksi Face ID</span>
+        <!-- ================= LANDING PAGE SECTION ================= -->
+        <div id="landingPageSection">
+            <!-- HERO SECTION -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-8 py-10 md:py-14 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest bg-amber-50/80 text-[var(--gold)] border border-amber-200/80 mb-6 shadow-sm backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Enkripsi End-to-End iOS & macOS
                 </div>
 
-                <div class="relative rounded-[28px] overflow-hidden bg-stone-900 aspect-[16/9] flex items-center justify-center">
-                    <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1600&auto=format&fit=crop" alt="Vault Preview" class="w-full h-full object-cover opacity-85 group-hover:scale-105 transition duration-700 ease-out">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 sm:p-10">
-                        <div class="text-left text-white">
-                            <span class="text-xs uppercase tracking-widest text-[var(--gold)] font-bold">Album Privat & Enkripsi</span>
-                            <h3 class="serif text-2xl sm:text-3xl font-bold mt-1">Portofolio Fotografi Estetika</h3>
+                <h1 class="serif text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#1c1c1e] max-w-4xl mx-auto leading-[1.15]">
+                    Brankas Digital Khas Apple untuk Kenangan Terindah.
+                </h1>
+
+                <p class="mt-6 text-sm sm:text-base text-stone-600 max-w-2xl mx-auto font-light leading-relaxed">
+                    Simpan, tata, dan amankan koleksi foto eksklusif Anda dengan keindahan desain khas iOS. Privasi penuh tanpa kompresi file asli.
+                </p>
+                
+                <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button data-open-auth="register" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest shadow-xl">
+                        Mulai Uji Coba Gratis
+                    </button>
+                    <a href="#galeri" class="ios-btn w-full sm:w-auto px-8 py-4 rounded-full bg-white/80 border border-black/10 text-[#1c1c1e] font-semibold text-xs uppercase tracking-widest shadow-sm">
+                        Jelajahi Galeri
+                    </a>
+                </div>
+
+                <!-- iOS Device Frame Preview -->
+                <div class="mt-14 max-w-5xl mx-auto p-3 sm:p-5 ios-glass rounded-[40px] shadow-2xl relative group">
+                    <div class="absolute top-8 left-8 z-10 hidden sm:flex items-center gap-2.5 px-4 py-2 rounded-2xl ios-glass-dark text-white text-xs font-medium shadow-lg">
+                        <svg class="w-4 h-4 text-amber-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span>Terproteksi Face ID</span>
+                    </div>
+
+                    <div class="relative rounded-[28px] overflow-hidden bg-stone-900 aspect-[16/9] flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=1600&auto=format&fit=crop" alt="Vault Preview" class="w-full h-full object-cover opacity-85 group-hover:scale-105 transition duration-700 ease-out">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6 sm:p-10">
+                            <div class="text-left text-white">
+                                <span class="text-xs uppercase tracking-widest text-[var(--gold)] font-bold">Album Privat & Enkripsi</span>
+                                <h3 class="serif text-2xl sm:text-3xl font-bold mt-1">Portofolio Fotografi Estetika</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- FITUR UTAMA -->
-        <section id="fitur" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="serif text-3xl sm:text-4xl font-bold">Keunggulan Standar iOS Vault</h2>
-                <p class="text-xs sm:text-sm text-stone-500 mt-2 font-normal">Didesain dengan perhatian mendalam pada privasi dan keindahan antarmuka.</p>
-            </div>
+            <!-- FITUR UTAMA -->
+            <section id="fitur" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="serif text-3xl sm:text-4xl font-bold">Keunggulan Standar iOS Vault</h2>
+                    <p class="text-xs sm:text-sm text-stone-500 mt-2 font-normal">Didesain dengan perhatian mendalam pada privasi dan keindahan antarmuka.</p>
+                </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="ios-card p-8 flex flex-col justify-between">
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 002-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="ios-card p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </div>
+                            <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Enkripsi AES-256</h3>
+                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                                Seluruh berkas dienkripsi lokal sebelum meninggalkan perangkat Anda. Kunci dekripsi hanya tersimpan di Secure Enclave milik Anda.
+                            </p>
                         </div>
-                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Enkripsi AES-256</h3>
-                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
-                            Seluruh berkas dienkripsi lokal sebelum meninggalkan perangkat Anda. Kunci dekripsi hanya tersimpan di Secure Enclave milik Anda.
-                        </p>
                     </div>
-                </div>
 
-                <!-- Card 2 -->
-                <div class="ios-card p-8 flex flex-col justify-between">
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <div class="ios-card p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Resolusi Asli & RAW</h3>
+                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                                Tanpa penurunan kualitas sedikitpun. Mendukung file ProRAW, HEIC, TIFF, JPEG, hingga data EXIF secara menyeluruh.
+                            </p>
                         </div>
-                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Resolusi Asli & RAW</h3>
-                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
-                            Tanpa penurunan kualitas sedikitpun. Mendukung file ProRAW, HEIC, TIFF, JPEG, hingga data EXIF secara menyeluruh.
-                        </p>
                     </div>
-                </div>
 
-                <!-- Card 3 -->
-                <div class="ios-card p-8 flex flex-col justify-between">
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <div class="ios-card p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center mb-6 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </div>
+                            <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Face ID & Passcode</h3>
+                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
+                                Proteksi akses dua lapis menggunakan autentikasi Biometrik Touch ID / Face ID dengan animasi transisi yang halus.
+                            </p>
                         </div>
-                        <h3 class="serif text-xl font-bold mb-3 text-[#1c1c1e]">Face ID & Passcode</h3>
-                        <p class="text-xs sm:text-sm text-stone-600 leading-relaxed font-light">
-                            Proteksi akses dua lapis menggunakan autentikasi Biometrik Touch ID / Face ID dengan animasi transisi yang halus.
-                        </p>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- PRATINJAU GALERI -->
-        <section id="galeri" class="max-w-7xl mx-auto px-4 sm:px-8 py-16">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="serif text-3xl sm:text-4xl font-bold">Galeri Foto Responsif</h2>
-                <p class="text-xs sm:text-sm text-stone-500 mt-2">Pratinjau antarmuka album visual yang bersih dan modern.</p>
-            </div>
+            <!-- PRATINJAU GALERI -->
+            <section id="galeri" class="max-w-7xl mx-auto px-4 sm:px-8 py-16">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="serif text-3xl sm:text-4xl font-bold">Galeri Foto Responsif</h2>
+                    <p class="text-xs sm:text-sm text-stone-500 mt-2">Pratinjau antarmuka album visual yang bersih dan modern.</p>
+                </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 1">
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                        <span class="text-xs font-semibold text-white">Alam & Lanskap</span>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 1">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                            <span class="text-xs font-semibold text-white">Alam & Lanskap</span>
+                        </div>
+                    </div>
+
+                    <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 2">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                            <span class="text-xs font-semibold text-white">Kabut Pegunungan</span>
+                        </div>
+                    </div>
+
+                    <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                        <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 3">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                            <span class="text-xs font-semibold text-white">Hutan Pinus</span>
+                        </div>
+                    </div>
+
+                    <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
+                        <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 4">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                            <span class="text-xs font-semibold text-white">Lembah & Danau</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HARGA / KEANGGOTAAN -->
+            <section id="harga" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="serif text-3xl sm:text-4xl font-bold">Pilih Keanggotaan Vault</h2>
+                    <p class="text-xs sm:text-sm text-stone-500 mt-2">Pilih paket sesuai kebutuhan penyimpanan privat Anda.</p>
+
+                    <div class="mt-8 inline-flex items-center">
+                        <div class="ios-segmented flex items-center w-72 h-11">
+                            <div id="segmentedPill" class="ios-segmented-pill"></div>
+                            <button id="btnMonthly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-black">
+                                Bulanan
+                            </button>
+                            <button id="btnYearly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-stone-500 flex items-center justify-center gap-1">
+                                Tahunan <span class="bg-amber-100 text-[var(--gold)] text-[9px] px-1.5 py-0.5 rounded-full uppercase font-black">Hemat 20%</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
-                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 2">
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                        <span class="text-xs font-semibold text-white">Kabut Pegunungan</span>
-                    </div>
-                </div>
-
-                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
-                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 3">
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                        <span class="text-xs font-semibold text-white">Hutan Pinus</span>
-                    </div>
-                </div>
-
-                <div class="ios-card overflow-hidden h-72 group cursor-pointer relative">
-                    <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out" alt="Sample 4">
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
-                        <span class="text-xs font-semibold text-white">Lembah & Danau</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- HARGA / KEANGGOTAAN -->
-        <section id="harga" class="max-w-7xl mx-auto px-4 sm:px-8 py-20">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <h2 class="serif text-3xl sm:text-4xl font-bold">Pilih Keanggotaan Vault</h2>
-                <p class="text-xs sm:text-sm text-stone-500 mt-2">Pilih paket sesuai kebutuhan penyimpanan privat Anda.</p>
-
-                <!-- iOS Segmented Control Switcher -->
-                <div class="mt-8 inline-flex items-center">
-                    <div class="ios-segmented flex items-center w-72 h-11">
-                        <div id="segmentedPill" class="ios-segmented-pill"></div>
-                        <button id="btnMonthly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-black">
-                            Bulanan
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Plan 1 -->
+                    <div class="ios-card p-8 sm:p-10 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-stone-400">Standard Tier</span>
+                            <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Personal Vault</h3>
+                            <div class="mt-4 flex items-baseline">
+                                <span id="priceGold" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 49.000</span>
+                                <span id="periodGold" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
+                            </div>
+                            <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Penyimpanan Enkripsi 500 GB
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Dukungan Formats HEIC & Live Photo
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Sinkronisasi iCloud & iOS App
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Autentikasi Face ID / Touch ID
+                                </li>
+                            </ul>
+                        </div>
+                        <button data-open-auth="register" onclick="showToast('Memilih paket Personal Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-stone-200/80 text-[#1c1c1e] font-bold text-xs uppercase tracking-widest hover:bg-stone-300">
+                            Pilih Paket
                         </button>
-                        <button id="btnYearly" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-stone-500 flex items-center justify-center gap-1">
-                            Tahunan <span class="bg-amber-100 text-[var(--gold)] text-[9px] px-1.5 py-0.5 rounded-full uppercase font-black">Hemat 20%</span>
+                    </div>
+
+                    <!-- Plan 2 -->
+                    <div class="ios-card p-8 sm:p-10 border-2 border-[var(--gold)] flex flex-col justify-between relative overflow-hidden bg-white/90 shadow-2xl">
+                        <div class="absolute top-5 right-5 bg-[#1c1c1e] text-[var(--gold)] text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                            Pilihan Utama
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-[var(--gold)]">Pro Tier</span>
+                            <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Unlimited Vault</h3>
+                            <div class="mt-4 flex items-baseline">
+                                <span id="priceHaute" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 149.000</span>
+                                <span id="periodHaute" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
+                            </div>
+                            <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Penyimpanan Tak Terbatas (Unlimited)
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Dukungan ProRAW Kamera & Metadata EXIF
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Multi Perangkat iOS, Mac & Web
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
+                                    Layanan Prioritas Concierge 24/7
+                                </li>
+                            </ul>
+                        </div>
+                        <button data-open-auth="register" onclick="showToast('Memilih paket Unlimited Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
+                            Berlangganan Sekarang
                         </button>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- Plan 1 -->
-                <div class="ios-card p-8 sm:p-10 flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-stone-400">Standard Tier</span>
-                        <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Personal Vault</h3>
-                        <div class="mt-4 flex items-baseline">
-                            <span id="priceGold" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 49.000</span>
-                            <span id="periodGold" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
-                        </div>
-                        <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Penyimpanan Enkripsi 500 GB
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Dukungan Formats HEIC & Live Photo
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Sinkronisasi iCloud & iOS App
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Autentikasi Face ID / Touch ID
-                            </li>
-                        </ul>
-                    </div>
-                    <button data-open-auth="register" onclick="showToast('Memilih paket Personal Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-stone-200/80 text-[#1c1c1e] font-bold text-xs uppercase tracking-widest hover:bg-stone-300">
-                        Pilih Paket
-                    </button>
+            <!-- FAQ SECTION -->
+            <section id="faq" class="max-w-3xl mx-auto px-4 sm:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="serif text-3xl sm:text-4xl font-bold">Pertanyaan Umum</h2>
+                    <p class="text-xs sm:text-sm text-stone-500 mt-2">Segala hal yang perlu Anda ketahui tentang privasi FotoVault.</p>
                 </div>
 
-                <!-- Plan 2 -->
-                <div class="ios-card p-8 sm:p-10 border-2 border-[var(--gold)] flex flex-col justify-between relative overflow-hidden bg-white/90 shadow-2xl">
-                    <div class="absolute top-5 right-5 bg-[#1c1c1e] text-[var(--gold)] text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                        Pilihan Utama
-                    </div>
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-[var(--gold)]">Pro Tier</span>
-                        <h3 class="serif text-2xl font-bold mt-1 text-[#1c1c1e]">Unlimited Vault</h3>
-                        <div class="mt-4 flex items-baseline">
-                            <span id="priceHaute" class="serif text-4xl font-extrabold text-[#1c1c1e]">Rp 149.000</span>
-                            <span id="periodHaute" class="text-xs text-stone-500 ml-1">.00 / bulan</span>
+                <div class="space-y-4">
+                    <div class="faq-card ios-card rounded-2xl overflow-hidden">
+                        <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                            <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Bagaimana sistem menjaga keamanan foto saya?</span>
+                            <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </button>
+                        <div class="accordion-wrapper">
+                            <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
+                                FotoVault memanfaatkan skema Zero-Knowledge dengan enkripsi AES-256 bit. Kunci enkripsi dibuat secara lokal pada perangkat Anda, sehingga tidak ada siapapun—termasuk pihak FotoVault—yang dapat melihat konten foto Anda.
+                            </div>
                         </div>
-                        <ul class="mt-8 space-y-3.5 text-xs sm:text-sm text-stone-600 font-light">
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Penyimpanan Tak Terbatas (Unlimited)
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Dukungan ProRAW Kamera & Metadata EXIF
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Multi Perangkat iOS, Mac & Web
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-5 h-5 rounded-full bg-black text-[var(--gold)] flex items-center justify-center text-xs font-bold">✓</span>
-                                Layanan Prioritas Concierge 24/7
-                            </li>
-                        </ul>
                     </div>
-                    <button data-open-auth="register" onclick="showToast('Memilih paket Unlimited Vault')" class="ios-btn mt-10 w-full py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
-                        Berlangganan Sekarang
+
+                    <div class="faq-card ios-card rounded-2xl overflow-hidden">
+                        <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                            <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Apakah kualitas file foto saya berkurang?</span>
+                            <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </div>
+                        </button>
+                        <div class="accordion-wrapper">
+                            <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
+                                Tidak sama sekali. Berkas disimpan dalam resolusi bit 100% tanpa kompresi, mempertahankan seluruh metadata EXIF, profil warna, dan format asli (termasuk Apple ProRAW & HEIC).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= VAULT DASHBOARD SECTION (LOGGED IN STATE) ================= -->
+        <div id="vaultDashboardSection" class="hidden max-w-7xl mx-auto px-4 sm:px-8 py-6">
+            <!-- Dashboard Subheader Controls -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-[#1c1c1e]">Koleksi Foto Privat</h1>
+                    <p class="text-xs sm:text-sm text-stone-500 mt-1">Kelola dan amankan aset visual berharga Anda secara eksklusif.</p>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative flex-1 sm:w-64">
+                        <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="searchInput" oninput="filterPhotos()" placeholder="Cari foto, lokasi, format..." class="ios-input w-full pl-10 pr-4 py-2.5 rounded-full text-xs focus:outline-none">
+                    </div>
+
+                    <!-- Add Photo Button -->
+                    <button onclick="openUploadModal()" class="ios-btn px-5 py-2.5 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Unggah Foto
                     </button>
                 </div>
             </div>
-        </section>
 
-        <!-- FAQ SECTION -->
-        <section id="faq" class="max-w-3xl mx-auto px-4 sm:px-8 py-16">
-            <div class="text-center mb-12">
-                <h2 class="serif text-3xl sm:text-4xl font-bold">Pertanyaan Umum</h2>
-                <p class="text-xs sm:text-sm text-stone-500 mt-2">Segala hal yang perlu Anda ketahui tentang privasi FotoVault.</p>
-            </div>
-
-            <div class="space-y-4">
-                <div class="faq-card ios-card rounded-2xl overflow-hidden">
-                    <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
-                        <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Bagaimana sistem menjaga keamanan foto saya?</span>
-                        <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            <!-- Vault Storage Overview & Category Filter Bar -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Storage Stat Card -->
+                <div class="ios-card p-6 flex items-center gap-4 bg-white/90">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-[var(--gold)] flex items-center justify-center shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-stone-500">Kapasitas Vault</span>
+                            <span class="text-stone-800">12.4 GB / 500 GB</span>
                         </div>
-                    </button>
-                    <div class="accordion-wrapper">
-                        <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
-                            FotoVault memanfaatkan skema Zero-Knowledge dengan enkripsi AES-256 bit. Kunci enkripsi dibuat secara lokal pada perangkat Anda, sehingga tidak ada siapapun—termasuk pihak FotoVault—yang dapat melihat konten foto Anda.
+                        <div class="w-full h-2 rounded-full bg-stone-100 overflow-hidden">
+                            <div class="h-full bg-[var(--gold)] rounded-full" style="width: 2.5%;"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="faq-card ios-card rounded-2xl overflow-hidden">
-                    <button type="button" class="accordion-header w-full p-6 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
-                        <span class="serif text-sm sm:text-base font-semibold text-[#1c1c1e]">Apakah kualitas file foto saya berkurang?</span>
-                        <div class="accordion-icon w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center shrink-0 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                        </div>
+                <!-- Album Tabs Bar (Mewah & Bebas Emoji) -->
+                <div class="lg:col-span-3 ios-card p-2 flex items-center gap-2 overflow-x-auto scrollbar-none">
+                    <button onclick="setCategoryFilter('all')" id="tab-all" class="category-tab active px-5 py-2.5 rounded-full text-xs font-bold transition whitespace-nowrap bg-[#1c1c1e] text-[var(--gold)] flex items-center gap-2 shadow-md">
+                        <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        <span>Semua Foto</span>
+                        <span id="count-all" class="px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-[var(--gold)] font-bold">0</span>
                     </button>
-                    <div class="accordion-wrapper">
-                        <div class="px-6 pb-6 text-xs sm:text-sm text-stone-600 leading-relaxed font-light border-t border-black/[0.04] pt-4">
-                            Tidak sama sekali. Berkas disimpan dalam resolusi bit 100% tanpa kompresi, mempertahankan seluruh metadata EXIF, profil warna, dan format asli (termasuk Apple ProRAW & HEIC).
-                        </div>
-                    </div>
+                    <button onclick="setCategoryFilter('favorit')" id="tab-favorit" class="category-tab px-5 py-2.5 rounded-full text-xs font-medium text-stone-600 hover:text-black hover:bg-stone-100 transition whitespace-nowrap flex items-center gap-2">
+                        <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                        <span>Favorit</span>
+                        <span id="count-favorit" class="px-2 py-0.5 rounded-full bg-stone-200/60 text-[10px] text-stone-600 font-semibold">0</span>
+                    </button>
+                    <button onclick="setCategoryFilter('proraw')" id="tab-proraw" class="category-tab px-5 py-2.5 rounded-full text-xs font-medium text-stone-600 hover:text-black hover:bg-stone-100 transition whitespace-nowrap flex items-center gap-2">
+                        <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span>Apple ProRAW</span>
+                        <span id="count-proraw" class="px-2 py-0.5 rounded-full bg-stone-200/60 text-[10px] text-stone-600 font-semibold">0</span>
+                    </button>
+                    <button onclick="setCategoryFilter('alam')" id="tab-alam" class="category-tab px-5 py-2.5 rounded-full text-xs font-medium text-stone-600 hover:text-black hover:bg-stone-100 transition whitespace-nowrap flex items-center gap-2">
+                        <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Lanskap & Alam</span>
+                        <span id="count-alam" class="px-2 py-0.5 rounded-full bg-stone-200/60 text-[10px] text-stone-600 font-semibold">0</span>
+                    </button>
+                    <button onclick="setCategoryFilter('trash')" id="tab-trash" class="category-tab px-5 py-2.5 rounded-full text-xs font-medium text-stone-600 hover:text-black hover:bg-stone-100 transition whitespace-nowrap flex items-center gap-2">
+                        <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        <span>Sampah</span>
+                        <span id="count-trash" class="px-2 py-0.5 rounded-full bg-stone-200/60 text-[10px] text-stone-600 font-semibold">0</span>
+                    </button>
                 </div>
             </div>
-        </section>
+
+            <!-- Photos Grid Gallery -->
+            <div id="vaultPhotoGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Dynamic Photos Rendered via JS -->
+            </div>
+
+            <!-- Empty Vault State -->
+            <div id="emptyVaultState" class="hidden ios-card p-12 text-center max-w-md mx-auto my-12">
+                <div class="w-16 h-16 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <h4 class="serif text-xl font-bold text-[#1c1c1e]">Tidak ada foto ditemukan</h4>
+                <p class="text-xs text-stone-500 mt-1 font-light">Tidak ada item di kategori atau hasil pencarian ini.</p>
+            </div>
+        </div>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="border-t border-black/[0.05] bg-white/40 backdrop-blur-md py-10 px-4 sm:px-8 text-center text-xs text-stone-400">
+    <footer class="border-t border-black/[0.05] bg-white/40 backdrop-blur-md py-8 px-4 sm:px-8 text-center text-xs text-stone-400">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="serif italic font-semibold text-[#1c1c1e]">FotoVault</span>
-                <span>&copy; 2026. Hak Cipta Dilindungi.</span>
+                <span>&copy; 2026. Hak Cipta Dilindungi. Sistem Enkripsi AES-256 Terverifikasi.</span>
             </div>
             <div class="flex gap-6 text-[11px] text-stone-500 font-medium">
                 <a href="#" class="hover:text-[var(--gold)] transition-colors">Privasi & Keamanan</a>
@@ -509,38 +636,789 @@
         </div>
     </footer>
 
-    <!-- AUTH MODAL (iOS Sheet Modal) -->
-    <div id="authModal" class="ios-modal-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
-        <div class="ios-modal-content ios-glass w-full max-w-md p-6 sm:p-8 bg-white/95 relative shadow-2xl border border-white/80">
-            <!-- iOS Sheet Drag Handle Indicator (Mobile) -->
-            <div class="w-10 h-1 rounded-full bg-stone-300 mx-auto mb-5 sm:hidden"></div>
 
-            <button id="btnCloseModal" class="ios-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-black flex items-center justify-center shadow-sm">
+    <!-- ================= AUTH MODAL (iOS ELEGANT AUTH SHEET) ================= -->
+    <div id="authModal" class="ios-modal-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50">
+        <div class="ios-modal-content ios-glass w-full max-w-md p-6 sm:p-8 bg-white/95 relative shadow-2xl border border-white/80 overflow-hidden">
+            <!-- iOS Sheet Drag Handle Indicator (Mobile) -->
+            <div class="w-10 h-1 rounded-full bg-stone-300 mx-auto mb-4 sm:hidden"></div>
+
+            <button id="btnCloseModal" onclick="closeAuthModal()" class="ios-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-black flex items-center justify-center shadow-sm z-10">
                 &times;
             </button>
-            <div id="modalHeader" class="mb-6 text-center">
-                <h3 id="modalTitle" class="serif text-2xl font-bold text-[#1c1c1e]">Masuk ke Vault</h3>
-                <p id="modalSubtitle" class="text-xs text-stone-500 mt-1 font-light">Masukkan kredensial akun privat Anda</p>
+
+            <!-- Brand Icon Badge -->
+            <div class="flex justify-center mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-[#1c1c1e] text-[var(--gold)] flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
             </div>
-            <form id="authForm" class="space-y-4" onsubmit="event.preventDefault(); showToast('Otentikasi Berhasil!'); document.getElementById('authModal').classList.remove('active');">
-                <div>
-                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Alamat Email</label>
-                    <input type="email" required placeholder="nama@icloud.com" class="ios-input w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none">
+
+            <!-- Segmented Auth Tab Switcher -->
+            <div class="ios-segmented flex items-center w-full h-11 mb-6">
+                <div id="authSegmentPill" class="ios-segmented-pill"></div>
+                <button type="button" onclick="switchAuthTab('login')" id="tabBtnLogin" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-black">
+                    Masuk
+                </button>
+                <button type="button" onclick="switchAuthTab('register')" id="tabBtnRegister" class="relative z-10 w-1/2 text-xs font-bold transition-colors duration-300 text-stone-500">
+                    Daftar Baru
+                </button>
+            </div>
+
+            <div id="modalHeader" class="mb-5 text-center">
+                <h3 id="modalTitle" class="serif text-2xl font-bold text-[#1c1c1e]">Masuk ke Vault</h3>
+                <p id="modalSubtitle" class="text-xs text-stone-500 mt-1 font-light">Buka brankas terenkripsi Anda dengan kredensial aman</p>
+            </div>
+
+            <!-- Face ID Scan Simulation Box -->
+            <div id="faceIdBox" class="mb-5 p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/60 transition" onclick="triggerFaceIDAuth()">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-[#1c1c1e] text-amber-400 flex items-center justify-center shadow-sm face-id-pulse">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h5 class="text-xs font-bold text-[#1c1c1e]">Biometrik Face ID / Touch ID</h5>
+                        <p class="text-[10px] text-stone-500">Klik untuk memindai otentikasi instan</p>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Kata Sandi / Passcode</label>
-                    <input type="password" required placeholder="••••••••" class="ios-input w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none">
+                <span class="text-[10px] uppercase font-black text-[var(--gold)]">Pindai</span>
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center my-4">
+                <div class="flex-1 border-t border-stone-200"></div>
+                <span class="px-3 text-[10px] uppercase font-bold text-stone-400">atau email & pass</span>
+                <div class="flex-1 border-t border-stone-200"></div>
+            </div>
+
+            <form id="authForm" class="space-y-4" onsubmit="handleAuthSubmit(event)">
+                <div id="fullNameGroup" class="hidden">
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Nama Lengkap</label>
+                    <div class="relative">
+                        <input type="text" id="inputName" placeholder="Nama Anda" class="ios-input w-full px-4 py-3 rounded-2xl text-xs focus:outline-none">
+                    </div>
                 </div>
-                <button type="submit" class="ios-btn w-full py-4 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
-                    Lanjutkan
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Alamat Email Apple / iCloud</label>
+                    <div class="relative">
+                        <input type="email" id="inputEmail" required placeholder="nama@icloud.com" value="user@fotovault.com" class="ios-input w-full px-4 py-3 rounded-2xl text-xs focus:outline-none">
+                    </div>
+                </div>
+    <!-- ================= PHOTO LIGHTBOX MODAL (LUXURY PRATINJAU) ================= -->
+    <div id="lightboxModal" class="ios-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85">
+        <div class="ios-modal-content ios-glass-dark w-full max-w-4xl p-5 sm:p-8 rounded-[36px] text-white relative shadow-2xl border border-[var(--gold)]/30 backdrop-blur-2xl overflow-hidden max-h-[92vh] flex flex-col justify-between">
+            <!-- Header Bar Controls -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+                <div class="flex items-center gap-2.5">
+                    <span id="lightboxBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest bg-amber-500/20 text-[var(--gold-light)] border border-amber-500/30">
+                        ProRAW 12-Bit
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        AES-256 Valid
+                    </span>
+                </div>
+                <button onclick="closeLightbox()" class="ios-btn w-9 h-9 rounded-full bg-white/10 text-stone-300 hover:text-white hover:bg-white/20 flex items-center justify-center transition border border-white/10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Main Lightbox Grid Container -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 overflow-y-auto pr-1">
+                <!-- Media Display Frame -->
+                <div class="md:col-span-2 rounded-2xl overflow-hidden bg-black/60 border border-white/10 aspect-[4/3] flex items-center justify-center relative shadow-inner group">
+                    <img id="lightboxImg" src="" alt="Photo Detail" class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                </div>
+
+                <!-- Detailed Information Panel -->
+                <div class="flex flex-col justify-between text-left space-y-5">
+                    <div>
+                        <h3 id="lightboxTitle" class="serif text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">Judul Foto</h3>
+                        <p id="lightboxDate" class="text-xs text-stone-400 mt-1.5 font-light flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Diunggah: 12 Feb 2026
+                        </p>
+
+                        <!-- Metadata Specs Grid -->
+                        <div class="mt-6 space-y-3.5 border-t border-white/10 pt-5 text-xs font-light text-stone-300">
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                                <span class="text-stone-400 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    Perangkat
+                                </span>
+                                <span id="lightboxCamera" class="font-medium text-white">iPhone 15 Pro Max</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                                <span class="text-stone-400 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                                    Resolusi EXIF
+                                </span>
+                                <span id="lightboxRes" class="font-medium text-white">48 MP (8064 x 6048)</span>
+                            </div>
+
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                                <span class="text-stone-400 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                    Sistem Kunci
+                                </span>
+                                <span class="font-medium text-amber-400">Secure Enclave</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Buttons Bar -->
+                    <div class="flex gap-3 pt-4 border-t border-white/10">
+                        <button id="lightboxFavBtn" onclick="toggleFavoriteCurrent()" class="ios-btn flex-1 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-xs font-bold flex items-center justify-center gap-2 border border-white/15 transition">
+                            <svg class="w-4 h-4 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            <span>Sukai Foto</span>
+                        </button>
+                        <button onclick="deleteCurrentPhoto()" class="ios-btn px-5 py-3.5 rounded-2xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/30 text-xs font-bold flex items-center justify-center gap-2 transition">
+                            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            <span>Hapus</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= UPLOAD PHOTO MODAL ================= -->
+    <div id="uploadModal" class="ios-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+        <div class="ios-modal-content ios-glass w-full max-w-lg p-6 sm:p-8 bg-white/95 relative shadow-2xl border border-white/80">
+            <button onclick="closeUploadModal()" class="ios-btn absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-black flex items-center justify-center">
+                &times;
+            </button>
+            <div class="text-center mb-6">
+                <h3 class="serif text-2xl font-bold text-[#1c1c1e]">Tambah Foto ke Vault</h3>
+                <p class="text-xs text-stone-500 mt-1">Foto akan dienkripsi lokal dengan AES-256 sebelum disimpan</p>
+            </div>
+
+            <form id="uploadForm" onsubmit="handleUploadSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Pilih File Foto (dari Perangkat)</label>
+                    <div id="dropZone" onclick="document.getElementById('uploadFileInput').click()" class="border-2 border-dashed border-stone-300 hover:border-[var(--gold)] rounded-2xl p-4 text-center cursor-pointer transition bg-stone-50/50 hover:bg-amber-50/30">
+                        <input type="file" id="uploadFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                        <div id="uploadDropPrompt" class="flex flex-col items-center gap-2">
+                            <div class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <span class="text-xs font-semibold text-stone-700">Klik untuk pilih berkas foto / Drop di sini</span>
+                            <span class="text-[10px] text-stone-400">Mendukung JPG, PNG, HEIC, ProRAW</span>
+                        </div>
+                        <div id="uploadPreviewBox" class="hidden flex items-center gap-3 text-left">
+                            <img id="uploadPreviewImg" src="" class="w-14 h-14 object-cover rounded-xl border border-stone-200 shadow-sm">
+                            <div class="flex-1 overflow-hidden">
+                                <p id="uploadFileName" class="text-xs font-bold text-stone-800 truncate">foto.jpg</p>
+                                <p id="uploadFileSize" class="text-[10px] text-stone-500">0 KB</p>
+                            </div>
+                            <button type="button" onclick="clearSelectedFile(event)" class="text-rose-500 hover:text-rose-700 text-xs font-bold px-2 py-1">Hapus</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Judul Foto</label>
+                    <input type="text" id="uploadTitle" required placeholder="misal: Liburan Bali ProRAW" class="ios-input w-full px-4 py-3 rounded-2xl text-xs focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Atau Gunakan Link / URL Gambar</label>
+                    <input type="url" id="uploadUrl" placeholder="https://images.unsplash.com/..." class="ios-input w-full px-4 py-3 rounded-2xl text-xs focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Kategori Album</label>
+                    <select id="uploadCategory" class="ios-input w-full px-4 py-3 rounded-2xl text-xs focus:outline-none text-stone-700">
+                        <option value="alam">Lanskap & Alam</option>
+                        <option value="proraw">Apple ProRAW</option>
+                        <option value="pribadi">Koleksi Pribadi</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="ios-btn w-full py-3.5 rounded-full bg-[#1c1c1e] text-[var(--gold)] font-bold text-xs uppercase tracking-widest hover:bg-black shadow-lg">
+                    Enkripsi & Simpan Foto
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPT INTERAKTIVITAS iOS -->
-    <script>
-        // Segmented Control Switcher Logic
+
+    <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Environment variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fotovault-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "demo-key",
+            authDomain: "demo.firebaseapp.com",
+            projectId: "demo-project",
+            storageBucket: "demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let unsubscribePhotos = null;
+
+        // Global Window State Variables
+        window.activeAuthMode = 'login';
+        window.activeCategory = 'all';
+        window.currentActivePhotoId = null;
+        let selectedFileDataUrl = null;
+
+        window.handleFileSelect = function(e) {
+            const file = e.target.files ? e.target.files[0] : (e.dataTransfer ? e.dataTransfer.files[0] : null);
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                selectedFileDataUrl = evt.target.result;
+                const previewImg = document.getElementById('uploadPreviewImg');
+                const fileName = document.getElementById('uploadFileName');
+                const fileSize = document.getElementById('uploadFileSize');
+                const titleInput = document.getElementById('uploadTitle');
+
+                if (previewImg) previewImg.src = selectedFileDataUrl;
+                if (fileName) fileName.textContent = file.name;
+                if (fileSize) fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+                
+                if (titleInput && !titleInput.value) {
+                    const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                    titleInput.value = nameWithoutExt;
+                }
+
+                document.getElementById('uploadDropPrompt')?.classList.add('hidden');
+                document.getElementById('uploadPreviewBox')?.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.clearSelectedFile = function(e) {
+            if (e) e.stopPropagation();
+            selectedFileDataUrl = null;
+            const fileInput = document.getElementById('uploadFileInput');
+            if (fileInput) fileInput.value = '';
+            document.getElementById('uploadDropPrompt')?.classList.remove('hidden');
+            document.getElementById('uploadPreviewBox')?.classList.add('hidden');
+        };
+
+        // Default seed data assigned to window.photos
+        window.photos = [
+            {
+                id: "seed-1",
+                title: "Danau Kabut Alami",
+                url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop",
+                category: "alam",
+                isFav: true,
+                isProRaw: true,
+                isTrash: false,
+                date: "14 Feb 2026",
+                camera: "iPhone 15 Pro Max",
+                resolution: "48 MP (8064 × 6048)"
+            },
+            {
+                id: "seed-2",
+                title: "Puncak Pegunungan Salju",
+                url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=800&auto=format&fit=crop",
+                category: "alam",
+                isFav: false,
+                isProRaw: true,
+                isTrash: false,
+                date: "10 Feb 2026",
+                camera: "iPhone 15 Pro",
+                resolution: "24 MP (5712 × 4284)"
+            },
+            {
+                id: "seed-3",
+                title: "Hutan Rindang Estetik",
+                url: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=800&auto=format&fit=crop",
+                category: "alam",
+                isFav: true,
+                isProRaw: false,
+                isTrash: false,
+                date: "05 Feb 2026",
+                camera: "iPhone 14 Pro",
+                resolution: "48 MP (8064 × 6048)"
+            }
+        ];
+
+        async function authenticateUser() {
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Cloud auth error, using local fallback mode:", err);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                connectCloudStorage(user.uid);
+            }
+        });
+
+        function connectCloudStorage(userId) {
+            if (unsubscribePhotos) unsubscribePhotos();
+
+            const userPhotosRef = collection(db, 'artifacts', appId, 'users', userId, 'photos');
+
+            unsubscribePhotos = onSnapshot(userPhotosRef, (snapshot) => {
+                if (!snapshot.empty) {
+                    const cloudPhotos = [];
+                    snapshot.forEach(docSnap => {
+                        cloudPhotos.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    window.photos = cloudPhotos;
+                }
+                window.renderVaultPhotos();
+                window.showToast("Data cloud tersinkronisasi");
+            }, (error) => {
+                console.warn("Snapshot subscription warning:", error);
+                window.renderVaultPhotos();
+            });
+        }
+
+        authenticateUser();
+
+        // Cloud Storage Helpers
+        window.savePhotoToCloud = async function(photoData) {
+            if (currentUser) {
+                try {
+                    const userPhotosRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'photos');
+                    await addDoc(userPhotosRef, photoData);
+                } catch (e) {
+                    console.error("Error adding to cloud:", e);
+                }
+            }
+        };
+
+        window.updateCloudPhoto = async function(photoId, updatedFields) {
+            if (currentUser && !photoId.toString().startsWith("seed-")) {
+                try {
+                    const photoDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'photos', photoId);
+                    await updateDoc(photoDocRef, updatedFields);
+                } catch (e) {
+                    console.error("Error updating cloud photo:", e);
+                }
+            }
+        };
+
+        window.deleteCloudPhoto = async function(photoId) {
+            if (currentUser && !photoId.toString().startsWith("seed-")) {
+                try {
+                    const photoDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'photos', photoId);
+                    await deleteDoc(photoDocRef);
+                } catch (e) {
+                    console.error("Error deleting cloud photo:", e);
+                }
+            }
+        };
+
+        let toastTimeout;
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            if (toast && toastMessage) {
+                toastMessage.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
+            }
+        };
+
+        window.switchAuthTab = function(mode) {
+            window.activeAuthMode = mode;
+            const authSegmentPill = document.getElementById('authSegmentPill');
+            const tabBtnLogin = document.getElementById('tabBtnLogin');
+            const tabBtnRegister = document.getElementById('tabBtnRegister');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSubtitle = document.getElementById('modalSubtitle');
+            const btnSubmitAuth = document.getElementById('btnSubmitAuth');
+            const fullNameGroup = document.getElementById('fullNameGroup');
+
+            if (mode === 'login') {
+                authSegmentPill.style.transform = 'translateX(0%)';
+                tabBtnLogin.classList.replace('text-stone-500', 'text-black');
+                tabBtnRegister.classList.replace('text-black', 'text-stone-500');
+                modalTitle.textContent = 'Masuk ke Vault';
+                modalSubtitle.textContent = 'Buka brankas terenkripsi Anda dengan kredensial aman';
+                btnSubmitAuth.querySelector('span').textContent = 'Masuk & Dekripsi Vault';
+                fullNameGroup.classList.add('hidden');
+            } else {
+                authSegmentPill.style.transform = 'translateX(100%)';
+                tabBtnRegister.classList.replace('text-stone-500', 'text-black');
+                tabBtnLogin.classList.replace('text-black', 'text-stone-500');
+                modalTitle.textContent = 'Daftar Akun Vault Baru';
+                modalSubtitle.textContent = 'Mulai amankan portofolio dan kenangan visual Anda';
+                btnSubmitAuth.querySelector('span').textContent = 'Buat Brankas Terenkripsi';
+                fullNameGroup.classList.remove('hidden');
+            }
+        };
+
+        window.handleAuthSubmit = function(e) {
+            e.preventDefault();
+            window.closeAuthModal();
+            window.showToast(window.activeAuthMode === 'login' ? 'Otentikasi Berhasil! Membuka Vault...' : 'Akun Vault Berhasil Dibuat!');
+            window.showSection('vault');
+        };
+
+        window.triggerFaceIDAuth = function() {
+            window.closeAuthModal();
+            window.showToast('Face ID Dikenali! Mengakses foto terenkripsi...');
+            window.showSection('vault');
+        };
+
+        window.triggerAppleSignIn = function() {
+            window.closeAuthModal();
+            window.showToast('Berhasil Masuk dengan Apple ID!');
+            window.showSection('vault');
+        };
+
+        window.logoutVault = function() {
+            window.showSection('landing');
+            window.showToast('Brankas berhasil dikunci.');
+        };
+
+        window.showSection = function(section) {
+            const landingSection = document.getElementById('landingPageSection');
+            const vaultSection = document.getElementById('vaultDashboardSection');
+            const landingNav = document.getElementById('landingNav');
+            const dashboardNav = document.getElementById('dashboardNav');
+            const guestNavBtns = document.getElementById('guestNavBtns');
+
+            if (section === 'vault') {
+                landingSection.classList.add('hidden');
+                vaultSection.classList.remove('hidden');
+                landingNav.classList.add('hidden');
+                guestNavBtns.classList.add('hidden');
+                dashboardNav.classList.remove('hidden');
+                window.renderVaultPhotos();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                landingSection.classList.remove('hidden');
+                vaultSection.classList.add('hidden');
+                landingNav.classList.remove('hidden');
+                guestNavBtns.classList.remove('hidden');
+                dashboardNav.classList.add('hidden');
+            }
+        };
+
+        const authModal = document.getElementById('authModal');
+        
+        document.querySelectorAll('[data-open-auth]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-open-auth');
+                window.switchAuthTab(mode);
+                authModal.classList.add('active');
+            });
+        });
+
+        window.closeAuthModal = function() {
+            authModal.classList.remove('active');
+        };
+
+        authModal?.addEventListener('click', (e) => {
+            if (e.target === authModal) window.closeAuthModal();
+        });
+
+        window.togglePasswordVisibility = function() {
+            const pwdInput = document.getElementById('inputPassword');
+            pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+        };
+
+        window.updateCategoryCounts = function() {
+            const countAll = window.photos.filter(p => !p.isTrash).length;
+            const countFav = window.photos.filter(p => p.isFav && !p.isTrash).length;
+            const countProRaw = window.photos.filter(p => p.isProRaw && !p.isTrash).length;
+            const countAlam = window.photos.filter(p => p.category === 'alam' && !p.isTrash).length;
+            const countTrash = window.photos.filter(p => p.isTrash).length;
+
+            document.getElementById('count-all').textContent = countAll;
+            document.getElementById('count-favorit').textContent = countFav;
+            document.getElementById('count-proraw').textContent = countProRaw;
+            document.getElementById('count-alam').textContent = countAlam;
+            document.getElementById('count-trash').textContent = countTrash;
+        };
+
+        window.renderVaultPhotos = function() {
+            const grid = document.getElementById('vaultPhotoGrid');
+            const emptyState = document.getElementById('emptyVaultState');
+            const searchVal = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
+
+            window.updateCategoryCounts();
+
+            let filtered = window.photos.filter(p => {
+                if (window.activeCategory === 'favorit' && !p.isFav) return false;
+                if (window.activeCategory === 'proraw' && !p.isProRaw) return false;
+                if (window.activeCategory === 'alam' && p.category !== 'alam') return false;
+                if (window.activeCategory === 'trash' && !p.isTrash) return false;
+                if (window.activeCategory !== 'trash' && p.isTrash) return false;
+
+                if (searchVal) {
+                    return p.title.toLowerCase().includes(searchVal) || p.camera.toLowerCase().includes(searchVal);
+                }
+
+                return true;
+            });
+
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = "ios-card overflow-hidden h-64 group cursor-pointer relative bg-stone-900 border border-black/10";
+                card.onclick = () => window.openLightbox(photo.id);
+
+                card.innerHTML = `
+                    <img src="${photo.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out opacity-90 group-hover:opacity-100" alt="${photo.title}">
+                    
+                    ${photo.isProRaw ? `<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-black/60 text-[var(--gold)] backdrop-blur-md border border-white/20">RAW</span>` : ''}
+                    
+                    <button onclick="event.stopPropagation(); window.toggleFavorite('${photo.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md text-white flex items-center justify-center hover:scale-110 transition">
+                        ${photo.isFav ? '❤️' : '🤍'}
+                    </button>
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <div class="text-left text-white w-full">
+                            <h4 class="serif font-bold text-sm truncate">${photo.title}</h4>
+                            <p class="text-[10px] text-stone-300 font-light flex items-center justify-between mt-0.5">
+                                <span>${photo.camera}</span>
+                                <span class="text-emerald-400">AES-256</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        window.setCategoryFilter = function(cat) {
+            window.activeCategory = cat;
+            document.querySelectorAll('.category-tab').forEach(btn => {
+                btn.className = "category-tab px-5 py-2.5 rounded-full text-xs font-medium text-stone-600 hover:text-black hover:bg-stone-100 transition whitespace-nowrap flex items-center gap-2";
+                const svg = btn.querySelector('svg');
+                if (svg) svg.setAttribute('class', 'w-4 h-4 text-stone-400');
+                const badge = btn.querySelector('span:last-child');
+                if (badge) badge.className = "px-2 py-0.5 rounded-full bg-stone-200/60 text-[10px] text-stone-600 font-semibold";
+            });
+            const activeBtn = document.getElementById(`tab-${cat}`);
+            if (activeBtn) {
+                activeBtn.className = "category-tab active px-5 py-2.5 rounded-full text-xs font-bold transition whitespace-nowrap bg-[#1c1c1e] text-[var(--gold)] flex items-center gap-2 shadow-md";
+                const svg = activeBtn.querySelector('svg');
+                if (svg) svg.setAttribute('class', 'w-4 h-4 text-[var(--gold)]');
+                const badge = activeBtn.querySelector('span:last-child');
+                if (badge) badge.className = "px-2 py-0.5 rounded-full bg-white/10 text-[10px] text-[var(--gold)] font-bold";
+            }
+            window.renderVaultPhotos();
+        };
+
+        window.filterPhotos = function() {
+            window.renderVaultPhotos();
+        };
+
+        window.toggleFavorite = function(id) {
+            const photo = window.photos.find(p => p.id === id);
+            if (photo) {
+                photo.isFav = !photo.isFav;
+                window.showToast(photo.isFav ? 'Ditambahkan ke Favorit' : 'Dihapus dari Favorit');
+                window.renderVaultPhotos();
+                if (window.updateCloudPhoto) {
+                    window.updateCloudPhoto(id, { isFav: photo.isFav });
+                }
+            }
+        };
+
+        window.renderVaultPhotos = function() {
+            const grid = document.getElementById('vaultPhotoGrid');
+            const emptyState = document.getElementById('emptyVaultState');
+            const searchVal = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
+
+            window.updateCategoryCounts();
+
+            let filtered = window.photos.filter(p => {
+                if (window.activeCategory === 'favorit' && !p.isFav) return false;
+                if (window.activeCategory === 'proraw' && !p.isProRaw) return false;
+                if (window.activeCategory === 'alam' && p.category !== 'alam') return false;
+                if (window.activeCategory === 'trash' && !p.isTrash) return false;
+                if (window.activeCategory !== 'trash' && p.isTrash) return false;
+
+                if (searchVal) {
+                    return p.title.toLowerCase().includes(searchVal) || p.camera.toLowerCase().includes(searchVal);
+                }
+
+                return true;
+            });
+
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = "ios-card overflow-hidden h-64 group cursor-pointer relative bg-stone-900 border border-black/10";
+                card.onclick = () => window.openLightbox(photo.id);
+
+                card.innerHTML = `
+                    <img src="${photo.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out opacity-90 group-hover:opacity-100" alt="${photo.title}">
+                    
+                    ${photo.isProRaw ? `<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider bg-black/60 text-[var(--gold)] backdrop-blur-md border border-white/20">RAW</span>` : ''}
+                    
+                    <button onclick="event.stopPropagation(); window.toggleFavorite('${photo.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center hover:scale-110 transition border border-white/10">
+                        <svg class="w-4 h-4 ${photo.isFav ? 'text-amber-400 fill-amber-400' : 'text-white'}" fill="${photo.isFav ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    </button>
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <div class="text-left text-white w-full">
+                            <h4 class="serif font-bold text-sm truncate">${photo.title}</h4>
+                            <p class="text-[10px] text-stone-300 font-light flex items-center justify-between mt-0.5">
+                                <span>${photo.camera}</span>
+                                <span class="text-emerald-400">AES-256</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        window.openLightbox = function(id) {
+            window.currentActivePhotoId = id;
+            const photo = window.photos.find(p => p.id === id);
+            if (!photo) return;
+
+            document.getElementById('lightboxImg').src = photo.url;
+            document.getElementById('lightboxTitle').textContent = photo.title;
+            document.getElementById('lightboxDate').textContent = 'Diunggah: ' + photo.date;
+            document.getElementById('lightboxCamera').textContent = photo.camera;
+            document.getElementById('lightboxRes').textContent = photo.resolution;
+            document.getElementById('lightboxBadge').textContent = photo.isProRaw ? 'ProRAW 12-Bit' : 'JPEG / HEIC';
+
+            window.updateLightboxFavBtn(photo.isFav);
+            document.getElementById('lightboxModal').classList.add('active');
+        };
+
+        window.closeLightbox = function() {
+            document.getElementById('lightboxModal').classList.remove('active');
+        };
+
+        window.updateLightboxFavBtn = function(isFav) {
+            const favBtn = document.getElementById('lightboxFavBtn');
+            if (favBtn) {
+                favBtn.innerHTML = `
+                    <svg class="w-4 h-4 ${isFav ? 'text-amber-400 fill-amber-400' : 'text-stone-300'}" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    <span>${isFav ? 'Disukai' : 'Sukai Foto'}</span>
+                `;
+                favBtn.className = isFav 
+                    ? "ios-btn flex-1 py-3.5 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center justify-center gap-2 hover:bg-amber-500/30 transition shadow-sm"
+                    : "ios-btn flex-1 py-3.5 rounded-2xl bg-white/10 text-white border border-white/15 text-xs font-semibold flex items-center justify-center gap-2 hover:bg-white/20 transition";
+            }
+        };
+
+        window.toggleFavoriteCurrent = function() {
+            if (window.currentActivePhotoId) {
+                window.toggleFavorite(window.currentActivePhotoId);
+                const photo = window.photos.find(p => p.id === window.currentActivePhotoId);
+                if (photo) {
+                    window.updateLightboxFavBtn(photo.isFav);
+                }
+            }
+        };
+
+        window.deleteCurrentPhoto = function() {
+            if (window.currentActivePhotoId) {
+                const photo = window.photos.find(p => p.id === window.currentActivePhotoId);
+                if (photo) {
+                    photo.isTrash = true;
+                    window.showToast('Foto dipindahkan ke Sampah');
+                    window.closeLightbox();
+                    window.renderVaultPhotos();
+                    if (window.updateCloudPhoto) {
+                        window.updateCloudPhoto(window.currentActivePhotoId, { isTrash: true });
+                    }
+                }
+            }
+        };
+
+        window.openUploadModal = function() {
+            document.getElementById('uploadModal').classList.add('active');
+        };
+
+        window.closeUploadModal = function() {
+            document.getElementById('uploadModal').classList.remove('active');
+        };
+
+        window.handleUploadSubmit = function(e) {
+            e.preventDefault();
+            const title = document.getElementById('uploadTitle').value;
+            const urlInput = document.getElementById('uploadUrl').value;
+            const category = document.getElementById('uploadCategory').value;
+
+            const fallbackUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop";
+
+            let finalPhotoUrl = fallbackUrl;
+            if (selectedFileDataUrl) {
+                finalPhotoUrl = selectedFileDataUrl;
+            } else if (urlInput.trim() !== "") {
+                finalPhotoUrl = urlInput.trim();
+            }
+
+            const newPhoto = {
+                title: title || "Foto Tanpa Judul",
+                url: finalPhotoUrl,
+                category: category,
+                isFav: false,
+                isProRaw: category === 'proraw',
+                isTrash: false,
+                date: "Baru saja",
+                camera: selectedFileDataUrl ? "Unggahan Perangkat" : "Apple ProRAW Engine",
+                resolution: "Resolusi Asli (AES-256)"
+            };
+
+            const localObj = { id: Date.now().toString(), ...newPhoto };
+            window.photos.unshift(localObj);
+            
+            if (window.savePhotoToCloud) {
+                window.savePhotoToCloud(newPhoto);
+            }
+
+            window.clearSelectedFile();
+            document.getElementById('uploadTitle').value = '';
+            document.getElementById('uploadUrl').value = '';
+
+            window.closeUploadModal();
+            window.showToast('Foto berhasil dienkripsi & diunggah ke Vault');
+            window.renderVaultPhotos();
+        };
+
         const btnMonthly = document.getElementById('btnMonthly');
         const btnYearly = document.getElementById('btnYearly');
         const segmentedPill = document.getElementById('segmentedPill');
@@ -569,54 +1447,13 @@
             periodHaute.textContent = '.00 / tahun';
         });
 
-        // Toggle Accordion FAQ
+        // FAQ Accordion Toggle
         document.querySelectorAll('.accordion-header').forEach(button => {
             button.addEventListener('click', () => {
                 const faqCard = button.closest('.faq-card');
                 faqCard.classList.toggle('open');
             });
         });
-
-        // Modal Auth Handlers
-        const authModal = document.getElementById('authModal');
-        const btnCloseModal = document.getElementById('btnCloseModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSubtitle = document.getElementById('modalSubtitle');
-
-        document.querySelectorAll('[data-open-auth]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const type = btn.getAttribute('data-open-auth');
-                if (type === 'login') {
-                    modalTitle.textContent = 'Masuk ke Vault';
-                    modalSubtitle.textContent = 'Masukkan kredensial akun privat Anda';
-                } else {
-                    modalTitle.textContent = 'Daftar Akun Vault';
-                    modalSubtitle.textContent = 'Mulai amankan koleksi foto eksklusif Anda';
-                }
-                authModal.classList.add('active');
-            });
-        });
-
-        btnCloseModal?.addEventListener('click', () => {
-            authModal.classList.remove('active');
-        });
-
-        authModal?.addEventListener('click', (e) => {
-            if (e.target === authModal) authModal.classList.remove('active');
-        });
-
-        // Toast Notification Helper (Dynamic Island Banner)
-        let toastTimeout;
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            if (toast && toastMessage) {
-                toastMessage.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toastTimeout);
-                toastTimeout = setTimeout(() => toast.classList.remove('show'), 3500);
-            }
-        }
     </script>
 </body>
 </html>
