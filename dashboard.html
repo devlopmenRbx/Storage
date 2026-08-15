@@ -1,55 +1,43 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<title>FotoVault — My Vault</title>
-
-<link rel="stylesheet" href="style.css">
+<title>FotoVault — Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 
 <style>
-
-/* =========================================================
-   PREMIUM VAULT
-========================================================= */
-
 :root{
-    --gold:#c59a4d;
-    --gold2:#9d7737;
-    --ink:#181715;
-    --muted:#77716a;
-    --cream:#f8f5ee;
+    --gold:#bd9349;
+    --gold-dark:#8d682d;
+    --ink:#171613;
+    --muted:#777269;
+    --bg:#f7f4ed;
+    --card:rgba(255,255,255,.72);
     --line:rgba(30,25,18,.08);
 }
 
-*{
-    box-sizing:border-box;
+*{box-sizing:border-box}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
     margin:0;
-    color:var(--ink);
-    background:
-        radial-gradient(
-            circle at 10% 0%,
-            rgba(220,194,137,.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 90% 20%,
-            rgba(255,255,255,.95),
-            transparent 30%
-        ),
-        #f7f4ed;
     min-height:100vh;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
+    background:
+        radial-gradient(circle at 8% 0%,rgba(211,178,106,.20),transparent 28%),
+        radial-gradient(circle at 92% 15%,rgba(255,255,255,.95),transparent 30%),
+        var(--bg);
 }
 
-button,
-input{
+button,input{
     font:inherit;
 }
 
@@ -57,97 +45,92 @@ button{
     cursor:pointer;
 }
 
-.vault-shell{
+.shell{
     width:min(1380px,94%);
     margin:auto;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+/* NAV */
 
-.vault-header{
+.topbar{
     position:sticky;
     top:12px;
     z-index:50;
-    margin:14px auto 0;
+    padding-top:12px;
 }
 
-.vault-nav{
+.nav{
+    min-height:62px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:15px;
-    padding:12px 15px;
-    border:1px solid rgba(255,255,255,.75);
-    background:rgba(255,255,255,.62);
-    backdrop-filter:blur(25px) saturate(140%);
-    -webkit-backdrop-filter:blur(25px) saturate(140%);
-    border-radius:24px;
+    gap:12px;
+    padding:8px 10px 8px 17px;
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:23px;
+    background:rgba(255,255,255,.68);
+    backdrop-filter:blur(26px) saturate(145%);
+    -webkit-backdrop-filter:blur(26px) saturate(145%);
     box-shadow:
-        0 18px 60px rgba(54,43,23,.08),
+        0 18px 55px rgba(50,40,20,.08),
         inset 0 1px rgba(255,255,255,.9);
 }
 
-.brand{
-    font-family:Georgia,serif;
-    font-size:21px;
-    font-weight:700;
-    text-decoration:none;
+.logo{
     color:var(--ink);
+    text-decoration:none;
+    font-family:Georgia,serif;
+    font-weight:700;
+    font-size:21px;
 }
 
-.brand span{
+.logo span{
     color:var(--gold);
 }
 
 .nav-right{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:7px;
 }
 
-.icon-btn{
-    width:42px;
-    height:42px;
-    border:1px solid var(--line);
-    border-radius:15px;
-    background:rgba(255,255,255,.7);
+.icon{
+    width:40px;
+    height:40px;
     display:grid;
     place-items:center;
-    color:#555;
-    transition:
-        transform .25s ease,
-        background .25s ease,
-        border-color .25s ease;
+    border:1px solid var(--line);
+    border-radius:14px;
+    color:#5d574f;
+    background:rgba(255,255,255,.62);
+    transition:.25s ease;
 }
 
-.icon-btn:hover{
+.icon:hover{
     transform:translateY(-2px);
     background:#fff;
-    border-color:rgba(197,154,77,.45);
 }
 
-.profile-btn{
+.profile{
     display:flex;
     align-items:center;
     gap:8px;
-    padding:4px 10px 4px 4px;
+    padding:3px 10px 3px 4px;
     border:1px solid var(--line);
     border-radius:999px;
-    background:rgba(255,255,255,.75);
+    background:rgba(255,255,255,.72);
 }
 
-.profile-avatar{
+.avatar{
     width:34px;
     height:34px;
     border-radius:50%;
     object-fit:cover;
-    background:#efe4cc;
+    background:#eee1c8;
 }
 
 .profile-name{
-    max-width:110px;
+    max-width:120px;
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
@@ -155,214 +138,191 @@ button{
     font-weight:700;
 }
 
-/* =========================================================
-   HERO
-========================================================= */
+/* HERO */
 
 .hero{
     position:relative;
     overflow:hidden;
     margin-top:28px;
-    padding:35px;
+    padding:36px;
+    border:1px solid rgba(255,255,255,.82);
     border-radius:34px;
     background:
         linear-gradient(
             135deg,
-            rgba(255,255,255,.78),
-            rgba(248,238,216,.58)
+            rgba(255,255,255,.80),
+            rgba(247,235,207,.62)
         );
-    border:1px solid rgba(255,255,255,.8);
-    box-shadow:0 30px 80px rgba(50,40,22,.08);
+    box-shadow:0 30px 90px rgba(45,35,18,.08);
 }
 
-.hero:after{
+.hero:before{
     content:"";
     position:absolute;
-    width:280px;
-    height:280px;
-    right:-100px;
-    top:-130px;
+    width:300px;
+    height:300px;
+    right:-120px;
+    top:-160px;
     border-radius:50%;
-    background:rgba(210,175,103,.16);
-    filter:blur(5px);
-    animation:heroFloat 7s ease-in-out infinite;
+    background:rgba(193,148,70,.16);
+    animation:float 7s ease-in-out infinite;
 }
 
-@keyframes heroFloat{
+@keyframes float{
     0%,100%{transform:translate(0,0)}
-    50%{transform:translate(-20px,25px)}
+    50%{transform:translate(-18px,25px)}
 }
 
-.hero-label{
-    color:var(--gold2);
+.kicker{
+    color:var(--gold-dark);
     font-size:10px;
     font-weight:800;
-    letter-spacing:.16em;
+    letter-spacing:.18em;
 }
 
 .hero h1{
     position:relative;
-    z-index:2;
+    z-index:1;
     margin:8px 0;
     font-family:Georgia,serif;
-    font-size:clamp(32px,5vw,58px);
-    line-height:1;
-    letter-spacing:-.04em;
+    font-size:clamp(34px,6vw,61px);
+    line-height:.98;
+    letter-spacing:-.045em;
 }
 
 .hero p{
     position:relative;
-    z-index:2;
-    max-width:650px;
+    z-index:1;
+    max-width:680px;
+    margin:15px 0 0;
     color:var(--muted);
     line-height:1.7;
 }
 
-/* =========================================================
-   TOOLBAR
-========================================================= */
+/* TOOLBAR */
 
 .toolbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     gap:12px;
-    margin:25px 0 17px;
+    margin:24px 0 15px;
 }
 
-.toolbar-left,
-.toolbar-right{
+.tools{
     display:flex;
     align-items:center;
     gap:8px;
 }
 
-.gold-btn,
-.soft-btn{
-    min-height:40px;
-    border-radius:14px;
+.primary,
+.secondary{
+    height:40px;
     padding:0 15px;
+    border-radius:14px;
     border:1px solid var(--line);
     transition:.25s ease;
 }
 
-.gold-btn{
-    color:#fff;
+.primary{
     border:0;
-    background:
-        linear-gradient(
-            135deg,
-            var(--gold),
-            var(--gold2)
-        );
-    box-shadow:
-        0 10px 28px rgba(173,129,54,.22);
+    color:#fff;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    box-shadow:0 10px 25px rgba(173,129,54,.20);
 }
 
-.gold-btn:hover,
-.soft-btn:hover{
+.secondary{
+    background:rgba(255,255,255,.7);
+}
+
+.primary:hover,
+.secondary:hover{
     transform:translateY(-2px);
-}
-
-.soft-btn{
-    background:rgba(255,255,255,.72);
 }
 
 .search{
     width:min(300px,45vw);
     height:40px;
-    border-radius:14px;
-    border:1px solid var(--line);
+    padding:0 14px;
     outline:none;
-    padding:0 13px;
-    background:rgba(255,255,255,.7);
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:rgba(255,255,255,.68);
 }
 
 .search:focus{
-    border-color:rgba(197,154,77,.6);
-    box-shadow:0 0 0 4px rgba(197,154,77,.09);
+    border-color:rgba(189,147,73,.55);
+    box-shadow:0 0 0 4px rgba(189,147,73,.09);
 }
 
-/* =========================================================
-   PHOTO GRID
-========================================================= */
+/* GALLERY */
 
-.photo-grid{
+.grid{
     display:grid;
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(180px,1fr)
-        );
+    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
     gap:14px;
 }
 
-.photo-card{
+.photo{
     position:relative;
     overflow:hidden;
     aspect-ratio:1;
     border-radius:22px;
-    background:#e9e3d7;
     border:1px solid rgba(255,255,255,.85);
-    box-shadow:0 15px 40px rgba(50,40,22,.08);
+    background:#e9e3d8;
+    box-shadow:0 14px 40px rgba(40,30,15,.08);
     opacity:0;
-    transform:translateY(18px) scale(.985);
-    animation:
-        cardIn .65s
-        cubic-bezier(.16,1,.3,1)
-        forwards;
+    transform:translateY(16px) scale(.985);
+    animation:photoIn .6s cubic-bezier(.16,1,.3,1) forwards;
 }
 
-@keyframes cardIn{
+@keyframes photoIn{
     to{
         opacity:1;
         transform:none;
     }
 }
 
-.photo-card img{
+.photo img{
     width:100%;
     height:100%;
     display:block;
     object-fit:cover;
     opacity:0;
-    transform:scale(1.04);
+    transform:scale(1.035);
     transition:
         opacity .55s ease,
-        transform .8s cubic-bezier(.16,1,.3,1);
+        transform .75s cubic-bezier(.16,1,.3,1);
 }
 
-.photo-card img.loaded{
+.photo img.loaded{
     opacity:1;
     transform:scale(1);
 }
 
-.photo-skeleton{
+.skeleton{
     position:absolute;
     inset:0;
     background:
         linear-gradient(
             105deg,
-            #ebe5d9 20%,
+            #e9e2d6 20%,
             #f7f3eb 35%,
-            #ebe5d9 50%
+            #e9e2d6 50%
         );
     background-size:220% 100%;
-    animation:shimmer 1.5s infinite;
+    animation:shimmer 1.4s linear infinite;
 }
 
 @keyframes shimmer{
-    to{
-        background-position:-220% 0;
-    }
+    to{background-position:-220% 0}
 }
 
-.photo-card.loaded .photo-skeleton{
+.photo.ready .skeleton{
     opacity:0;
-    pointer-events:none;
 }
 
-.photo-overlay{
+.overlay{
     position:absolute;
     left:9px;
     right:9px;
@@ -370,16 +330,16 @@ button{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:8px;
-    padding:8px 9px;
+    gap:7px;
+    padding:8px;
     border-radius:14px;
     color:white;
-    background:rgba(20,18,14,.42);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
+    background:rgba(20,18,15,.43);
+    backdrop-filter:blur(13px);
+    -webkit-backdrop-filter:blur(13px);
 }
 
-.photo-title{
+.photo-name{
     min-width:0;
     overflow:hidden;
     white-space:nowrap;
@@ -393,53 +353,48 @@ button{
     gap:5px;
 }
 
-.mini-btn{
+.mini{
     width:30px;
     height:30px;
+    display:grid;
+    place-items:center;
+    padding:0;
     border:0;
     border-radius:10px;
     color:white;
-    background:rgba(255,255,255,.17);
-    backdrop-filter:blur(8px);
+    background:rgba(255,255,255,.18);
+    transition:.2s ease;
 }
 
-.mini-btn:hover{
-    background:rgba(255,255,255,.3);
+.mini:hover{
+    background:rgba(255,255,255,.32);
 }
 
-/* =========================================================
-   EMPTY / LOADING
-========================================================= */
+/* STATES */
 
-.loading-state{
-    min-height:250px;
+.state{
+    min-height:260px;
     display:grid;
     place-items:center;
+    text-align:center;
     color:var(--muted);
 }
 
-.loader-ring{
+.spinner{
     width:42px;
     height:42px;
-    border:3px solid rgba(197,154,77,.18);
+    margin:auto;
+    border:3px solid rgba(189,147,73,.18);
     border-top-color:var(--gold);
     border-radius:50%;
-    animation:spin 1s linear infinite;
+    animation:spin .9s linear infinite;
 }
 
 @keyframes spin{
     to{transform:rotate(360deg)}
 }
 
-.empty{
-    padding:65px 20px;
-    text-align:center;
-    color:var(--muted);
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
+/* MODAL */
 
 .modal{
     position:fixed;
@@ -447,35 +402,35 @@ button{
     z-index:100;
     display:none;
     place-items:center;
-    padding:20px;
-    background:rgba(19,17,14,.57);
+    padding:18px;
+    background:rgba(18,16,13,.58);
     backdrop-filter:blur(16px);
 }
 
 .modal.open{
     display:grid;
-    animation:fadeIn .25s ease;
+    animation:fade .22s ease;
 }
 
-@keyframes fadeIn{
+@keyframes fade{
     from{opacity:0}
     to{opacity:1}
 }
 
 .modal-card{
-    width:min(460px,100%);
-    padding:22px;
-    border-radius:28px;
-    background:rgba(255,255,255,.9);
+    width:min(455px,100%);
+    padding:23px;
     border:1px solid rgba(255,255,255,.9);
+    border-radius:28px;
+    background:rgba(255,255,255,.91);
     box-shadow:0 40px 100px rgba(0,0,0,.25);
-    animation:modalIn .45s cubic-bezier(.16,1,.3,1);
+    animation:modalIn .42s cubic-bezier(.16,1,.3,1);
 }
 
 @keyframes modalIn{
     from{
         opacity:0;
-        transform:translateY(25px) scale(.96);
+        transform:translateY(22px) scale(.96);
     }
     to{
         opacity:1;
@@ -485,93 +440,106 @@ button{
 
 .modal-head{
     display:flex;
-    align-items:center;
     justify-content:space-between;
+    align-items:center;
 }
 
 .modal-title{
+    margin:4px 0 0;
     font-family:Georgia,serif;
     font-size:25px;
-    margin:0;
 }
 
-.modal-input{
+.close{
+    width:38px;
+    height:38px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:#fff;
+    font-size:22px;
+}
+
+.modal-file{
+    margin:18px 0 0;
+    padding:11px 12px;
+    border-radius:13px;
+    background:#f5f1e8;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.email{
     width:100%;
     height:46px;
-    margin-top:16px;
-    border-radius:15px;
-    border:1px solid var(--line);
-    outline:none;
+    margin-top:12px;
     padding:0 14px;
+    border:1px solid var(--line);
+    border-radius:15px;
+    outline:none;
     background:#fff;
 }
 
-.modal-input:focus{
+.email:focus{
     border-color:var(--gold);
 }
 
 .modal-actions{
     display:flex;
     gap:8px;
-    margin-top:14px;
+    margin-top:13px;
 }
 
-/* =========================================================
-   SHARE SCANNING
-========================================================= */
+.modal-actions>*{
+    flex:1;
+}
 
-.share-scan{
+/* SCAN */
+
+.scan{
     display:none;
     text-align:center;
-    padding:25px 5px 10px;
+    padding:18px 0 4px;
 }
 
-.share-scan.active{
+.scan.active{
     display:block;
 }
 
-.scan-orb{
+.orb{
     position:relative;
-    width:110px;
-    height:110px;
-    margin:auto;
-    border-radius:50%;
+    width:108px;
+    height:108px;
     display:grid;
     place-items:center;
-    background:
-        radial-gradient(
-            circle,
-            #fff,
-            #f1e3c6
-        );
+    margin:8px auto 0;
+    border-radius:50%;
+    background:radial-gradient(circle,#fff,#f1e2c3);
     box-shadow:
-        0 0 0 1px #e1c78f,
-        0 0 0 12px rgba(197,154,77,.08),
-        0 0 60px rgba(197,154,77,.25);
+        0 0 0 1px #d9bd80,
+        0 0 0 11px rgba(189,147,73,.08),
+        0 0 55px rgba(189,147,73,.24);
 }
 
-.scan-orb:before,
-.scan-orb:after{
+.orb:before,
+.orb:after{
     content:"";
     position:absolute;
     inset:-15px;
+    border:1px solid rgba(189,147,73,.45);
     border-radius:50%;
-    border:1px solid rgba(197,154,77,.4);
-    animation:scanPulse 1.8s ease-out infinite;
+    animation:pulse 1.7s ease-out infinite;
 }
 
-.scan-orb:after{
-    animation-delay:.9s;
+.orb:after{
+    animation-delay:.85s;
 }
 
-@keyframes scanPulse{
+@keyframes pulse{
     0%{
         opacity:0;
-        transform:scale(.75);
+        transform:scale(.72);
     }
-    30%{
-        opacity:1;
-    }
+    25%{opacity:1}
     100%{
         opacity:0;
         transform:scale(1.35);
@@ -580,87 +548,85 @@ button{
 
 .scan-line{
     position:absolute;
-    left:17px;
-    right:17px;
+    left:18px;
+    right:18px;
     height:2px;
     background:linear-gradient(90deg,transparent,var(--gold),transparent);
     box-shadow:0 0 12px var(--gold);
-    animation:scanLine 1.45s ease-in-out infinite;
+    animation:scan 1.3s ease-in-out infinite;
 }
 
-@keyframes scanLine{
+@keyframes scan{
     0%,100%{top:25px}
     50%{top:83px}
 }
 
-.scan-status{
-    margin-top:25px;
-    font-size:13px;
+.scan-text{
+    margin:25px 0 12px;
     color:var(--muted);
+    font-size:13px;
 }
 
-.scan-progress{
+.progress{
     height:5px;
-    margin-top:14px;
     overflow:hidden;
     border-radius:999px;
-    background:#eee8dc;
+    background:#eee7db;
 }
 
-.scan-progress span{
+.progress span{
     display:block;
-    width:0%;
+    width:0;
     height:100%;
     border-radius:999px;
-    background:linear-gradient(90deg,var(--gold2),var(--gold));
-    transition:width .25s ease;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold));
+    transition:width .3s ease;
 }
 
-/* =========================================================
-   NOTIFICATION
-========================================================= */
+/* TOAST */
 
 .toast{
     position:fixed;
-    right:20px;
-    bottom:20px;
+    right:18px;
+    bottom:18px;
     z-index:200;
-    max-width:320px;
-    padding:14px 16px;
-    border-radius:17px;
+    max-width:340px;
+    padding:13px 15px;
+    border-radius:16px;
     color:white;
-    background:rgba(25,23,20,.9);
-    backdrop-filter:blur(18px);
-    box-shadow:0 20px 50px rgba(0,0,0,.2);
-    transform:translateY(20px);
+    background:rgba(25,23,20,.92);
+    backdrop-filter:blur(15px);
+    box-shadow:0 20px 50px rgba(0,0,0,.22);
     opacity:0;
+    transform:translateY(18px);
     pointer-events:none;
-    transition:.35s ease;
+    transition:.3s ease;
 }
 
 .toast.show{
-    transform:none;
     opacity:1;
+    transform:none;
 }
+
+/* MOBILE */
 
 @media(max-width:700px){
 
-    .vault-shell{
+    .shell{
         width:92%;
     }
 
     .hero{
-        padding:25px;
-        border-radius:27px;
+        padding:27px;
+        border-radius:28px;
     }
 
     .toolbar{
-        align-items:stretch;
         flex-direction:column;
+        align-items:stretch;
     }
 
-    .toolbar-left,
-    .toolbar-right{
+    .tools{
         width:100%;
     }
 
@@ -668,311 +634,202 @@ button{
         width:100%;
     }
 
-    .photo-grid{
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
+    .grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
         gap:9px;
     }
 
     .profile-name{
         display:none;
     }
-
 }
-
 </style>
 </head>
 
 <body>
 
-<header class="vault-header vault-shell">
+<header class="topbar shell">
+<nav class="nav">
 
-    <nav class="vault-nav">
+<a href="index.html" class="logo">
+Foto<span>Vault</span>
+</a>
 
-        <a href="index.html" class="brand">
-            Foto<span>Vault</span>
-        </a>
+<div class="nav-right">
 
-        <div class="nav-right">
+<button class="icon" id="notificationBtn" title="Notifikasi">
+<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-width="1.8" stroke-linecap="round" d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
+</svg>
+</button>
 
-            <button
-                class="icon-btn"
-                id="notificationBtn"
-                title="Notifikasi"
-            >
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-width="1.8" stroke-linecap="round" d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
-                </svg>
-            </button>
+<button class="icon" id="refreshBtn" title="Refresh">
+<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-width="1.8" stroke-linecap="round" d="M20 11a8 8 0 0 0-14.9-4M4 4v5h5M4 13a8 8 0 0 0 14.9 4M20 20v-5h-5"/>
+</svg>
+</button>
 
-            <button
-                class="icon-btn"
-                id="refreshBtn"
-                title="Refresh"
-            >
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-width="1.8" stroke-linecap="round" d="M20 11a8 8 0 0 0-14.9-4M4 4v5h5M4 13a8 8 0 0 0 14.9 4M20 20v-5h-5"/>
-                </svg>
-            </button>
+<button class="profile" id="profileBtn">
+<img class="avatar" id="avatar" alt="Profile">
+<span class="profile-name" id="profileName">Memuat...</span>
+</button>
 
-            <button
-                class="profile-btn"
-                id="profileBtn"
-            >
-                <img
-                    id="profileAvatar"
-                    class="profile-avatar"
-                    src=""
-                    alt="Profile"
-                >
-                <span
-                    id="profileName"
-                    class="profile-name"
-                >
-                    Memuat...
-                </span>
-            </button>
-
-        </div>
-
-    </nav>
-
+</div>
+</nav>
 </header>
 
 
-<main class="vault-shell">
+<main class="shell">
 
-    <section class="hero">
+<section class="hero">
 
-        <div class="hero-label">
-            PRIVATE PHOTO VAULT
-        </div>
+<div class="kicker">
+PRIVATE PHOTO VAULT
+</div>
 
-        <h1>
-            Ruang pribadi<br>
-            untuk kenangan kamu.
-        </h1>
+<h1>
+Ruang pribadi<br>
+untuk kenangan kamu.
+</h1>
 
-        <p>
-            Semua foto milikmu tetap berada di ruangmu.
-            Bagikan hanya foto tertentu kepada orang yang kamu pilih.
-        </p>
+<p>
+Simpan foto secara pribadi dan bagikan hanya kepada akun
+yang kamu pilih. Akses foto dikontrol oleh Supabase RLS.
+</p>
 
-    </section>
-
-
-    <section class="toolbar">
-
-        <div class="toolbar-left">
-
-            <button
-                class="gold-btn"
-                id="uploadBtn"
-            >
-                Upload Foto
-            </button>
-
-            <input
-                type="file"
-                id="fileInput"
-                accept="image/*"
-                multiple
-                hidden
-            >
-
-        </div>
-
-        <div class="toolbar-right">
-
-            <input
-                id="searchInput"
-                class="search"
-                type="search"
-                placeholder="Cari foto..."
-            >
-
-        </div>
-
-    </section>
+</section>
 
 
-    <section id="gallery">
+<section class="toolbar">
 
-        <div class="loading-state">
-            <div>
-                <div class="loader-ring"></div>
-                <p>Menyiapkan Vault...</p>
-            </div>
-        </div>
+<div class="tools">
 
-    </section>
+<button class="primary" id="uploadBtn">
+Upload Foto
+</button>
+
+<input
+type="file"
+id="fileInput"
+accept="image/*"
+multiple
+hidden
+>
+
+</div>
+
+<input
+class="search"
+id="searchInput"
+type="search"
+placeholder="Cari foto..."
+>
+
+</section>
+
+
+<section id="gallery">
+
+<div class="state">
+<div>
+<div class="spinner"></div>
+<p>Menyiapkan Vault...</p>
+</div>
+</div>
+
+</section>
 
 </main>
 
 
-<!-- =======================================================
-     SHARE MODAL
-======================================================= -->
+<!-- SHARE MODAL -->
 
-<div
-    class="modal"
-    id="shareModal"
->
+<div class="modal" id="shareModal">
 
-    <div class="modal-card">
+<div class="modal-card">
 
-        <div class="modal-head">
+<div class="modal-head">
 
-            <div>
-                <p
-                    style="
-                        margin:0;
-                        color:var(--gold2);
-                        font-size:10px;
-                        font-weight:800;
-                        letter-spacing:.14em;
-                    "
-                >
-                    SECURE SHARING
-                </p>
+<div>
+<div class="kicker">SECURE SHARING</div>
+<h2 class="modal-title">Bagikan foto</h2>
+</div>
 
-                <h2 class="modal-title">
-                    Bagikan foto
-                </h2>
-            </div>
-
-            <button
-                class="icon-btn"
-                id="closeShare"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div id="shareForm">
-
-            <p
-                id="shareFilename"
-                style="
-                    margin-top:18px;
-                    font-size:12px;
-                    color:var(--muted);
-                "
-            ></p>
-
-            <input
-                id="recipientEmail"
-                class="modal-input"
-                type="email"
-                placeholder="Email penerima"
-                autocomplete="off"
-            >
-
-            <div class="modal-actions">
-
-                <button
-                    class="soft-btn"
-                    id="cancelShare"
-                    style="flex:1"
-                >
-                    Batal
-                </button>
-
-                <button
-                    class="gold-btn"
-                    id="sendShare"
-                    style="flex:1"
-                >
-                    Bagikan
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <div
-            class="share-scan"
-            id="shareScan"
-        >
-
-            <div class="scan-orb">
-
-                <div class="scan-line"></div>
-
-                <svg
-                    width="32"
-                    height="32"
-                    fill="none"
-                    stroke="var(--gold2)"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"
-                    />
-                </svg>
-
-            </div>
-
-            <div
-                class="scan-status"
-                id="scanStatus"
-            >
-                Memindai penerima...
-            </div>
-
-            <div class="scan-progress">
-                <span id="scanProgress"></span>
-            </div>
-
-        </div>
-
-    </div>
+<button class="close" id="closeShare">×</button>
 
 </div>
 
 
-<div
-    class="toast"
-    id="toast"
-></div>
+<div id="shareForm">
+
+<div class="modal-file" id="shareFile">
+Foto
+</div>
+
+<input
+class="email"
+id="recipientEmail"
+type="email"
+placeholder="Email penerima"
+autocomplete="off"
+>
+
+<div class="modal-actions">
+
+<button class="secondary" id="cancelShare">
+Batal
+</button>
+
+<button class="primary" id="sendShare">
+Bagikan
+</button>
+
+</div>
+
+</div>
+
+
+<div class="scan" id="scan">
+
+<div class="orb">
+
+<div class="scan-line"></div>
+
+<svg width="32" height="32" fill="none" stroke="var(--gold-dark)" viewBox="0 0 24 24">
+<path stroke-width="1.5" stroke-linecap="round" d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/>
+</svg>
+
+</div>
+
+<div class="scan-text" id="scanText">
+Menghubungkan ke server aman...
+</div>
+
+<div class="progress">
+<span id="progress"></span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="toast" id="toast"></div>
 
 
 <script>
-
 /* =========================================================
-   CONFIG
+   SUPABASE
 ========================================================= */
 
 const db = FV.db;
 
 const BUCKET = "photos";
-
-/*
- * Nama Edge Function:
- *
- * admin-api
- *
- * Pastikan Edge Function kamu dideploy dengan
- * nama yang sama.
- */
-
 const SHARE_FUNCTION = "admin-api";
 
-
-/* =========================================================
-   STATE
-========================================================= */
-
 let currentUser = null;
-let currentPhotos = [];
+let photos = [];
 let selectedPhoto = null;
 
 
@@ -980,34 +837,11 @@ let selectedPhoto = null;
    HELPERS
 ========================================================= */
 
-const $ = id =>
-    document.getElementById(id);
-
-
-function toast(message){
-
-    const el = $("toast");
-
-    el.textContent = message;
-
-    el.classList.add("show");
-
-    clearTimeout(
-        toast.timer
-    );
-
-    toast.timer =
-        setTimeout(
-            () => {
-                el.classList.remove("show");
-            },
-            3200
-        );
+function $(id){
+    return document.getElementById(id);
 }
 
-
 function escapeHTML(value){
-
     return String(value ?? "")
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
@@ -1016,75 +850,48 @@ function escapeHTML(value){
         .replaceAll("'","&#039;");
 }
 
+function showToast(message){
+    const t = $("toast");
 
-function formatSize(bytes){
+    t.textContent = message;
+    t.classList.add("show");
 
-    if(!bytes)
-        return "0 KB";
+    clearTimeout(showToast.timer);
 
-    const units=[
-        "B",
-        "KB",
-        "MB",
-        "GB"
-    ];
-
-    let i=0;
-    let n=Number(bytes);
-
-    while(
-        n >= 1024 &&
-        i < units.length-1
-    ){
-        n/=1024;
-        i++;
-    }
-
-    return n.toFixed(
-        n >= 10 ? 0 : 1
-    )+" "+units[i];
+    showToast.timer = setTimeout(()=>{
+        t.classList.remove("show");
+    },3500);
 }
 
 
 /* =========================================================
-   SESSION
+   AUTH
 ========================================================= */
 
-async function requireUser(){
+async function init(){
 
     const {
         data,
         error
-    } =
-        await db.auth.getUser();
+    } = await db.auth.getUser();
 
     if(
         error ||
         !data ||
         !data.user
     ){
-
-        location.href =
-            "login.html";
-
-        return false;
+        location.href="login.html";
+        return;
     }
 
-    currentUser =
-        data.user;
+    currentUser = data.user;
 
-    return true;
+    renderProfile();
+
+    await loadPhotos();
 }
 
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
 function renderProfile(){
-
-    if(!currentUser)
-        return;
 
     const name =
         currentUser.user_metadata?.display_name ||
@@ -1092,46 +899,29 @@ function renderProfile(){
         currentUser.email?.split("@")[0] ||
         "User";
 
-    $("profileName")
-        .textContent =
-        name;
+    $("profileName").textContent = name;
 
     const avatar =
         currentUser.user_metadata?.avatar_url;
 
     if(avatar){
-
-        $("profileAvatar")
-            .src =
-            avatar;
-
+        $("avatar").src = avatar;
     }else{
-
-        /*
-         * SVG data avatar lokal.
-         * Tidak membutuhkan external avatar service.
-         */
-
-        const letter =
-            encodeURIComponent(
-                name
-                    .charAt(0)
-                    .toUpperCase()
-            );
-
-        $("profileAvatar")
-            .src =
-            `data:image/svg+xml;charset=UTF-8,
-            <svg xmlns="http://www.w3.org/2000/svg"
-            width="80" height="80">
-            <rect width="100%" height="100%"
-            rx="40" fill="%23f0e4cc"/>
-            <text x="50%" y="55%"
-            dominant-baseline="middle"
-            text-anchor="middle"
-            font-size="32"
-            fill="%239d7737">${letter}</text>
-            </svg>`;
+        $("avatar").src =
+            "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                    <rect width="100%" height="100%" rx="40" fill="#efe2c7"/>
+                    <text x="50%" y="55%"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        font-family="Arial"
+                        font-size="32"
+                        fill="#8d682d">
+                        ${name.charAt(0).toUpperCase()}
+                    </text>
+                </svg>
+            `);
     }
 }
 
@@ -1143,55 +933,51 @@ function renderProfile(){
 async function loadPhotos(){
 
     $("gallery").innerHTML = `
-        <div class="loading-state">
+        <div class="state">
             <div>
-                <div class="loader-ring"></div>
-                <p>Memuat foto dengan aman...</p>
+                <div class="spinner"></div>
+                <p>Memuat foto...</p>
             </div>
         </div>
     `;
 
 
     /*
-     * RLS memastikan query ini hanya mengembalikan:
+     * RLS menentukan foto apa yang boleh dikembalikan.
      *
-     * 1. foto milik current_user
-     * 2. foto yang secara eksplisit dibagikan kepada current_user
-     *
-     * Tidak ada filter user_id yang dipercaya dari browser.
+     * Tidak ada user_id dari URL/query yang dipercaya.
      */
 
     const {
         data,
         error
-    } =
-        await db
-            .from("photos")
-            .select(`
-                id,
-                user_id,
-                filename,
-                path,
-                size,
-                created_at
-            `)
-            .order(
-                "created_at",
-                {
-                    ascending:false
-                }
-            );
+    } = await db
+        .from("photos")
+        .select(`
+            id,
+            user_id,
+            name,
+            path,
+            size,
+            mime_type,
+            created_at
+        `)
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
 
     if(error){
 
-        console.error(
-            error
-        );
+        console.error(error);
 
         $("gallery").innerHTML = `
-            <div class="empty">
-                Gagal memuat foto.
+            <div class="state">
+                <div>
+                    <strong>Gagal memuat foto</strong>
+                    <p>${escapeHTML(error.message)}</p>
+                </div>
             </div>
         `;
 
@@ -1199,20 +985,19 @@ async function loadPhotos(){
     }
 
 
-    currentPhotos =
-        data || [];
+    photos = data || [];
 
 
-    if(!currentPhotos.length){
+    if(!photos.length){
 
         $("gallery").innerHTML = `
-            <div class="empty">
-                <h3 style="font-family:Georgia,serif">
-                    Vault masih kosong
-                </h3>
-                <p>
-                    Upload foto pertama kamu.
-                </p>
+            <div class="state">
+                <div>
+                    <h3 style="font-family:Georgia,serif">
+                        Vault masih kosong
+                    </h3>
+                    <p>Upload foto pertama kamu.</p>
+                </div>
             </div>
         `;
 
@@ -1220,179 +1005,136 @@ async function loadPhotos(){
     }
 
 
-    /*
-     * Buat card dahulu.
-     *
-     * Signed URL dibuat secara PARALEL,
-     * bukan satu-per-satu dalam loop.
-     */
+    $("gallery").innerHTML = `
+        <div class="grid">
+            ${photos.map((photo,index)=>`
+                <article
+                    class="photo"
+                    data-id="${escapeHTML(photo.id)}"
+                    data-name="${escapeHTML(photo.name)}"
+                    style="animation-delay:${Math.min(index,20)*45}ms"
+                >
 
-    const cards =
-        currentPhotos.map(
-            (photo,index) => {
+                    <div class="skeleton"></div>
 
-                return `
-                    <article
-                        class="photo-card"
-                        data-id="${escapeHTML(photo.id)}"
-                        data-name="${escapeHTML(photo.filename || "")}"
-                        style="animation-delay:${Math.min(index,15)*45}ms"
+                    <img
+                        data-image
+                        alt="${escapeHTML(photo.name)}"
+                        loading="lazy"
+                        decoding="async"
                     >
 
-                        <div class="photo-skeleton"></div>
+                    <div class="overlay">
 
-                        <img
-                            data-photo-image
-                            alt="${escapeHTML(photo.filename || "Photo")}"
-                            decoding="async"
-                            loading="lazy"
-                        >
+                        <span class="photo-name">
+                            ${escapeHTML(photo.name)}
+                        </span>
 
-                        <div class="photo-overlay">
+                        <div class="photo-actions">
 
-                            <span class="photo-title">
-                                ${escapeHTML(
-                                    photo.filename ||
-                                    "Photo"
-                                )}
-                            </span>
-
-                            <div class="photo-actions">
-
-                                <button
-                                    class="mini-btn share-photo"
-                                    data-id="${escapeHTML(photo.id)}"
-                                    title="Bagikan"
-                                >
-                                    ↗
-                                </button>
-
-                            </div>
+                            <button
+                                class="mini shareBtn"
+                                data-id="${escapeHTML(photo.id)}"
+                                title="Bagikan"
+                            >
+                                ↗
+                            </button>
 
                         </div>
 
-                    </article>
-                `;
-            }
-        ).join("");
+                    </div>
 
-
-    $("gallery").innerHTML =
-        `<div class="photo-grid">${cards}</div>`;
+                </article>
+            `).join("")}
+        </div>
+    `;
 
 
     /*
-     * Ambil signed URL paralel.
+     * Signed URL diproses paralel.
+     * Ini membuat galeri jauh lebih smooth daripada
+     * membuat URL satu per satu secara serial.
      */
 
-    const results =
+    const signedResults =
         await Promise.allSettled(
-            currentPhotos.map(
-                photo =>
-                    db.storage
-                        .from(BUCKET)
-                        .createSignedUrl(
-                            photo.path,
-                            600
-                        )
+            photos.map(photo =>
+                db.storage
+                    .from(BUCKET)
+                    .createSignedUrl(
+                        photo.path,
+                        600
+                    )
             )
         );
 
 
-    results.forEach(
-        (result,index) => {
+    signedResults.forEach((result,index)=>{
 
-            const photo =
-                currentPhotos[index];
+        const photo = photos[index];
 
-            const card =
-                document.querySelector(
-                    `.photo-card[data-id="${CSS.escape(photo.id)}"]`
-                );
+        const card =
+            document.querySelector(
+                `.photo[data-id="${CSS.escape(photo.id)}"]`
+            );
 
-            if(!card)
-                return;
+        if(!card)
+            return;
 
-            const image =
-                card.querySelector(
-                    "[data-photo-image]"
-                );
+        const img =
+            card.querySelector("[data-image]");
 
 
-            if(
-                result.status ===
-                "fulfilled" &&
-                result.value?.data?.signedUrl
-            ){
+        if(
+            result.status === "fulfilled" &&
+            result.value?.data?.signedUrl
+        ){
 
-                image.src =
-                    result.value.data.signedUrl;
+            img.src =
+                result.value.data.signedUrl;
 
-                image.onload =
-                    () => {
+            img.onload = ()=>{
 
-                        image.classList.add(
-                            "loaded"
-                        );
+                img.classList.add("loaded");
+                card.classList.add("ready");
 
-                        card.classList.add(
-                            "loaded"
-                        );
+            };
 
-                    };
+            img.onerror = ()=>{
+                card.classList.add("ready");
+            };
 
-                image.onerror =
-                    () => {
+        }else{
 
-                        card.classList.add(
-                            "loaded"
-                        );
-
-                    };
-
-            }else{
-
-                card.classList.add(
-                    "loaded"
-                );
-
-            }
+            card.classList.add("ready");
 
         }
-    );
+
+    });
 
 
     document
-        .querySelectorAll(
-            ".share-photo"
-        )
-        .forEach(
-            button => {
+        .querySelectorAll(".shareBtn")
+        .forEach(button=>{
 
-                button.addEventListener(
-                    "click",
-                    event => {
+            button.addEventListener(
+                "click",
+                ()=>{
 
-                        event.stopPropagation();
+                    const photo =
+                        photos.find(
+                            item =>
+                                String(item.id) ===
+                                String(button.dataset.id)
+                        );
 
-                        const id =
-                            button.dataset.id;
+                    if(photo)
+                        openShare(photo);
 
-                        const photo =
-                            currentPhotos.find(
-                                p =>
-                                    String(p.id) ===
-                                    String(id)
-                            );
+                }
+            );
 
-                        if(photo)
-                            openShare(photo);
-
-                    }
-                );
-
-            }
-        );
+        });
 }
 
 
@@ -1401,42 +1143,27 @@ async function loadPhotos(){
 ========================================================= */
 
 $("searchInput")
-    .addEventListener(
-        "input",
-        event => {
+.addEventListener("input",event=>{
 
-            const query =
-                event.target.value
-                    .toLowerCase()
-                    .trim();
+    const query =
+        event.target.value
+            .toLowerCase()
+            .trim();
 
-            document
-                .querySelectorAll(
-                    ".photo-card"
-                )
-                .forEach(
-                    card => {
+    document
+        .querySelectorAll(".photo")
+        .forEach(card=>{
 
-                        const name =
-                            (
-                                card.dataset.name ||
-                                ""
-                            )
-                            .toLowerCase();
+            const name =
+                (card.dataset.name || "")
+                    .toLowerCase();
 
-                        card.style.display =
-                            (
-                                !query ||
-                                name.includes(query)
-                            )
-                            ? ""
-                            : "none";
-
-                    }
-                );
-
-        }
-    );
+            card.style.display =
+                !query || name.includes(query)
+                    ? ""
+                    : "none";
+        });
+});
 
 
 /* =========================================================
@@ -1444,625 +1171,130 @@ $("searchInput")
 ========================================================= */
 
 $("uploadBtn")
-    .addEventListener(
-        "click",
-        () =>
-            $("fileInput").click()
-    );
+.addEventListener(
+    "click",
+    ()=>$("fileInput").click()
+);
 
 
 $("fileInput")
-    .addEventListener(
-        "change",
-        async event => {
+.addEventListener(
+    "change",
+    async event=>{
 
-            const files =
-                [...event.target.files];
+        const files =
+            [...event.target.files];
 
-            if(!files.length)
-                return;
+        if(!files.length)
+            return;
 
-
-            $("uploadBtn")
-                .disabled = true;
-
-            $("uploadBtn")
-                .textContent =
-                "Mengupload...";
+        $("uploadBtn").disabled = true;
+        $("uploadBtn").textContent = "Mengupload...";
 
 
-            try{
+        try{
 
-                for(
-                    const file of files
-                ){
+            for(const file of files){
 
-                    if(
-                        !file.type.startsWith(
-                            "image/"
-                        )
+                if(!file.type.startsWith("image/"))
+                    continue;
+
+
+                const extension =
+                    (
+                        file.name
+                            .split(".")
+                            .pop() ||
+                        "jpg"
                     )
-                        continue;
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g,"");
 
 
-                    /*
-                     * Storage path wajib dimulai
-                     * dengan UID user sendiri.
-                     */
+                const filename =
+                    `${crypto.randomUUID()}.${extension}`;
 
-                    const extension =
-                        (
-                            file.name
-                                .split(".")
-                                .pop() ||
-                            "jpg"
-                        )
-                        .toLowerCase()
-                        .replace(
-                            /[^a-z0-9]/g,
-                            ""
-                        );
-
-                    const filename =
-                        `${crypto.randomUUID()}.${extension}`;
-
-                    const path =
-                        `${currentUser.id}/${filename}`;
-
-
-                    const {
-                        error:
-                        uploadError
-                    } =
-                        await db.storage
-                            .from(BUCKET)
-                            .upload(
-                                path,
-                                file,
-                                {
-                                    upsert:false,
-                                    contentType:
-                                        file.type
-                                }
-                            );
-
-
-                    if(uploadError)
-                        throw uploadError;
-
-
-                    /*
-                     * Simpan metadata.
-                     */
-
-                    const {
-                        error:
-                        insertError
-                    } =
-                        await db
-                            .from("photos")
-                            .insert({
-                                user_id:
-                                    currentUser.id,
-
-                                filename:
-                                    file.name,
-
-                                path:
-                                    path,
-
-                                size:
-                                    file.size
-                            });
-
-
-                    if(insertError)
-                        throw insertError;
-
-                }
-
-
-                toast(
-                    "Foto berhasil ditambahkan."
-                );
-
-                await loadPhotos();
-
-            }catch(error){
-
-                console.error(
-                    error
-                );
-
-                toast(
-                    error.message ||
-                    "Upload gagal."
-                );
-
-            }finally{
-
-                $("uploadBtn")
-                    .disabled = false;
-
-                $("uploadBtn")
-                    .textContent =
-                    "Upload Foto";
-
-                $("fileInput")
-                    .value = "";
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   SHARE MODAL
-========================================================= */
-
-function openShare(photo){
-
-    selectedPhoto =
-        photo;
-
-    $("shareFilename")
-        .textContent =
-        photo.filename ||
-        "Foto";
-
-    $("recipientEmail")
-        .value = "";
-
-    $("shareForm")
-        .style.display =
-        "block";
-
-    $("shareScan")
-        .classList.remove(
-            "active"
-        );
-
-    $("shareModal")
-        .classList.add(
-            "open"
-        );
-
-    setTimeout(
-        () =>
-            $("recipientEmail")
-                .focus(),
-        250
-    );
-}
-
-
-function closeShare(){
-
-    selectedPhoto =
-        null;
-
-    $("shareModal")
-        .classList.remove(
-            "open"
-        );
-
-    $("shareScan")
-        .classList.remove(
-            "active"
-        );
-
-    $("shareForm")
-        .style.display =
-        "block";
-
-    $("scanProgress")
-        .style.width =
-        "0%";
-}
-
-
-$("closeShare")
-    .onclick =
-    closeShare;
-
-$("cancelShare")
-    .onclick =
-    closeShare;
-
-
-$("shareModal")
-    .addEventListener(
-        "click",
-        event => {
-
-            if(
-                event.target ===
-                $("shareModal")
-            ){
-                closeShare();
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   SHARE SCAN UI
-========================================================= */
-
-function startScan(){
-
-    $("shareForm")
-        .style.display =
-        "none";
-
-    $("shareScan")
-        .classList.add(
-            "active"
-        );
-
-    $("scanProgress")
-        .style.width =
-        "8%";
-
-    $("scanStatus")
-        .textContent =
-        "Menghubungkan ke server aman...";
-
-    setTimeout(
-        () => {
-            $("scanProgress")
-                .style.width =
-                "32%";
-
-            $("scanStatus")
-                .textContent =
-                "Memverifikasi penerima...";
-        },
-        350
-    );
-
-    setTimeout(
-        () => {
-            $("scanProgress")
-                .style.width =
-                "58%";
-
-            $("scanStatus")
-                .textContent =
-                "Memeriksa hak akses foto...";
-        },
-        800
-    );
-
-    setTimeout(
-        () => {
-            $("scanProgress")
-                .style.width =
-                "78%";
-
-            $("scanStatus")
-                .textContent =
-                "Menyiapkan akses berbagi...";
-        },
-        1250
-    );
-
-}
-
-
-/* =========================================================
-   SEND SHARE
-========================================================= */
-
-$("sendShare")
-    .addEventListener(
-        "click",
-        async () => {
-
-            if(!selectedPhoto)
-                return;
-
-
-            const email =
-                $("recipientEmail")
-                    .value
-                    .trim()
-                    .toLowerCase();
-
-
-            if(!email){
-
-                toast(
-                    "Masukkan email penerima."
-                );
-
-                return;
-            }
-
-
-            if(
-                !email.includes("@")
-            ){
-
-                toast(
-                    "Email penerima tidak valid."
-                );
-
-                return;
-            }
-
-
-            startScan();
-
-
-            try{
 
                 /*
-                 * PENTING:
-                 *
-                 * Tidak mencari auth.users
-                 * dari browser.
-                 *
-                 * Edge Function yang melakukan:
-                 *
-                 * 1. validasi JWT
-                 * 2. validasi pemilik foto
-                 * 3. mencari penerima
-                 * 4. membuat photo_share
-                 * 5. membuat notification
+                 * Folder pertama harus UID user.
                  */
 
-                const {
-                    data:
-                    sessionData
-                } =
-                    await db.auth
-                        .getSession();
-
-
-                const token =
-                    sessionData
-                        ?.session
-                        ?.access_token;
-
-
-                if(!token)
-                    throw new Error(
-                        "Session login sudah berakhir."
-                    );
+                const path =
+                    `${currentUser.id}/${filename}`;
 
 
                 const {
-                    data,
-                    error
+                    error:uploadError
                 } =
-                    await db.functions
-                        .invoke(
-                            SHARE_FUNCTION,
+                    await db.storage
+                        .from(BUCKET)
+                        .upload(
+                            path,
+                            file,
                             {
-                                body:{
-                                    action:
-                                        "share_photo",
-
-                                    photo_id:
-                                        selectedPhoto.id,
-
-                                    recipient_email:
-                                        email
-                                }
+                                upsert:false,
+                                contentType:file.type
                             }
                         );
 
 
-                if(error)
-                    throw error;
+                if(uploadError)
+                    throw uploadError;
 
 
-                if(
-                    !data ||
-                    data.success !== true
-                ){
+                /*
+                 * DATABASE KAMU MENGGUNAKAN
+                 * kolom "name", bukan "filename".
+                 */
 
-                    throw new Error(
-                        data?.message ||
-                        "Foto gagal dibagikan."
-                    );
+                const {
+                    error:insertError
+                } =
+                    await db
+                        .from("photos")
+                        .insert({
+                            user_id:
+                                currentUser.id,
 
-                }
+                            name:
+                                file.name,
 
+                            path:
+                                path,
 
-                $("scanProgress")
-                    .style.width =
-                    "100%";
+                            size:
+                                file.size,
 
-                $("scanStatus")
-                    .textContent =
-                    "Foto berhasil dibagikan.";
-
-
-                setTimeout(
-                    () => {
-
-                        closeShare();
-
-                        toast(
-                            "Foto berhasil dibagikan dan notifikasi telah dikirim."
-                        );
-
-                    },
-                    600
-                );
+                            mime_type:
+                                file.type
+                        });
 
 
-            }catch(error){
-
-                console.error(
-                    "SHARE ERROR:",
-                    error
-                );
-
-                closeShare();
-
-                toast(
-                    error.message ||
-                    "Gagal membagikan foto."
-                );
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-$("notificationBtn")
-    .addEventListener(
-        "click",
-        async () => {
-
-            const {
-                data,
-                error
-            } =
-                await db
-                    .from("notifications")
-                    .select(
-                        "id,title,message,read,created_at"
-                    )
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    )
-                    .order(
-                        "created_at",
-                        {
-                            ascending:false
-                        }
-                    )
-                    .limit(20);
-
-
-            if(error){
-
-                toast(
-                    "Notifikasi tidak dapat dimuat."
-                );
-
-                return;
+                if(insertError)
+                    throw insertError;
             }
 
 
-            if(!data?.length){
-
-                toast(
-                    "Belum ada notifikasi."
-                );
-
-                return;
-            }
-
-
-            const unread =
-                data.filter(
-                    x => !x.read
-                );
-
-
-            toast(
-                unread.length
-                    ? `${unread.length} notifikasi baru.`
-                    : `Ada ${data.length} notifikasi.`
+            showToast(
+                "Foto berhasil diupload."
             );
-
-
-            /*
-             * Tandai sebagai dibaca.
-             */
-
-            if(unread.length){
-
-                await db
-                    .from("notifications")
-                    .update({
-                        read:true
-                    })
-                    .eq(
-                        "user_id",
-                        currentUser.id
-                    )
-                    .eq(
-                        "read",
-                        false
-                    );
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-$("profileBtn")
-    .addEventListener(
-        "click",
-        () => {
-            location.href =
-                "profile.html";
-        }
-    );
-
-
-/* =========================================================
-   REFRESH
-========================================================= */
-
-$("refreshBtn")
-    .addEventListener(
-        "click",
-        async () => {
-
-            const button =
-                $("refreshBtn");
-
-            button.style.transform =
-                "rotate(360deg)";
 
             await loadPhotos();
 
-            setTimeout(
-                () => {
-                    button.style.transform =
-                        "";
-                },
-                500
+        }catch(error){
+
+            console.error(error);
+
+            showToast(
+                error.message ||
+                "Upload gagal."
             );
 
-        }
-    );
+        }finally{
 
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-db.auth.onAuthStateChange(
-    (event) => {
-
-        if(
-            event ===
-            "SIGNED_OUT"
-        ){
-
-            location.href =
-                "login.html";
+            $("uploadBtn").disabled = false;
+            $("uploadBtn").textContent = "Upload Foto";
+            $("fileInput").value = "";
 
         }
 
@@ -2071,24 +1303,357 @@ db.auth.onAuthStateChange(
 
 
 /* =========================================================
-   INIT
+   SHARE MODAL
 ========================================================= */
 
-(async function(){
+function openShare(photo){
 
-    const ok =
-        await requireUser();
+    selectedPhoto = photo;
 
-    if(!ok)
-        return;
+    $("shareFile").textContent =
+        photo.name;
 
-    renderProfile();
+    $("recipientEmail").value = "";
+
+    $("shareForm").style.display = "block";
+    $("scan").classList.remove("active");
+
+    $("progress").style.width = "0%";
+
+    $("shareModal").classList.add("open");
+
+    setTimeout(
+        ()=>$("recipientEmail").focus(),
+        250
+    );
+}
+
+function closeShare(){
+
+    selectedPhoto = null;
+
+    $("shareModal").classList.remove("open");
+
+    $("shareForm").style.display = "block";
+
+    $("scan").classList.remove("active");
+
+    $("progress").style.width = "0%";
+}
+
+$("closeShare").onclick = closeShare;
+$("cancelShare").onclick = closeShare;
+
+$("shareModal").addEventListener(
+    "click",
+    event=>{
+        if(event.target === $("shareModal"))
+            closeShare();
+    }
+);
+
+
+/* =========================================================
+   SCANNING
+========================================================= */
+
+function startScan(){
+
+    $("shareForm").style.display = "none";
+    $("scan").classList.add("active");
+
+    $("progress").style.width = "8%";
+
+    $("scanText").textContent =
+        "Menghubungkan ke server aman...";
+
+
+    setTimeout(()=>{
+        $("progress").style.width = "30%";
+        $("scanText").textContent =
+            "Memverifikasi akun penerima...";
+    },350);
+
+
+    setTimeout(()=>{
+        $("progress").style.width = "52%";
+        $("scanText").textContent =
+            "Memeriksa kepemilikan foto...";
+    },750);
+
+
+    setTimeout(()=>{
+        $("progress").style.width = "73%";
+        $("scanText").textContent =
+            "Membuat akses berbagi...";
+    },1100);
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+$("sendShare").addEventListener(
+    "click",
+    async ()=>{
+
+        if(!selectedPhoto)
+            return;
+
+
+        const email =
+            $("recipientEmail")
+                .value
+                .trim()
+                .toLowerCase();
+
+
+        if(!email){
+            showToast(
+                "Masukkan email penerima."
+            );
+            return;
+        }
+
+
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+            showToast(
+                "Format email tidak valid."
+            );
+            return;
+        }
+
+
+        startScan();
+
+
+        try{
+
+            /*
+             * Edge Function menerima:
+             *
+             * photo_id
+             * recipient_email
+             *
+             * Edge Function sendiri yang mencari
+             * user Auth.
+             */
+
+            const {
+                data,
+                error
+            } =
+                await db.functions.invoke(
+                    SHARE_FUNCTION,
+                    {
+                        body:{
+                            action:
+                                "share_photo",
+
+                            photo_id:
+                                selectedPhoto.id,
+
+                            recipient_email:
+                                email
+                        }
+                    }
+                );
+
+
+            if(error)
+                throw error;
+
+
+            if(
+                !data ||
+                data.success !== true
+            ){
+
+                throw new Error(
+                    data?.message ||
+                    "Foto gagal dibagikan."
+                );
+
+            }
+
+
+            $("progress").style.width = "100%";
+
+            $("scanText").textContent =
+                "Foto berhasil dibagikan.";
+
+
+            setTimeout(()=>{
+
+                closeShare();
+
+                showToast(
+                    "Foto berhasil dibagikan. Notifikasi telah dikirim."
+                );
+
+            },650);
+
+
+        }catch(error){
+
+            console.error(
+                "SHARE ERROR:",
+                error
+            );
+
+            closeShare();
+
+            showToast(
+                error.message ||
+                "Gagal membagikan foto."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+$("notificationBtn").addEventListener(
+    "click",
+    async ()=>{
+
+        const {
+            data,
+            error
+        } =
+            await db
+                .from("notifications")
+                .select(`
+                    id,
+                    type,
+                    title,
+                    body,
+                    photo_id,
+                    is_read,
+                    created_at
+                `)
+                .eq(
+                    "recipient_id",
+                    currentUser.id
+                )
+                .order(
+                    "created_at",
+                    {ascending:false}
+                )
+                .limit(20);
+
+
+        if(error){
+
+            console.error(error);
+
+            showToast(
+                "Notifikasi gagal dimuat."
+            );
+
+            return;
+        }
+
+
+        if(!data?.length){
+
+            showToast(
+                "Belum ada notifikasi."
+            );
+
+            return;
+        }
+
+
+        const unread =
+            data.filter(
+                item => !item.is_read
+            );
+
+
+        showToast(
+            unread.length
+                ? `${unread.length} notifikasi baru.`
+                : `Ada ${data.length} notifikasi.`
+        );
+
+
+        if(unread.length){
+
+            const ids =
+                unread.map(
+                    item => item.id
+                );
+
+
+            await db
+                .from("notifications")
+                .update({
+                    is_read:true
+                })
+                .in(
+                    "id",
+                    ids
+                );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+$("profileBtn").onclick = ()=>{
+    location.href="profile.html";
+};
+
+
+$("refreshBtn").onclick = async ()=>{
+
+    $("refreshBtn").style.transform =
+        "rotate(360deg)";
 
     await loadPhotos();
 
-})();
+    setTimeout(()=>{
+        $("refreshBtn").style.transform = "";
+    },500);
+};
+
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+db.auth.onAuthStateChange(
+    (event)=>{
+
+        if(event === "SIGNED_OUT"){
+            location.href="login.html";
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+init();
 
 </script>
 
 </body>
 </html>
+```
