@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8f7f4">
+<title>Masuk — FotoVault</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+<style>
+.oauth{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.oauth-btn{
+  width:100%;
+  min-height:48px;
+  border:1px solid rgba(50,45,38,.10);
+  border-radius:16px;
+  background:rgba(255,255,255,.78);
+  color:#25221e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.22s ease;
+  box-shadow:0 8px 24px rgba(45,38,25,.04);
+}
+.oauth-btn:hover{transform:translateY(-2px);background:#fff;box-shadow:0 12px 30px rgba(45,38,25,.08)}
+.oauth-btn:active{transform:scale(.98)}
+.oauth-btn:disabled{opacity:.55;pointer-events:none}
+.oauth-icon{width:19px;height:19px;display:block}
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0;color:#9a948b;font-size:11px}
+.divider:before,.divider:after{content:"";height:1px;flex:1;background:rgba(50,45,38,.10)}
+.login-loading{display:none;align-items:center;justify-content:center;gap:8px}
+.login-loading.show{display:flex}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(181,138,67,.25);border-top-color:#b58a43;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+
+<body>
+<div class="auth">
+  <div class="authbox glass">
+    <a href="index.html" class="brand">Foto<span class="gold">Vault</span></a>
+    <span class="pill" id="badge">PRIVATE PHOTO VAULT</span>
+
+    <h1 class="serif" id="title">Selamat datang kembali</h1>
+    <p class="muted" id="sub">Masuk ke brankas foto pribadi kamu.</p>
+
+    <div class="oauth">
+      <button id="googleBtn" class="oauth-btn" type="button">
+        <svg class="oauth-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M21.35 12.27c0-.78-.07-1.53-.22-2.25H12v4.26h5.26a4.5 4.5 0 0 1-1.95 2.96v2.46h3.16c1.85-1.7 2.88-4.2 2.88-7.43z"/>
+          <path fill="#34A853" d="M12 21.72c2.64 0 4.86-.87 6.48-2.35l-3.16-2.46c-.87.58-1.98.93-3.32.93-2.55 0-4.71-1.72-5.49-4.03H3.24v2.54A9.79 9.79 0 0 0 12 21.72z"/>
+          <path fill="#FBBC05" d="M6.51 13.81a5.9 5.9 0 0 1 0-3.62V7.65H3.24a9.78 9.78 0 0 0 0 8.7l3.27-2.54z"/>
+          <path fill="#EA4335" d="M12 6.16c1.44 0 2.73.5 3.75 1.48l2.81-2.81C16.85 3.26 14.63 2.38 12 2.38a9.79 9.79 0 0 0-8.76 5.27l3.27 2.54 3.27 2.54C7.29 7.88 9.45 6.16 12 6.16z"/>
+        </svg>
+        <span>Lanjutkan dengan Google</span>
+      </button>
+
+      <button id="appleBtn" class="oauth-btn" type="button">
+        <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.66-.8 1.11-1.92.99-3.04-.96.04-2.12.64-2.8 1.44-.61.71-1.14 1.86-1 2.97.97.08 1.96-.49 2.64-1.38z"/>
+        </svg>
+        <span>Lanjutkan dengan Apple</span>
+      </button>
+    </div>
+
+    <div class="divider">atau email & password</div>
+
+    <div class="stack">
+      <input id="email" class="input" type="email" autocomplete="email" placeholder="nama@email.com">
+      <input id="password" class="input" type="password" autocomplete="current-password" placeholder="Password">
+
+      <button id="submit" class="btn btn-dark" type="button">
+        <span id="submitText">Masuk</span>
+        <span id="submitLoading" class="login-loading">
+          <span class="spinner"></span>
+          Memproses...
+        </span>
+      </button>
+
+      <button id="toggle" class="btn btn-light" type="button">Buat akun</button>
+      <button id="forgot" class="btn btn-light" type="button">Lupa password</button>
+      <a href="index.html" style="text-align:center;color:#888;font-size:13px">Kembali</a>
+    </div>
+
+    <p id="msg" class="muted"></p>
+  </div>
+</div>
+
+<script>
+let register = new URLSearchParams(location.search).get("mode") === "register";
+
+const $ = id => document.getElementById(id);
+const email = $("email");
+const password = $("password");
+const submit = $("submit");
+const submitText = $("submitText");
+const submitLoading = $("submitLoading");
+const toggle = $("toggle");
+const forgot = $("forgot");
+const googleBtn = $("googleBtn");
+const appleBtn = $("appleBtn");
+const msg = $("msg");
+
+function say(text, error=false){
+  msg.textContent = text || "";
+  msg.style.color = error ? "#b42318" : "#777";
+}
+
+function render(){
+  $("badge").textContent = register ? "CREATE YOUR VAULT" : "PRIVATE PHOTO VAULT";
+  $("title").textContent = register ? "Buat Vault baru" : "Selamat datang kembali";
+  $("sub").textContent = register
+    ? "Daftarkan akun untuk menyimpan foto secara private."
+    : "Masuk ke brankas foto pribadi kamu.";
+  submitText.textContent = register ? "Daftar" : "Masuk";
+  toggle.textContent = register ? "Saya sudah punya akun" : "Buat akun";
+  password.autocomplete = register ? "new-password" : "current-password";
+}
+
+function setBusy(busy, text="Memproses..."){
+  [submit,toggle,forgot,googleBtn,appleBtn].forEach(b => b.disabled = busy);
+  submitText.style.display = busy ? "none" : "inline";
+  submitLoading.classList.toggle("show", busy);
+  submitLoading.querySelector(".spinner")?.nextSibling &&
+    (submitLoading.lastChild.textContent = " " + text);
+}
+
+async function route(user){
+  const {data,error} = await FV.db
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if(error){
+    console.error("ROLE CHECK", error);
+    say("Login berhasil, tetapi role belum bisa diperiksa: " + error.message, true);
+    return;
+  }
+
+  const role = String(data?.role || "user").trim().toLowerCase();
+
+  if(role === "admin"){
+    say("Admin terverifikasi. Membuka dashboard admin...");
+    setTimeout(() => location.replace("admin.html"), 250);
+  }else{
+    say("Login berhasil.");
+    setTimeout(() => location.replace("dashboard.html"), 250);
+  }
+}
+
+async function oauth(provider, button){
+  try{
+    setBusy(true, provider === "google" ? "Membuka Google..." : "Membuka Apple...");
+
+    const {error} = await FV.db.auth.signInWithOAuth({
+      provider,
+      options:{
+        redirectTo: location.origin + location.pathname
+      }
+    });
+
+    if(error) throw error;
+  }catch(err){
+    console.error("OAuth error:", err);
+    say(err.message || "Login OAuth gagal.", true);
+    setBusy(false);
+  }
+}
+
+googleBtn.onclick = () => oauth("google", googleBtn);
+appleBtn.onclick = () => oauth("apple", appleBtn);
+
+toggle.onclick = () => {
+  register = !register;
+  render();
+  say("");
+};
+
+forgot.onclick = async () => {
+  const e = email.value.trim();
+
+  if(!e){
+    say("Masukkan email terlebih dahulu untuk reset password.", true);
+    return;
+  }
+
+  forgot.disabled = true;
+  say("Mengirim link reset password...");
+
+  try{
+    const {error} = await FV.db.auth.resetPasswordForEmail(e,{
+      redirectTo: location.origin + location.pathname
+    });
+
+    if(error) throw error;
+
+    say("Link reset password sudah dikirim ke email.");
+  }catch(err){
+    console.error(err);
+    say(err.message || "Gagal mengirim reset password.", true);
+  }finally{
+    forgot.disabled = false;
+  }
+};
+
+submit.onclick = async () => {
+  const e = email.value.trim();
+  const p = password.value;
+
+  if(!e || p.length < 6){
+    say("Masukkan email dan password minimal 6 karakter.", true);
+    return;
+  }
+
+  setBusy(true, register ? "Membuat akun..." : "Memverifikasi akun...");
+  say(register ? "Membuat akun..." : "Memverifikasi akun...");
+
+  try{
+    const result = register
+      ? await FV.db.auth.signUp({
+          email:e,
+          password:p,
+          options:{
+            emailRedirectTo: location.origin + location.pathname
+          }
+        })
+      : await FV.db.auth.signInWithPassword({
+          email:e,
+          password:p
+        });
+
+    if(result.error) throw result.error;
+
+    if(register && !result.data.session){
+      say("Akun dibuat. Cek email konfirmasi jika diminta.");
+      setBusy(false);
+      return;
+    }
+
+    if(!result.data.user) throw new Error("User tidak ditemukan.");
+
+    await route(result.data.user);
+  }catch(err){
+    console.error(err);
+    say(err.message || "Terjadi kesalahan.", true);
+    setBusy(false);
+  }
+};
+
+[email,password].forEach(x => x.addEventListener("keydown", e => {
+  if(e.key === "Enter") submit.click();
+}));
+
+/* OAuth callback/session handling */
+(async function init(){
+  render();
+
+  const {data:{session}} = await FV.db.auth.getSession();
+
+  if(session?.user){
+    await route(session.user);
+  }
+})();
+
+FV.db.auth.onAuthStateChange(async (event, session) => {
+  if(event === "SIGNED_IN" && session?.user){
+    await route(session.user);
+  }
+});
+</script>
+</body>
+</html>
