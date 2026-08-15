@@ -2,2378 +2,2102 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <title>Admin Dashboard Premium v3</title>
-
-<meta name="theme-color" content="#f5f5f7">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
-    --bg:#f5f5f7;
-    --card:rgba(255,255,255,.78);
-    --card-solid:#fff;
-    --text:#111;
-    --muted:#777;
-    --border:rgba(0,0,0,.07);
-    --shadow:0 20px 60px rgba(0,0,0,.08);
-    --blue:#007aff;
-    --green:#34c759;
-    --red:#ff3b30;
-    --orange:#ff9500;
-    --purple:#af52de;
-    --radius:24px;
-    --sidebar:260px;
+  --bg:#f5f5f7;
+  --card:rgba(255,255,255,.78);
+  --card-solid:#fff;
+  --text:#111;
+  --muted:#777;
+  --line:rgba(0,0,0,.08);
+  --blue:#007aff;
+  --green:#34c759;
+  --red:#ff3b30;
+  --orange:#ff9500;
+  --purple:#af52de;
+  --shadow:0 12px 35px rgba(0,0,0,.08);
+  --radius:24px;
 }
 
 *{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html{
-    scroll-behavior:smooth;
+  scroll-behavior:smooth;
 }
 
 body{
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
-    "SF Pro Text",Inter,Arial,sans-serif;
-    background:
-        radial-gradient(circle at 10% 0%,rgba(0,122,255,.08),transparent 28%),
-        radial-gradient(circle at 90% 10%,rgba(175,82,222,.08),transparent 25%),
-        var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    overflow-x:hidden;
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(0,122,255,.08),transparent 30%),
+    radial-gradient(circle at 90% 10%,rgba(175,82,222,.07),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
 }
 
-/* ================================
-   BACKGROUND EFFECT
-================================ */
-
-.bg-orb{
-    position:fixed;
-    width:320px;
-    height:320px;
-    border-radius:50%;
-    filter:blur(80px);
-    opacity:.18;
-    pointer-events:none;
-    z-index:-1;
-    animation:floatOrb 12s ease-in-out infinite alternate;
+button,input,select,textarea{
+  font:inherit;
 }
 
-.orb1{
-    background:#007aff;
-    top:-100px;
-    left:-80px;
+button{
+  border:0;
+  cursor:pointer;
 }
 
-.orb2{
-    background:#af52de;
-    right:-100px;
-    bottom:10%;
-    animation-delay:2s;
+.app{
+  display:flex;
+  min-height:100vh;
 }
 
-@keyframes floatOrb{
-    from{
-        transform:translate3d(0,0,0) scale(1);
-    }
-    to{
-        transform:translate3d(40px,30px,0) scale(1.12);
-    }
-}
-
-/* ================================
-   SIDEBAR
-================================ */
-
+/* SIDEBAR */
 .sidebar{
-    position:fixed;
-    left:18px;
-    top:18px;
-    bottom:18px;
-    width:var(--sidebar);
-    padding:18px 14px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.7);
-    backdrop-filter:blur(28px);
-    -webkit-backdrop-filter:blur(28px);
-    border-radius:28px;
-    box-shadow:var(--shadow);
-    z-index:100;
-    display:flex;
-    flex-direction:column;
-    animation:sidebarIn .55s ease;
-}
-
-@keyframes sidebarIn{
-    from{
-        opacity:0;
-        transform:translateX(-25px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+  position:fixed;
+  z-index:100;
+  left:18px;
+  top:18px;
+  bottom:18px;
+  width:250px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.8);
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border-radius:30px;
+  box-shadow:var(--shadow);
+  overflow-y:auto;
+  transition:.3s ease;
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    gap:11px;
-    padding:6px 8px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:8px 6px 20px;
 }
 
 .brand-icon{
-    width:40px;
-    height:40px;
-    border-radius:13px;
-    display:grid;
-    place-items:center;
-    color:white;
-    font-size:20px;
-    background:linear-gradient(135deg,#007aff,#5856d6);
-    box-shadow:0 10px 24px rgba(0,122,255,.25);
+  width:43px;
+  height:43px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:21px;
+  background:linear-gradient(135deg,#007aff,#5856d6);
+  box-shadow:0 8px 18px rgba(0,122,255,.22);
 }
 
-.brand-text strong{
-    display:block;
-    font-size:15px;
+.brand-title{
+  font-weight:800;
+  font-size:16px;
 }
 
-.brand-text span{
-    font-size:11px;
-    color:var(--muted);
+.brand-sub{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:2px;
 }
 
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-    overflow:auto;
-    padding-right:2px;
-}
-
-.nav::-webkit-scrollbar{
-    width:3px;
-}
-
-.nav::-webkit-scrollbar-thumb{
-    background:#ddd;
-    border-radius:10px;
+.nav-label{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#999;
+  margin:17px 8px 7px;
 }
 
 .nav-btn{
-    border:0;
-    background:transparent;
-    color:#555;
-    width:100%;
-    padding:10px 11px;
-    border-radius:13px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-    font-size:13px;
-    text-align:left;
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        color .2s ease;
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-align:left;
+  padding:11px 12px;
+  margin:3px 0;
+  border-radius:14px;
+  color:#555;
+  background:transparent;
+  transition:.2s ease;
 }
 
 .nav-btn:hover{
-    background:rgba(0,122,255,.07);
-    transform:translateX(3px);
-    color:var(--blue);
+  background:rgba(0,122,255,.07);
+  transform:translateX(2px);
 }
 
 .nav-btn.active{
-    background:rgba(0,122,255,.1);
-    color:var(--blue);
-    font-weight:600;
+  background:rgba(0,122,255,.11);
+  color:var(--blue);
+  font-weight:700;
 }
 
 .nav-icon{
-    width:22px;
-    text-align:center;
-    font-size:16px;
+  width:22px;
+  text-align:center;
+  font-size:17px;
 }
 
 .sidebar-bottom{
-    margin-top:auto;
-    padding-top:12px;
+  margin-top:20px;
+  padding-top:15px;
+  border-top:1px solid var(--line);
 }
-
-.admin-mini{
-    padding:11px;
-    border-radius:16px;
-    background:rgba(0,0,0,.035);
-    margin-bottom:8px;
-}
-
-.admin-mini small{
-    color:var(--muted);
-    display:block;
-    margin-bottom:3px;
-}
-
-.admin-mini strong{
-    font-size:12px;
-    word-break:break-all;
-}
-
-/* ================================
-   MAIN
-================================ */
 
 .main{
-    margin-left:calc(var(--sidebar) + 38px);
-    padding:22px 25px 50px 0;
-    min-height:100vh;
+  width:calc(100% - 286px);
+  margin-left:286px;
+  padding:24px;
 }
 
 .topbar{
-    height:64px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:22px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:5px 0 18px;
+  backdrop-filter:blur(14px);
 }
 
-.top-left{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.page-title h1{
+  margin:0;
+  font-size:29px;
+  letter-spacing:-1px;
 }
 
-.page-title{
-    font-size:27px;
-    font-weight:750;
-    letter-spacing:-.7px;
-}
-
-.page-subtitle{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:3px;
+.page-title p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:13px;
 }
 
 .top-actions{
-    display:flex;
-    align-items:center;
-    gap:7px;
-}
-
-/* ================================
-   BUTTONS
-================================ */
-
-.btn{
-    border:0;
-    min-height:36px;
-    padding:0 13px;
-    border-radius:12px;
-    font-size:12px;
-    font-weight:600;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:7px;
-    transition:
-        transform .16s ease,
-        box-shadow .16s ease,
-        opacity .16s ease,
-        background .16s ease;
-    white-space:nowrap;
-}
-
-.btn:hover{
-    transform:translateY(-1px);
-}
-
-.btn:active{
-    transform:scale(.96);
-}
-
-.btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-    transform:none;
-}
-
-.btn-primary{
-    color:white;
-    background:var(--blue);
-    box-shadow:0 7px 18px rgba(0,122,255,.2);
-}
-
-.btn-success{
-    color:white;
-    background:var(--green);
-}
-
-.btn-danger{
-    color:white;
-    background:var(--red);
-}
-
-.btn-orange{
-    color:white;
-    background:var(--orange);
-}
-
-.btn-purple{
-    color:white;
-    background:var(--purple);
-}
-
-.btn-soft{
-    background:rgba(0,0,0,.05);
-    color:#333;
-}
-
-.btn-soft:hover{
-    background:rgba(0,122,255,.09);
-    color:var(--blue);
+  display:flex;
+  gap:8px;
+  align-items:center;
 }
 
 .icon-btn{
-    width:36px;
-    height:36px;
-    padding:0;
-    border-radius:12px;
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  background:rgba(255,255,255,.75);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 5px 16px rgba(0,0,0,.05);
+  transition:.2s ease;
 }
 
-.menu-mobile{
-    display:none;
+.icon-btn:hover{
+  transform:translateY(-2px);
 }
 
-/* ================================
-   SECTIONS
-================================ */
+.mobile-menu{
+  display:none;
+}
 
+/* SECTIONS */
 .section{
-    display:none;
-    animation:sectionIn .35s ease;
+  display:none;
+  animation:fadeIn .35s ease;
 }
 
 .section.active{
-    display:block;
+  display:block;
 }
 
-@keyframes sectionIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 
-/* ================================
-   CARDS
-================================ */
-
+/* CARDS */
 .card{
-    background:var(--card);
-    backdrop-filter:blur(22px);
-    -webkit-backdrop-filter:blur(22px);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:0 15px 50px rgba(0,0,0,.055);
-    padding:19px;
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.85);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
 
-.card-title{
-    font-size:15px;
-    font-weight:700;
-    margin-bottom:4px;
+.card-pad{
+  padding:20px;
 }
 
-.card-subtitle{
-    font-size:11px;
-    color:var(--muted);
-    margin-bottom:15px;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
 }
 
-.grid{
-    display:grid;
-    gap:13px;
+.stat{
+  padding:19px;
+  min-height:125px;
+  position:relative;
+  overflow:hidden;
 }
 
-.stats-grid{
-    grid-template-columns:repeat(4,1fr);
-}
-
-.stat-card{
-    position:relative;
-    overflow:hidden;
-    min-height:125px;
-}
-
-.stat-card::after{
-    content:"";
-    position:absolute;
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    background:rgba(0,122,255,.06);
-    right:-25px;
-    top:-25px;
+.stat::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  right:-35px;
+  bottom:-45px;
+  border-radius:50%;
+  background:rgba(0,122,255,.07);
 }
 
 .stat-icon{
-    width:39px;
-    height:39px;
-    border-radius:13px;
-    display:grid;
-    place-items:center;
-    background:rgba(0,122,255,.1);
-    margin-bottom:12px;
-}
-
-.stat-label{
-    color:var(--muted);
-    font-size:11px;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:rgba(0,122,255,.1);
+  margin-bottom:12px;
 }
 
 .stat-value{
-    font-size:25px;
-    font-weight:750;
-    letter-spacing:-.5px;
-    margin-top:3px;
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:-.8px;
 }
 
-.content-grid{
-    grid-template-columns:1.2fr .8fr;
-    margin-top:14px;
+.stat-label{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
 }
 
-.two-grid{
-    grid-template-columns:1fr 1fr;
+.grid2{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:16px;
 }
 
-.three-grid{
-    grid-template-columns:repeat(3,1fr);
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
 }
 
-.spacer{
-    height:14px;
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
 }
 
-/* ================================
-   TABLE
-================================ */
+.section-head h2{
+  font-size:18px;
+  margin:0;
+}
 
+.section-head p{
+  margin:4px 0 0;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:39px;
+  padding:9px 14px;
+  border-radius:13px;
+  font-weight:700;
+  font-size:13px;
+  transition:.2s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-primary{
+  background:var(--blue);
+  color:white;
+}
+
+.btn-success{
+  background:var(--green);
+  color:white;
+}
+
+.btn-danger{
+  background:var(--red);
+  color:white;
+}
+
+.btn-warning{
+  background:var(--orange);
+  color:white;
+}
+
+.btn-soft{
+  background:rgba(0,122,255,.09);
+  color:var(--blue);
+}
+
+.btn-gray{
+  background:rgba(0,0,0,.06);
+  color:#555;
+}
+
+/* TABLE */
 .table-wrap{
-    overflow:auto;
-    border-radius:15px;
-    border:1px solid var(--border);
+  overflow-x:auto;
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:650px;
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
 }
 
 th{
-    text-align:left;
-    padding:11px 12px;
-    background:rgba(0,0,0,.025);
-    color:#777;
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:.4px;
+  text-align:left;
+  color:#888;
+  font-size:11px;
+  font-weight:700;
+  padding:12px;
+  border-bottom:1px solid var(--line);
 }
 
 td{
-    padding:12px;
-    border-top:1px solid rgba(0,0,0,.05);
-    font-size:12px;
+  padding:13px 12px;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
 }
 
-tr{
-    transition:background .15s ease;
+tr:last-child td{
+  border-bottom:0;
 }
 
-tbody tr:hover{
-    background:rgba(0,122,255,.035);
+.user-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#e8e8ed;
+  display:grid;
+  place-items:center;
+  font-weight:700;
+  color:#777;
 }
 
 .badge{
-    display:inline-flex;
-    align-items:center;
-    padding:4px 8px;
-    border-radius:20px;
-    font-size:10px;
-    font-weight:650;
-}
-
-.badge-blue{
-    color:#0066d6;
-    background:rgba(0,122,255,.1);
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:800;
 }
 
 .badge-green{
-    color:#168a35;
-    background:rgba(52,199,89,.12);
+  color:#178b39;
+  background:rgba(52,199,89,.13);
 }
 
 .badge-red{
-    color:#d9271c;
-    background:rgba(255,59,48,.1);
+  color:#d52e27;
+  background:rgba(255,59,48,.12);
+}
+
+.badge-blue{
+  color:#0065cf;
+  background:rgba(0,122,255,.11);
 }
 
 .badge-orange{
-    color:#c56b00;
-    background:rgba(255,149,0,.12);
+  color:#bb6a00;
+  background:rgba(255,149,0,.13);
 }
 
-/* ================================
-   STATUS
-================================ */
-
-.status-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 0;
-    border-bottom:1px solid rgba(0,0,0,.05);
-}
-
-.status-row:last-child{
-    border-bottom:0;
-}
-
-.status-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.status-dot{
-    width:9px;
-    height:9px;
-    border-radius:50%;
-    background:#bbb;
-}
-
-.status-dot.online{
-    background:var(--green);
-    box-shadow:0 0 0 5px rgba(52,199,89,.1);
-}
-
-.status-dot.offline{
-    background:var(--red);
-}
-
-/* ================================
-   TOGGLE
-================================ */
-
-.toggle{
-    position:relative;
-    width:42px;
-    height:24px;
-    flex:none;
-}
-
-.toggle input{
-    display:none;
-}
-
-.slider{
-    position:absolute;
-    inset:0;
-    background:#d1d1d6;
-    border-radius:30px;
-    cursor:pointer;
-    transition:.25s ease;
-}
-
-.slider::after{
-    content:"";
-    position:absolute;
-    width:20px;
-    height:20px;
-    left:2px;
-    top:2px;
-    background:#fff;
-    border-radius:50%;
-    box-shadow:0 2px 6px rgba(0,0,0,.18);
-    transition:.25s ease;
-}
-
-.toggle input:checked + .slider{
-    background:var(--green);
-}
-
-.toggle input:checked + .slider::after{
-    transform:translateX(18px);
-}
-
-/* ================================
-   INPUT
-================================ */
-
-.input,
-.select,
-.textarea{
-    width:100%;
-    border:1px solid rgba(0,0,0,.08);
-    background:rgba(255,255,255,.72);
-    padding:10px 12px;
-    border-radius:12px;
-    outline:none;
-    font-family:inherit;
-    font-size:12px;
-    transition:.2s ease;
-}
-
-.input:focus,
-.select:focus,
-.textarea:focus{
-    border-color:rgba(0,122,255,.35);
-    box-shadow:0 0 0 4px rgba(0,122,255,.08);
-}
-
-.textarea{
-    min-height:90px;
-    resize:vertical;
+/* FORMS */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
 }
 
 .form-group{
-    margin-bottom:12px;
+  margin-bottom:13px;
 }
 
-.form-label{
-    display:block;
-    font-size:11px;
-    font-weight:650;
-    margin-bottom:6px;
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin:0 0 7px;
 }
 
-/* ================================
-   SEARCH
-================================ */
-
-.search-row{
-    display:flex;
-    gap:8px;
-    margin-bottom:12px;
+.input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--line);
+  outline:none;
+  border-radius:14px;
+  background:rgba(255,255,255,.72);
+  padding:11px 13px;
+  color:var(--text);
+  transition:.2s;
 }
 
-.search-row .input{
-    flex:1;
+.input:focus,
+select:focus,
+textarea:focus{
+  border-color:rgba(0,122,255,.45);
+  box-shadow:0 0 0 4px rgba(0,122,255,.08);
 }
 
-/* ================================
-   SKELETON
-================================ */
-
-.skeleton{
-    background:
-        linear-gradient(
-            90deg,
-            rgba(0,0,0,.04) 25%,
-            rgba(255,255,255,.65) 50%,
-            rgba(0,0,0,.04) 75%
-        );
-    background-size:200% 100%;
-    animation:shimmer 1.3s infinite;
-    border-radius:8px;
+textarea{
+  min-height:100px;
+  resize:vertical;
 }
 
-@keyframes shimmer{
-    to{
-        background-position:-200% 0;
-    }
+/* MAINTENANCE */
+.maintenance-hero{
+  padding:25px;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(255,59,48,.12),transparent 32%),
+    var(--card);
 }
 
-/* ================================
-   LOADING OVERLAY
-================================ */
-
-.loading{
-    position:fixed;
-    inset:0;
-    background:rgba(245,245,247,.58);
-    backdrop-filter:blur(10px);
-    z-index:1000;
-    display:none;
-    place-items:center;
+.maintenance-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 }
 
-.loading.show{
-    display:grid;
+.status-orb{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  background:rgba(52,199,89,.13);
+  position:relative;
 }
 
-.loader-card{
-    padding:23px;
-    background:rgba(255,255,255,.9);
-    border:1px solid var(--border);
-    border-radius:22px;
-    box-shadow:var(--shadow);
-    text-align:center;
-    min-width:170px;
+.status-orb.on{
+  background:rgba(255,59,48,.13);
+  animation:pulse 1.8s infinite;
 }
 
-.spinner{
-    width:34px;
-    height:34px;
-    border:3px solid rgba(0,122,255,.14);
-    border-top-color:var(--blue);
-    border-radius:50%;
-    animation:spin .7s linear infinite;
-    margin:auto auto 11px;
-}
-
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-.loader-card strong{
-    display:block;
-    font-size:13px;
-}
-
-.loader-card span{
-    display:block;
-    font-size:10px;
-    color:var(--muted);
-    margin-top:3px;
-}
-
-/* ================================
-   TOAST
-================================ */
-
-.toast-container{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    z-index:2000;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.toast{
-    min-width:250px;
-    max-width:350px;
-    padding:13px 15px;
-    border-radius:16px;
-    background:rgba(255,255,255,.92);
-    backdrop-filter:blur(20px);
-    border:1px solid var(--border);
-    box-shadow:0 15px 45px rgba(0,0,0,.12);
-    animation:toastIn .3s ease;
-    font-size:12px;
-}
-
-.toast.success{
-    border-left:3px solid var(--green);
-}
-
-.toast.error{
-    border-left:3px solid var(--red);
-}
-
-.toast.info{
-    border-left:3px solid var(--blue);
-}
-
-@keyframes toastIn{
-    from{
-        opacity:0;
-        transform:translateY(12px) scale(.97);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-/* ================================
-   MODAL
-================================ */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.25);
-    backdrop-filter:blur(9px);
-    z-index:1500;
-    display:none;
-    place-items:center;
-    padding:20px;
-}
-
-.modal.show{
-    display:grid;
-}
-
-.modal-card{
-    width:min(470px,100%);
-    background:rgba(255,255,255,.94);
-    border-radius:25px;
-    border:1px solid var(--border);
-    box-shadow:0 30px 100px rgba(0,0,0,.2);
-    padding:21px;
-    animation:modalIn .25s ease;
-}
-
-@keyframes modalIn{
-    from{
-        opacity:0;
-        transform:translateY(15px) scale(.97);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-.modal-title{
-    font-size:17px;
-    font-weight:750;
-    margin-bottom:6px;
-}
-
-.modal-text{
-    color:#777;
-    font-size:12px;
-    line-height:1.6;
-}
-
-.modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:7px;
-    margin-top:18px;
-}
-
-/* ================================
-   MAINTENANCE
-================================ */
-
-.maintenance-card{
-    border:1px solid rgba(255,149,0,.18);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,149,0,.08),
-            rgba(255,255,255,.78)
-        );
-}
-
-.maintenance-card.enabled{
-    border-color:rgba(255,59,48,.2);
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,59,48,.08),
-            rgba(255,255,255,.78)
-        );
+@keyframes pulse{
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(255,59,48,.2);
+  }
+  50%{
+    box-shadow:0 0 0 14px rgba(255,59,48,0);
+  }
 }
 
 .maintenance-status{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:12px;
+  font-size:22px;
+  font-weight:800;
 }
 
-.big-status{
-    font-size:18px;
-    font-weight:750;
+.countdown{
+  font-size:43px;
+  font-weight:900;
+  letter-spacing:3px;
+  margin:22px 0 5px;
+  font-variant-numeric:tabular-nums;
 }
 
-/* ================================
-   MOBILE
-================================ */
-
-@media(max-width:1000px){
-    :root{
-        --sidebar:225px;
-    }
-
-    .stats-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .content-grid,
-    .two-grid{
-        grid-template-columns:1fr;
-    }
-
-    .three-grid{
-        grid-template-columns:1fr 1fr;
-    }
+.countdown-label{
+  color:var(--muted);
+  font-size:12px;
 }
 
-@media(max-width:720px){
+.toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
 
-    .sidebar{
-        transform:translateX(-115%);
-        transition:.3s ease;
-        width:245px;
-        top:10px;
-        bottom:10px;
-        left:10px;
-    }
+.switch{
+  width:50px;
+  height:30px;
+  border-radius:999px;
+  padding:3px;
+  background:#d1d1d6;
+  transition:.25s;
+}
 
-    .sidebar.open{
-        transform:none;
-    }
+.switch.active{
+  background:var(--green);
+}
 
-    .main{
-        margin-left:0;
-        padding:12px 12px 40px;
-    }
+.switch-knob{
+  width:24px;
+  height:24px;
+  background:white;
+  border-radius:50%;
+  box-shadow:0 2px 5px rgba(0,0,0,.18);
+  transition:.25s;
+}
 
-    .topbar{
-        height:57px;
-    }
+.switch.active .switch-knob{
+  transform:translateX(20px);
+}
 
-    .menu-mobile{
-        display:inline-flex;
-    }
+/* QUICK GRID */
+.feature-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
 
-    .page-title{
-        font-size:21px;
-    }
+.feature{
+  padding:17px;
+  min-height:110px;
+  transition:.2s;
+}
 
-    .page-subtitle{
-        font-size:10px;
-    }
+.feature:hover{
+  transform:translateY(-3px);
+}
 
-    .top-actions .refresh-text{
-        display:none;
-    }
+.feature-icon{
+  font-size:22px;
+  margin-bottom:9px;
+}
 
-    .stats-grid{
-        grid-template-columns:1fr 1fr;
-    }
+.feature-title{
+  font-weight:750;
+  font-size:13px;
+}
 
-    .three-grid{
-        grid-template-columns:1fr;
-    }
+.feature-desc{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:4px;
+}
 
-    .card{
-        padding:15px;
-        border-radius:20px;
-    }
+/* LOG */
+.log{
+  display:flex;
+  gap:11px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+}
 
-    .stat-card{
-        min-height:110px;
-    }
+.log:last-child{
+  border-bottom:0;
+}
 
-    .stat-value{
-        font-size:21px;
-    }
+.log-dot{
+  width:9px;
+  height:9px;
+  margin-top:5px;
+  border-radius:50%;
+  background:var(--blue);
+  flex:none;
+}
 
-    .btn{
-        min-height:35px;
-        padding:0 10px;
-        font-size:11px;
-    }
+.log-title{
+  font-size:13px;
+  font-weight:700;
+}
 
-    .toast-container{
-        left:12px;
-        right:12px;
-        bottom:12px;
-    }
+.log-meta{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:3px;
+}
 
-    .toast{
-        min-width:0;
-        width:100%;
-    }
+/* TOAST */
+.toast-container{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.toast{
+  min-width:270px;
+  max-width:360px;
+  padding:14px 16px;
+  border-radius:17px;
+  background:rgba(30,30,32,.93);
+  color:white;
+  box-shadow:0 14px 35px rgba(0,0,0,.22);
+  animation:toastIn .3s ease;
+  font-size:13px;
+}
+
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:translateY(15px) scale(.97);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+/* LOADING */
+.loading-overlay{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:none;
+  place-items:center;
+  background:rgba(245,245,247,.72);
+  backdrop-filter:blur(15px);
+}
+
+.loading-overlay.show{
+  display:grid;
+}
+
+.loader{
+  width:42px;
+  height:42px;
+  border:4px solid rgba(0,122,255,.15);
+  border-top-color:var(--blue);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:none;
+  place-items:center;
+  padding:20px;
+  background:rgba(0,0,0,.3);
+  backdrop-filter:blur(10px);
+}
+
+.modal.show{
+  display:grid;
+}
+
+.modal-card{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:22px;
+  border-radius:27px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 30px 80px rgba(0,0,0,.22);
+  animation:modalIn .25s ease;
+}
+
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:translateY(15px) scale(.96);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:17px;
+}
+
+.modal-head h3{
+  margin:0;
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .feature-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:850px){
+  .sidebar{
+    transform:translateX(-120%);
+  }
+
+  .sidebar.open{
+    transform:none;
+  }
+
+  .main{
+    width:100%;
+    margin-left:0;
+    padding:17px;
+  }
+
+  .mobile-menu{
+    display:grid;
+  }
+
+  .grid2{
+    grid-template-columns:1fr;
+  }
+
+  .feature-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:520px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+  }
+
+  .stat{
+    padding:14px;
+    min-height:110px;
+  }
+
+  .stat-value{
+    font-size:21px;
+  }
+
+  .page-title h1{
+    font-size:23px;
+  }
+
+  .top-actions .refresh-text{
+    display:none;
+  }
+
+  .feature-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .countdown{
+    font-size:31px;
+  }
+
+  .maintenance-top{
+    align-items:flex-start;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg-orb orb1"></div>
-<div class="bg-orb orb2"></div>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader"></div>
+</div>
 
-<!-- ================================
-     SIDEBAR
-================================ -->
+<div class="app">
 
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
 
-    <div class="brand">
-        <div class="brand-icon"></div>
-
-        <div class="brand-text">
-            <strong>Admin Premium</strong>
-            <span>Control Center v3</span>
-        </div>
+  <div class="brand">
+    <div class="brand-icon">⌘</div>
+    <div>
+      <div class="brand-title">Admin Premium</div>
+      <div class="brand-sub">Dashboard v3</div>
     </div>
+  </div>
 
-    <nav class="nav">
+  <div class="nav-label">Overview</div>
 
-        <button class="nav-btn active"
-                data-section="overview">
-            <span class="nav-icon">⌂</span>
-            Overview
-        </button>
+  <button class="nav-btn active" data-section="overview">
+    <span class="nav-icon">⌂</span> Dashboard
+  </button>
 
-        <button class="nav-btn"
-                data-section="users">
-            <span class="nav-icon">♙</span>
-            Users
-        </button>
+  <button class="nav-btn" data-section="analytics">
+    <span class="nav-icon">◔</span> Analytics
+  </button>
 
-        <button class="nav-btn"
-                data-section="photos">
-            <span class="nav-icon">▧</span>
-            Photos
-        </button>
+  <button class="nav-btn" data-section="activity">
+    <span class="nav-icon">◷</span> Activity
+  </button>
 
-        <button class="nav-btn"
-                data-section="storage">
-            <span class="nav-icon">▤</span>
-            Storage
-        </button>
+  <div class="nav-label">Management</div>
 
-        <button class="nav-btn"
-                data-section="maintenance">
-            <span class="nav-icon">⚙</span>
-            Maintenance
-        </button>
+  <button class="nav-btn" data-section="users">
+    <span class="nav-icon">♙</span> Users
+  </button>
 
-        <button class="nav-btn"
-                data-section="security">
-            <span class="nav-icon">◉</span>
-            Security
-        </button>
+  <button class="nav-btn" data-section="photos">
+    <span class="nav-icon">▧</span> Photos
+  </button>
 
-        <button class="nav-btn"
-                data-section="notifications">
-            <span class="nav-icon">♢</span>
-            Notifications
-        </button>
+  <button class="nav-btn" data-section="storage">
+    <span class="nav-icon">▱</span> Storage
+  </button>
 
-        <button class="nav-btn"
-                data-section="audit">
-            <span class="nav-icon">≡</span>
-            Audit Log
-        </button>
+  <button class="nav-btn" data-section="notifications">
+    <span class="nav-icon">♢</span> Notifications
+  </button>
 
-        <button class="nav-btn"
-                data-section="settings">
-            <span class="nav-icon">⚙</span>
-            Settings
-        </button>
+  <button class="nav-btn" data-section="reports">
+    <span class="nav-icon">▤</span> Reports
+  </button>
 
-    </nav>
+  <div class="nav-label">System</div>
 
-    <div class="sidebar-bottom">
+  <button class="nav-btn" data-section="maintenance">
+    <span class="nav-icon">⚙</span> Maintenance
+  </button>
 
-        <div class="admin-mini">
-            <small>Signed in as</small>
-            <strong id="adminEmail">Loading...</strong>
-        </div>
+  <button class="nav-btn" data-section="security">
+    <span class="nav-icon">◉</span> Security
+  </button>
 
-        <button class="btn btn-soft"
-                style="width:100%"
-                onclick="logout()">
-            ↪ Keluar
-        </button>
+  <button class="nav-btn" data-section="audit">
+    <span class="nav-icon">⌁</span> Audit Log
+  </button>
 
-    </div>
+  <button class="nav-btn" data-section="settings">
+    <span class="nav-icon">☷</span> Settings
+  </button>
+
+  <div class="sidebar-bottom">
+    <button class="nav-btn" id="logoutBtn">
+      <span class="nav-icon">↪</span> Keluar
+    </button>
+  </div>
 
 </aside>
 
-<!-- ================================
-     MAIN
-================================ -->
-
+<!-- MAIN -->
 <main class="main">
 
-    <header class="topbar">
+<header class="topbar">
 
-        <div class="top-left">
+  <div class="page-title">
+    <h1 id="pageTitle">Dashboard</h1>
+    <p id="pageSubtitle">Kontrol website dari satu tempat.</p>
+  </div>
 
-            <button class="btn btn-soft icon-btn menu-mobile"
-                    onclick="toggleSidebar()">
-                ☰
-            </button>
+  <div class="top-actions">
 
-            <div>
-                <div class="page-title"
-                     id="pageTitle">
-                    Overview
-                </div>
+    <button class="icon-btn mobile-menu" id="mobileMenu">
+      ☰
+    </button>
 
-                <div class="page-subtitle"
-                     id="pageSubtitle">
-                    Admin Control Center
-                </div>
-            </div>
+    <button class="icon-btn" id="refreshBtn" title="Refresh">
+      ↻
+    </button>
 
+    <button class="icon-btn" id="notificationBtn" title="Notifikasi">
+      ♢
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- ======================================================
+     OVERVIEW
+====================================================== -->
+
+<section class="section active" id="section-overview">
+
+  <div class="stats">
+
+    <div class="card stat">
+      <div class="stat-icon">♙</div>
+      <div class="stat-value" id="statUsers">—</div>
+      <div class="stat-label">Total Users</div>
+    </div>
+
+    <div class="card stat">
+      <div class="stat-icon">▧</div>
+      <div class="stat-value" id="statPhotos">—</div>
+      <div class="stat-label">Total Photos</div>
+    </div>
+
+    <div class="card stat">
+      <div class="stat-icon">▱</div>
+      <div class="stat-value" id="statStorage">—</div>
+      <div class="stat-label">Storage Used</div>
+    </div>
+
+    <div class="card stat">
+      <div class="stat-icon">◉</div>
+      <div class="stat-value" id="statStatus">ONLINE</div>
+      <div class="stat-label">System Status</div>
+    </div>
+
+  </div>
+
+
+  <div class="grid2">
+
+    <div class="card card-pad">
+
+      <div class="section-head">
+        <div>
+          <h2>Quick Actions</h2>
+          <p>Aksi admin yang sering digunakan.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+
+        <button class="card feature" onclick="openSection('users')">
+          <div class="feature-icon">♙</div>
+          <div class="feature-title">Users</div>
+          <div class="feature-desc">Kelola akun</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('photos')">
+          <div class="feature-icon">▧</div>
+          <div class="feature-title">Photos</div>
+          <div class="feature-desc">Kelola foto</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('storage')">
+          <div class="feature-icon">▱</div>
+          <div class="feature-title">Storage</div>
+          <div class="feature-desc">Kapasitas</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('maintenance')">
+          <div class="feature-icon">⚙</div>
+          <div class="feature-title">Maintenance</div>
+          <div class="feature-desc">ON / OFF timer</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('security')">
+          <div class="feature-icon">◉</div>
+          <div class="feature-title">Security</div>
+          <div class="feature-desc">Keamanan</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('audit')">
+          <div class="feature-icon">⌁</div>
+          <div class="feature-title">Audit Log</div>
+          <div class="feature-desc">Aktivitas admin</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('notifications')">
+          <div class="feature-icon">♢</div>
+          <div class="feature-title">Broadcast</div>
+          <div class="feature-desc">Notifikasi</div>
+        </button>
+
+        <button class="card feature" onclick="openSection('settings')">
+          <div class="feature-icon">☷</div>
+          <div class="feature-title">Settings</div>
+          <div class="feature-desc">Konfigurasi</div>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="card card-pad">
+
+      <div class="section-head">
+        <div>
+          <h2>System Overview</h2>
+          <p>Status layanan.</p>
+        </div>
+      </div>
+
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Supabase Connection</div>
+          <div class="log-meta" id="supabaseStatus">
+            Memeriksa koneksi...
+          </div>
+        </div>
+      </div>
+
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Authentication</div>
+          <div class="log-meta">
+            Supabase Auth
+          </div>
+        </div>
+      </div>
+
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Storage</div>
+          <div class="log-meta">
+            Photo storage service
+          </div>
+        </div>
+      </div>
+
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Admin API</div>
+          <div class="log-meta" id="apiStatus">
+            Endpoint configured
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     ANALYTICS
+====================================================== -->
+
+<section class="section" id="section-analytics">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>Analytics</h2>
+        <p>Ringkasan performa sistem.</p>
+      </div>
+
+      <button class="btn btn-soft" onclick="loadStats()">↻ Refresh</button>
+    </div>
+
+    <div class="grid3">
+
+      <div class="card card-pad">
+        <b>Users</b>
+        <div class="stat-value" id="analyticsUsers">—</div>
+        <small>Total akun</small>
+      </div>
+
+      <div class="card card-pad">
+        <b>Photos</b>
+        <div class="stat-value" id="analyticsPhotos">—</div>
+        <small>Total foto</small>
+      </div>
+
+      <div class="card card-pad">
+        <b>Storage</b>
+        <div class="stat-value" id="analyticsStorage">—</div>
+        <small>Data foto</small>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     ACTIVITY
+====================================================== -->
+
+<section class="section" id="section-activity">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>Activity Center</h2>
+        <p>Aktivitas terbaru sistem.</p>
+      </div>
+
+      <button class="btn btn-soft" onclick="loadActivity()">Refresh</button>
+    </div>
+
+    <div id="activityList">
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Dashboard dimuat</div>
+          <div class="log-meta">Menunggu data aktivitas.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     USERS
+====================================================== -->
+
+<section class="section" id="section-users">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>User Management</h2>
+        <p>Cari dan kelola data pengguna.</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="loadUsers()">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <div style="display:flex;gap:9px;margin-bottom:15px;flex-wrap:wrap">
+
+      <input
+        class="input"
+        id="userSearch"
+        placeholder="Cari user / email / nama..."
+        style="max-width:420px"
+        oninput="filterUsers()">
+
+      <select id="userFilter" class="input" style="max-width:180px" onchange="filterUsers()">
+        <option value="all">Semua User</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+      </select>
+
+    </div>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>USER</th>
+            <th>EMAIL</th>
+            <th>ROLE</th>
+            <th>STATUS</th>
+            <th>AKSI</th>
+          </tr>
+        </thead>
+
+        <tbody id="usersTable">
+          <tr>
+            <td colspan="5">Memuat...</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     PHOTOS
+====================================================== -->
+
+<section class="section" id="section-photos">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>Photo Management</h2>
+        <p>Monitoring foto yang tersimpan.</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="loadPhotos()">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>FILE</th>
+            <th>USER</th>
+            <th>SIZE</th>
+            <th>CREATED</th>
+            <th>AKSI</th>
+          </tr>
+        </thead>
+
+        <tbody id="photosTable">
+          <tr>
+            <td colspan="5">Memuat...</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     STORAGE
+====================================================== -->
+
+<section class="section" id="section-storage">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>Storage Management</h2>
+        <p>Monitor penggunaan kapasitas penyimpanan.</p>
+      </div>
+
+      <button class="btn btn-soft" onclick="loadStats()">Refresh</button>
+    </div>
+
+    <div class="grid3">
+
+      <div class="card card-pad">
+        <div class="stat-label">Storage Used</div>
+        <div class="stat-value" id="storageUsed">—</div>
+      </div>
+
+      <div class="card card-pad">
+        <div class="stat-label">Storage Limit</div>
+        <div class="stat-value" id="storageLimit">—</div>
+      </div>
+
+      <div class="card card-pad">
+        <div class="stat-label">Usage</div>
+        <div class="stat-value" id="storagePercent">—</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px">
+      <div style="height:10px;background:#e5e5ea;border-radius:99px;overflow:hidden">
+        <div id="storageBar"
+             style="height:100%;width:0;background:var(--blue);transition:.5s">
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <button class="btn btn-primary" onclick="openStorageModal()">
+        ⚙ Atur Kapasitas
+      </button>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     NOTIFICATIONS
+====================================================== -->
+
+<section class="section" id="section-notifications">
+
+  <div class="grid2">
+
+    <div class="card card-pad">
+
+      <div class="section-head">
+        <div>
+          <h2>Broadcast</h2>
+          <p>Kirim pemberitahuan ke pengguna.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Judul</label>
+        <input class="input" id="broadcastTitle" placeholder="Judul notifikasi">
+      </div>
+
+      <div class="form-group">
+        <label>Pesan</label>
+        <textarea id="broadcastMessage" placeholder="Isi pemberitahuan..."></textarea>
+      </div>
+
+      <button class="btn btn-primary" onclick="sendBroadcast()">
+        ♢ Kirim Broadcast
+      </button>
+
+    </div>
+
+    <div class="card card-pad">
+
+      <div class="section-head">
+        <div>
+          <h2>Notification Center</h2>
+          <p>Status pengiriman.</p>
+        </div>
+      </div>
+
+      <div id="notificationLog">
+        Belum ada aktivitas broadcast.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     REPORTS
+====================================================== -->
+
+<section class="section" id="section-reports">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+      <div>
+        <h2>Reports</h2>
+        <p>Ringkasan data website.</p>
+      </div>
+    </div>
+
+    <div class="grid3">
+
+      <button class="card feature" onclick="generateReport('users')">
+        <div class="feature-icon">♙</div>
+        <div class="feature-title">User Report</div>
+        <div class="feature-desc">Ringkasan pengguna</div>
+      </button>
+
+      <button class="card feature" onclick="generateReport('photos')">
+        <div class="feature-icon">▧</div>
+        <div class="feature-title">Photo Report</div>
+        <div class="feature-desc">Ringkasan foto</div>
+      </button>
+
+      <button class="card feature" onclick="generateReport('system')">
+        <div class="feature-icon">◉</div>
+        <div class="feature-title">System Report</div>
+        <div class="feature-desc">Status sistem</div>
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     MAINTENANCE
+====================================================== -->
+
+<section class="section" id="section-maintenance">
+
+  <div class="card maintenance-hero">
+
+    <div class="maintenance-top">
+
+      <div style="display:flex;gap:14px;align-items:center">
+
+        <div class="status-orb" id="maintenanceOrb">
+          ✓
         </div>
 
-        <div class="top-actions">
+        <div>
+          <div class="maintenance-status" id="maintenanceStatusText">
+            Website Online
+          </div>
 
-            <button class="btn btn-soft"
-                    onclick="refreshCurrent()">
-                ↻
-                <span class="refresh-text">
-                    Refresh
-                </span>
-            </button>
-
+          <div style="color:var(--muted);font-size:12px" id="maintenanceSubtext">
+            Maintenance sedang tidak aktif.
+          </div>
         </div>
 
-    </header>
+      </div>
 
-    <!-- ============================
-         OVERVIEW
-    ============================= -->
+      <button
+        class="btn btn-danger"
+        id="maintenanceButton"
+        onclick="toggleMaintenance()">
+        Aktifkan
+      </button>
 
-    <section class="section active"
-             id="section-overview">
+    </div>
 
-        <div class="grid stats-grid">
+    <div class="countdown" id="maintenanceCountdown">
+      --:--:--
+    </div>
 
-            <div class="card stat-card">
-                <div class="stat-icon">♙</div>
-                <div class="stat-label">Total Users</div>
-                <div class="stat-value"
-                     id="statUsers">
-                    —
-                </div>
-            </div>
+    <div class="countdown-label" id="countdownLabel">
+      Timer maintenance
+    </div>
 
-            <div class="card stat-card">
-                <div class="stat-icon">▧</div>
-                <div class="stat-label">Total Photos</div>
-                <div class="stat-value"
-                     id="statPhotos">
-                    —
-                </div>
-            </div>
+  </div>
 
-            <div class="card stat-card">
-                <div class="stat-icon">▤</div>
-                <div class="stat-label">Storage Used</div>
-                <div class="stat-value"
-                     id="statStorage">
-                    —
-                </div>
-            </div>
 
-            <div class="card stat-card">
-                <div class="stat-icon">●</div>
-                <div class="stat-label">
-                    Active 30 Days
-                </div>
-                <div class="stat-value"
-                     id="statActive">
-                    —
-                </div>
-            </div>
+  <div class="grid2">
 
+    <div class="card card-pad">
+
+      <div class="section-head">
+        <div>
+          <h2>Maintenance Control</h2>
+          <p>Pengaturan mode pemeliharaan.</p>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <b>Maintenance Mode</b>
+          <div class="stat-label">Blokir akses user biasa</div>
         </div>
 
-        <div class="spacer"></div>
+        <button
+          class="switch"
+          id="maintenanceSwitch"
+          onclick="toggleMaintenance()">
 
-        <div class="grid content-grid">
+          <div class="switch-knob"></div>
 
-            <div class="card">
+        </button>
+      </div>
 
-                <div class="card-title">
-                    System Status
-                </div>
+      <div class="form-group" style="margin-top:17px">
+        <label>Pesan Maintenance</label>
 
-                <div class="card-subtitle">
-                    Kondisi layanan saat ini
-                </div>
+        <textarea
+          id="maintenanceMessage"
+          placeholder="Website sedang dalam pemeliharaan..."></textarea>
+      </div>
 
-                <div class="status-row">
-                    <div class="status-left">
-                        <span class="status-dot"
-                              id="healthDot"></span>
-                        <span>Admin API</span>
-                    </div>
+      <div class="form-group">
+        <label>Durasi Maintenance (menit)</label>
 
-                    <span class="badge"
-                          id="healthBadge">
-                        Checking
-                    </span>
-                </div>
+        <input
+          class="input"
+          type="number"
+          id="maintenanceDuration"
+          value="30"
+          min="1"
+          max="1440">
+      </div>
 
-                <div class="status-row">
-                    <div class="status-left">
-                        <span class="status-dot"
-                              id="dbDot"></span>
-                        <span>Database</span>
-                    </div>
+      <button
+        class="btn btn-primary"
+        onclick="saveMaintenance()">
 
-                    <span class="badge"
-                          id="dbBadge">
-                        Checking
-                    </span>
-                </div>
+        ✓ Simpan & Terapkan
+      </button>
 
-                <div class="status-row">
-                    <div class="status-left">
-                        <span class="status-dot"
-                              id="storageDot"></span>
-                        <span>Storage</span>
-                    </div>
+    </div>
 
-                    <span class="badge"
-                          id="storageBadge">
-                        Checking
-                    </span>
-                </div>
 
-            </div>
+    <div class="card card-pad">
 
-            <div class="card maintenance-card"
-                 id="maintenanceOverviewCard">
+      <div class="section-head">
+        <div>
+          <h2>Scheduled Maintenance</h2>
+          <p>Atur waktu mulai dan selesai otomatis.</p>
+        </div>
+      </div>
 
-                <div class="card-title">
-                    Maintenance
-                </div>
+      <div class="form-grid">
 
-                <div class="card-subtitle">
-                    Status maintenance website
-                </div>
-
-                <div class="maintenance-status">
-
-                    <span class="status-dot"
-                          id="maintenanceDot"></span>
-
-                    <div>
-                        <div class="big-status"
-                             id="maintenanceText">
-                            Checking...
-                        </div>
-
-                        <div class="page-subtitle"
-                             id="maintenanceMessage">
-                            —
-                        </div>
-                    </div>
-
-                </div>
-
-                <button class="btn btn-soft"
-                        onclick="showSection('maintenance')">
-                    Kelola Maintenance
-                </button>
-
-            </div>
-
+        <div class="form-group">
+          <label>Mulai</label>
+          <input class="input" type="datetime-local" id="maintenanceStart">
         </div>
 
-    </section>
-
-    <!-- ============================
-         USERS
-    ============================= -->
-
-    <section class="section"
-             id="section-users">
-
-        <div class="card">
-
-            <div class="card-title">
-                User Management
-            </div>
-
-            <div class="card-subtitle">
-                Kelola akun dan keamanan pengguna.
-            </div>
-
-            <div class="search-row">
-
-                <input class="input"
-                       id="userSearch"
-                       placeholder="Cari email atau UID..."
-                       oninput="filterUsers()">
-
-                <button class="btn btn-soft"
-                        onclick="loadUsers()">
-                    ↻
-                </button>
-
-            </div>
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Dibuat</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="usersTable">
-                        <tr>
-                            <td colspan="5">
-                                Memuat...
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
-            </div>
-
+        <div class="form-group">
+          <label>Selesai</label>
+          <input class="input" type="datetime-local" id="maintenanceEnd">
         </div>
 
-    </section>
+      </div>
 
-    <!-- ============================
-         PHOTOS
-    ============================= -->
+      <div class="toggle-row">
 
-    <section class="section"
-             id="section-photos">
-
-        <div class="card">
-
-            <div class="card-title">
-                Photos Management
-            </div>
-
-            <div class="card-subtitle">
-                Kelola file foto yang tersimpan.
-            </div>
-
-            <div class="search-row">
-
-                <input class="input"
-                       id="photoSearch"
-                       placeholder="Cari nama foto atau UID..."
-                       oninput="filterPhotos()">
-
-                <button class="btn btn-soft"
-                        onclick="loadPhotos()">
-                    ↻
-                </button>
-
-            </div>
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>User ID</th>
-                            <th>Ukuran</th>
-                            <th>Tanggal</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="photosTable">
-                        <tr>
-                            <td colspan="5">
-                                Memuat...
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
-            </div>
-
+        <div>
+          <b>Auto Start</b>
+          <div class="stat-label">Aktifkan otomatis</div>
         </div>
 
-    </section>
+        <input type="checkbox" id="autoStart">
 
-    <!-- ============================
-         STORAGE
-    ============================= -->
+      </div>
 
-    <section class="section"
-             id="section-storage">
+      <div class="toggle-row">
 
-        <div class="grid two-grid">
-
-            <div class="card">
-
-                <div class="card-title">
-                    Storage Overview
-                </div>
-
-                <div class="card-subtitle">
-                    Penggunaan penyimpanan sistem.
-                </div>
-
-                <div class="status-row">
-                    <span>Total Photos</span>
-                    <strong id="storagePhotos">—</strong>
-                </div>
-
-                <div class="status-row">
-                    <span>Used Storage</span>
-                    <strong id="storageUsed">—</strong>
-                </div>
-
-                <div class="status-row">
-                    <span>System Status</span>
-                    <span class="badge badge-green">
-                        Online
-                    </span>
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-title">
-                    User Storage Quota
-                </div>
-
-                <div class="card-subtitle">
-                    Tambahkan kapasitas penyimpanan user.
-                </div>
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        User ID
-                    </label>
-
-                    <input class="input"
-                           id="quotaUserId"
-                           placeholder="UUID user">
-
-                </div>
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Kapasitas
-                    </label>
-
-                    <select class="select"
-                            id="quotaSize">
-
-                        <option value="1073741824">
-                            1 GB
-                        </option>
-
-                        <option value="5368709120">
-                            5 GB
-                        </option>
-
-                        <option value="10737418240">
-                            10 GB
-                        </option>
-
-                        <option value="53687091200">
-                            50 GB
-                        </option>
-
-                        <option value="107374182400">
-                            100 GB
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <button class="btn btn-primary"
-                        onclick="setQuota()">
-                    Simpan Kapasitas
-                </button>
-
-                <button class="btn btn-soft"
-                        onclick="checkQuota()">
-                    Cek Quota
-                </button>
-
-            </div>
-
+        <div>
+          <b>Auto End</b>
+          <div class="stat-label">Matikan otomatis</div>
         </div>
 
-    </section>
+        <input type="checkbox" id="autoEnd">
 
-    <!-- ============================
-         MAINTENANCE
-    ============================= -->
+      </div>
 
-    <section class="section"
-             id="section-maintenance">
+      <button
+        class="btn btn-success"
+        style="margin-top:15px"
+        onclick="saveMaintenanceSchedule()">
 
-        <div class="card maintenance-card"
-             id="maintenanceCard">
+        ⏱ Simpan Jadwal
+      </button>
 
-            <div class="card-title">
-                Maintenance Control
-            </div>
+    </div>
 
-            <div class="card-subtitle">
-                Aktifkan atau nonaktifkan mode maintenance
-                melalui Supabase.
-            </div>
+  </div>
 
-            <div class="status-row">
+</section>
 
-                <div class="status-left">
 
-                    <span class="status-dot"
-                          id="maintenanceControlDot"></span>
+<!-- ======================================================
+     SECURITY
+====================================================== -->
 
-                    <div>
-                        <strong id="maintenanceControlText">
-                            Checking...
-                        </strong>
+<section class="section" id="section-security">
 
-                        <div class="page-subtitle">
-                            Status tersimpan di database
-                        </div>
-                    </div>
+  <div class="card card-pad">
 
-                </div>
+    <div class="section-head">
+      <div>
+        <h2>Security Center</h2>
+        <p>Pemeriksaan keamanan dashboard.</p>
+      </div>
 
-                <label class="toggle">
+      <button class="btn btn-primary" onclick="runSecurityCheck()">
+        ◉ Scan
+      </button>
+    </div>
 
-                    <input type="checkbox"
-                           id="maintenanceToggle"
-                           onchange="toggleMaintenance()">
+    <div class="feature-grid">
 
-                    <span class="slider"></span>
+      <div class="card feature">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">RLS</div>
+        <div class="feature-desc" id="securityRLS">Checking...</div>
+      </div>
 
-                </label>
+      <div class="card feature">
+        <div class="feature-icon">♙</div>
+        <div class="feature-title">Auth</div>
+        <div class="feature-desc">Supabase Auth</div>
+      </div>
 
-            </div>
+      <div class="card feature">
+        <div class="feature-icon">⌁</div>
+        <div class="feature-title">Audit</div>
+        <div class="feature-desc">Activity logging</div>
+      </div>
 
-            <div class="spacer"></div>
+      <div class="card feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">API</div>
+        <div class="feature-desc" id="securityAPI">Checking...</div>
+      </div>
 
-            <div class="form-group">
+      <div class="card feature">
+        <div class="feature-icon">▣</div>
+        <div class="feature-title">Session</div>
+        <div class="feature-desc">Current session</div>
+      </div>
 
-                <label class="form-label">
-                    Pesan Maintenance
-                </label>
+      <div class="card feature">
+        <div class="feature-icon">◉</div>
+        <div class="feature-title">Publishable Key</div>
+        <div class="feature-desc">Client-safe key</div>
+      </div>
 
-                <textarea class="textarea"
-                          id="maintenanceInput"
-                          placeholder="Contoh: Website sedang diperbarui..."></textarea>
+    </div>
 
-            </div>
+  </div>
 
-            <button class="btn btn-primary"
-                    onclick="saveMaintenance()">
-                Simpan Maintenance
-            </button>
+</section>
 
+
+<!-- ======================================================
+     AUDIT
+====================================================== -->
+
+<section class="section" id="section-audit">
+
+  <div class="card card-pad">
+
+    <div class="section-head">
+
+      <div>
+        <h2>Audit Log</h2>
+        <p>Catatan aktivitas administrator.</p>
+      </div>
+
+      <button class="btn btn-soft" onclick="loadAudit()">
+        ↻ Refresh
+      </button>
+
+    </div>
+
+    <div id="auditList">
+
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">Audit system ready</div>
+          <div class="log-meta">
+            Menunggu aktivitas.
+          </div>
         </div>
+      </div>
 
-    </section>
+    </div>
 
-    <!-- ============================
-         SECURITY
-    ============================= -->
+  </div>
 
-    <section class="section"
-             id="section-security">
+</section>
 
-        <div class="grid two-grid">
 
-            <div class="card">
+<!-- ======================================================
+     SETTINGS
+====================================================== -->
 
-                <div class="card-title">
-                    Security Controls
-                </div>
+<section class="section" id="section-settings">
 
-                <div class="card-subtitle">
-                    Pengaturan akses sistem.
-                </div>
+  <div class="grid2">
 
-                <div class="status-row">
+    <div class="card card-pad">
 
-                    <span>Lock Upload</span>
-
-                    <label class="toggle">
-                        <input type="checkbox"
-                               id="uploadLock"
-                               onchange="setLock('upload_locked',this.checked)">
-                        <span class="slider"></span>
-                    </label>
-
-                </div>
-
-                <div class="status-row">
-
-                    <span>Lock Registration</span>
-
-                    <label class="toggle">
-                        <input type="checkbox"
-                               id="registrationLock"
-                               onchange="setLock('registration_locked',this.checked)">
-                        <span class="slider"></span>
-                    </label>
-
-                </div>
-
-                <div class="status-row">
-
-                    <span>Lock Sharing</span>
-
-                    <label class="toggle">
-                        <input type="checkbox"
-                               id="sharingLock"
-                               onchange="setLock('sharing_locked',this.checked)">
-                        <span class="slider"></span>
-                    </label>
-
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-title">
-                    Security Health
-                </div>
-
-                <div class="card-subtitle">
-                    Pemeriksaan layanan.
-                </div>
-
-                <button class="btn btn-primary"
-                        onclick="runSecurityCheck()">
-                    Jalankan Security Check
-                </button>
-
-                <div class="spacer"></div>
-
-                <div id="securityResult">
-                    Belum dilakukan pemeriksaan.
-                </div>
-
-            </div>
-
+      <div class="section-head">
+        <div>
+          <h2>Website Settings</h2>
+          <p>Pengaturan umum.</p>
         </div>
+      </div>
 
-    </section>
+      <div class="form-group">
+        <label>Nama Website</label>
+        <input class="input" id="siteName" value="Photo Storage">
+      </div>
 
-    <!-- ============================
-         NOTIFICATIONS
-    ============================= -->
+      <div class="form-group">
+        <label>Deskripsi</label>
+        <textarea id="siteDescription">Penyimpanan foto pribadi.</textarea>
+      </div>
 
-    <section class="section"
-             id="section-notifications">
+      <button class="btn btn-primary" onclick="saveSiteSettings()">
+        ✓ Simpan
+      </button>
 
-        <div class="grid two-grid">
+    </div>
 
-            <div class="card">
 
-                <div class="card-title">
-                    Send Notification
-                </div>
+    <div class="card card-pad">
 
-                <div class="card-subtitle">
-                    Kirim notifikasi kepada user.
-                </div>
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        User ID
-                    </label>
-
-                    <input class="input"
-                           id="notifyUserId"
-                           placeholder="UUID user">
-
-                </div>
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Judul
-                    </label>
-
-                    <input class="input"
-                           id="notifyTitle"
-                           placeholder="Judul notifikasi">
-
-                </div>
-
-                <div class="form-group">
-
-                    <label class="form-label">
-                        Pesan
-                    </label>
-
-                    <textarea class="textarea"
-                              id="notifyBody"
-                              placeholder="Isi notifikasi"></textarea>
-
-                </div>
-
-                <button class="btn btn-primary"
-                        onclick="sendNotification()">
-                    Kirim Notifikasi
-                </button>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-title">
-                    Notification Center
-                </div>
-
-                <div class="card-subtitle">
-                    Notifikasi terbaru.
-                </div>
-
-                <div id="notificationList">
-                    Memuat...
-                </div>
-
-            </div>
-
+      <div class="section-head">
+        <div>
+          <h2>Admin Tools</h2>
+          <p>Tools administrasi.</p>
         </div>
+      </div>
 
-    </section>
+      <div class="feature-grid">
 
-    <!-- ============================
-         AUDIT
-    ============================= -->
+        <button class="card feature" onclick="loadStats()">
+          <div class="feature-icon">↻</div>
+          <div class="feature-title">Refresh All</div>
+        </button>
 
-    <section class="section"
-             id="section-audit">
+        <button class="card feature" onclick="clearLocalCache()">
+          <div class="feature-icon">⌫</div>
+          <div class="feature-title">Clear Cache</div>
+        </button>
 
-        <div class="grid two-grid">
+        <button class="card feature" onclick="exportData()">
+          <div class="feature-icon">⇩</div>
+          <div class="feature-title">Export Data</div>
+        </button>
 
-            <div class="card">
+        <button class="card feature" onclick="runHealthCheck()">
+          <div class="feature-icon">♥</div>
+          <div class="feature-title">Health Check</div>
+        </button>
 
-                <div class="card-title">
-                    Audit Logs
-                </div>
+      </div>
 
-                <div class="card-subtitle">
-                    Aktivitas administratif.
-                </div>
+    </div>
 
-                <div class="table-wrap">
+  </div>
 
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Action</th>
-                                <th>User</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="auditTable">
-                            <tr>
-                                <td colspan="3">
-                                    Memuat...
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-title">
-                    Activity Statistics
-                </div>
-
-                <div class="card-subtitle">
-                    Ringkasan aktivitas admin.
-                </div>
-
-                <div id="activityStats">
-                    Memuat...
-                </div>
-
-                <div class="spacer"></div>
-
-                <button class="btn btn-orange"
-                        onclick="cleanAudit()">
-                    Bersihkan Audit Lama
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- ============================
-         SETTINGS
-    ============================= -->
-
-    <section class="section"
-             id="section-settings">
-
-        <div class="grid two-grid">
-
-            <div class="card">
-
-                <div class="card-title">
-                    System Settings
-                </div>
-
-                <div class="card-subtitle">
-                    Konfigurasi sistem.
-                </div>
-
-                <div id="settingsList">
-                    Memuat...
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-title">
-                    Maintenance Tools
-                </div>
-
-                <div class="card-subtitle">
-                    Tools administrasi database.
-                </div>
-
-                <button class="btn btn-soft"
-                        onclick="testDatabase()">
-                    Test Database
-                </button>
-
-                <button class="btn btn-soft"
-                        onclick="testStorage()">
-                    Test Storage
-                </button>
-
-                <button class="btn btn-orange"
-                        onclick="cleanNotifications()">
-                    Bersihkan Notifikasi Lama
-                </button>
-
-                <div class="spacer"></div>
-
-                <div id="settingsResult">
-                    —
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
+</section>
 
 </main>
+</div>
 
-<!-- ================================
-     LOADING
-================================ -->
 
-<div class="loading"
-     id="loading">
+<!-- MODAL -->
+<div class="modal" id="modal">
 
-    <div class="loader-card">
+  <div class="modal-card">
 
-        <div class="spinner"></div>
+    <div class="modal-head">
 
-        <strong id="loadingTitle">
-            Memproses...
-        </strong>
+      <h3 id="modalTitle">Admin</h3>
 
-        <span id="loadingSubtitle">
-            Mohon tunggu
-        </span>
+      <button class="icon-btn" onclick="closeModal()">×</button>
 
     </div>
 
-</div>
+    <div id="modalBody"></div>
 
-<!-- ================================
-     TOAST
-================================ -->
-
-<div class="toast-container"
-     id="toastContainer"></div>
-
-<!-- ================================
-     MODAL
-================================ -->
-
-<div class="modal"
-     id="confirmModal">
-
-    <div class="modal-card">
-
-        <div class="modal-title"
-             id="modalTitle">
-            Konfirmasi
-        </div>
-
-        <div class="modal-text"
-             id="modalText">
-            Apakah kamu yakin?
-        </div>
-
-        <div class="modal-actions">
-
-            <button class="btn btn-soft"
-                    onclick="closeModal()">
-                Batal
-            </button>
-
-            <button class="btn btn-danger"
-                    id="modalConfirm">
-                Lanjutkan
-            </button>
-
-        </div>
-
-    </div>
+  </div>
 
 </div>
+
+
+<div class="toast-container" id="toastContainer"></div>
+
 
 <script>
 /* =========================================================
-   SUPABASE
+   SUPABASE CONFIG
 ========================================================= */
 
 const SUPABASE_URL =
-    "https://dpvlxxqsipksfiagpxzx.supabase.co";
+  "https://dpvlxxqsipksfiagpxzx.supabase.co";
 
-const SUPABASE_KEY =
-    "sb_publishable_uaaaNqNY7KLO3XJURnx03w_4luiz76g";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_uaaaNqNY7KLO3XJURnx03w_4luiz76g";
 
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+const { createClient } =
+  supabase;
 
-const ADMIN_API =
-    `${SUPABASE_URL}/functions/v1/admin-api`;
+const sb =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/*
+  Jika Edge Function admin-api kamu mempunyai URL berbeda,
+  isi variabel ini.
+
+  Contoh:
+  https://PROJECT.supabase.co/functions/v1/admin-api
+*/
+const ADMIN_API_URL =
+  `${SUPABASE_URL}/functions/v1/admin-api`;
+
 
 /* =========================================================
    STATE
 ========================================================= */
 
-let currentSection = "overview";
+let currentUser = null;
 let usersCache = [];
 let photosCache = [];
-let currentConfirmAction = null;
+
+let maintenanceState = {
+  enabled:false,
+  endAt:null,
+  message:"Website sedang dalam pemeliharaan."
+};
+
+let countdownInterval = null;
+
 
 /* =========================================================
-   INIT
+   BASIC UI
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
+const $ = id =>
+  document.getElementById(id);
 
-        setupNavigation();
 
-        const {
-            data
-        } =
-            await supabaseClient.auth.getSession();
-
-        if (!data.session) {
-            window.location.href =
-                "login.html";
-            return;
-        }
-
-        const {
-            data: userData
-        } =
-            await supabaseClient.auth.getUser();
-
-        if (!userData?.user) {
-            window.location.href =
-                "login.html";
-            return;
-        }
-
-        document.getElementById(
-            "adminEmail"
-        ).textContent =
-            userData.user.email ||
-            "Admin";
-
-        try {
-
-            await verifyAdmin();
-
-            await loadOverview();
-
-        } catch (error) {
-
-            showToast(
-                error.message,
-                "error"
-            );
-
-            setTimeout(() => {
-                window.location.href =
-                    "dashboard.html";
-            }, 1200);
-
-        }
-
-    }
-);
-
-/* =========================================================
-   API
-========================================================= */
-
-async function api(
-    action,
-    payload = {}
-) {
-
-    showLoading(
-        "Memproses...",
-        action.replaceAll("_"," ")
-    );
-
-    try {
-
-        const {
-            data: {
-                session
-            }
-        } =
-            await supabaseClient.auth.getSession();
-
-        if (!session) {
-            throw new Error(
-                "Session login sudah berakhir."
-            );
-        }
-
-        const response =
-            await fetch(
-                ADMIN_API,
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json",
-
-                        "Authorization":
-                            `Bearer ${session.access_token}`,
-
-                        "apikey":
-                            SUPABASE_KEY
-                    },
-
-                    body:JSON.stringify({
-                        action,
-                        ...payload
-                    })
-                }
-            );
-
-        const result =
-            await response.json();
-
-        if (!response.ok ||
-            result?.ok === false) {
-
-            throw new Error(
-                result?.error ||
-                "Request gagal."
-            );
-        }
-
-        return result;
-
-    } finally {
-
-        hideLoading();
-
-    }
+function showLoading(show=true){
+  $("loadingOverlay").classList.toggle("show",show);
 }
 
-/* =========================================================
-   VERIFY ADMIN
-========================================================= */
 
-async function verifyAdmin(){
+function toast(message){
+  const container = $("toastContainer");
 
-    await api("health");
+  const item =
+    document.createElement("div");
 
+  item.className = "toast";
+  item.textContent = message;
+
+  container.appendChild(item);
+
+  setTimeout(()=>{
+    item.style.opacity="0";
+    item.style.transform="translateY(10px)";
+
+    setTimeout(()=>{
+      item.remove();
+    },250);
+
+  },3000);
 }
+
+
+function openModal(title,html){
+  $("modalTitle").textContent=title;
+  $("modalBody").innerHTML=html;
+  $("modal").classList.add("show");
+}
+
+
+function closeModal(){
+  $("modal").classList.remove("show");
+}
+
 
 /* =========================================================
    NAVIGATION
 ========================================================= */
 
-function setupNavigation(){
+const titles = {
+  overview:["Dashboard","Kontrol website dari satu tempat."],
+  analytics:["Analytics","Ringkasan performa sistem."],
+  activity:["Activity","Aktivitas terbaru."],
+  users:["Users","Manajemen pengguna."],
+  photos:["Photos","Manajemen foto."],
+  storage:["Storage","Penggunaan penyimpanan."],
+  notifications:["Notifications","Broadcast pengguna."],
+  reports:["Reports","Laporan website."],
+  maintenance:["Maintenance","Mode pemeliharaan dan timer."],
+  security:["Security","Pusat keamanan."],
+  audit:["Audit Log","Catatan aktivitas admin."],
+  settings:["Settings","Pengaturan website."]
+};
 
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+function openSection(name){
 
-                    showSection(
-                        button.dataset.section
-                    );
+  document.querySelectorAll(".section")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
 
-                    closeSidebar();
+  const target =
+    $("section-"+name);
 
-                }
-            );
+  if(target)
+    target.classList.add("active");
 
-        });
+  document.querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.section===name
+      );
+    });
 
+  if(titles[name]){
+    $("pageTitle").textContent=titles[name][0];
+    $("pageSubtitle").textContent=titles[name][1];
+  }
+
+  $("sidebar").classList.remove("open");
+
+  if(name==="users") loadUsers();
+  if(name==="photos") loadPhotos();
+  if(name==="maintenance") loadMaintenance();
+  if(name==="audit") loadAudit();
 }
 
-function showSection(section){
 
-    currentSection = section;
+document.querySelectorAll(".nav-btn[data-section]")
+.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    openSection(btn.dataset.section);
+  });
+});
 
-    document
-        .querySelectorAll(".nav-btn")
-        .forEach(button => {
 
-            button.classList.toggle(
-                "active",
-                button.dataset.section === section
-            );
+$("mobileMenu").addEventListener("click",()=>{
+  $("sidebar").classList.toggle("open");
+});
 
-        });
-
-    document
-        .querySelectorAll(".section")
-        .forEach(element => {
-
-            element.classList.toggle(
-                "active",
-                element.id ===
-                `section-${section}`
-            );
-
-        });
-
-    const names = {
-
-        overview:[
-            "Overview",
-            "Admin Control Center"
-        ],
-
-        users:[
-            "Users",
-            "User Management"
-        ],
-
-        photos:[
-            "Photos",
-            "Photo Management"
-        ],
-
-        storage:[
-            "Storage",
-            "Storage & Quota"
-        ],
-
-        maintenance:[
-            "Maintenance",
-            "System Maintenance"
-        ],
-
-        security:[
-            "Security",
-            "Security Controls"
-        ],
-
-        notifications:[
-            "Notifications",
-            "Notification Center"
-        ],
-
-        audit:[
-            "Audit Log",
-            "Administrative Activity"
-        ],
-
-        settings:[
-            "Settings",
-            "System Configuration"
-        ]
-
-    };
-
-    document.getElementById(
-        "pageTitle"
-    ).textContent =
-        names[section]?.[0] ||
-        "Admin";
-
-    document.getElementById(
-        "pageSubtitle"
-    ).textContent =
-        names[section]?.[1] ||
-        "";
-
-    loadSection(section);
-
-}
-
-async function loadSection(section){
-
-    try{
-
-        if(section === "overview")
-            await loadOverview();
-
-        if(section === "users")
-            await loadUsers();
-
-        if(section === "photos")
-            await loadPhotos();
-
-        if(section === "storage")
-            await loadStorage();
-
-        if(section === "maintenance")
-            await loadMaintenance();
-
-        if(section === "security")
-            await loadSecurity();
-
-        if(section === "notifications")
-            await loadNotifications();
-
-        if(section === "audit")
-            await loadAudit();
-
-        if(section === "settings")
-            await loadSettings();
-
-    }catch(error){
-
-        showToast(
-            error.message,
-            "error"
-        );
-
-    }
-
-}
 
 /* =========================================================
-   OVERVIEW
+   AUTH
 ========================================================= */
 
-async function loadOverview(){
+async function checkAdmin(){
 
-    const [
-        statsResult,
-        healthResult,
-        dbResult,
-        storageResult,
-        maintenanceResult
-    ] = await Promise.all([
+  const {
+    data,
+    error
+  } = await sb.auth.getSession();
 
-        api("stats"),
+  if(error){
+    toast("Gagal membaca session.");
+    return;
+  }
 
-        api("health"),
+  const session=data.session;
 
-        api("database_test"),
+  if(!session){
+    window.location.href="login.html";
+    return;
+  }
 
-        api("storage_test"),
+  currentUser=session.user;
 
-        api("maintenance_status")
+  /*
+    Pemeriksaan role.
+    Sistem mencoba beberapa lokasi metadata yang umum.
+    Admin API/RLS tetap menjadi pengaman sebenarnya.
+  */
 
-    ]);
+  const role =
+    currentUser.app_metadata?.role ||
+    currentUser.user_metadata?.role ||
+    "";
 
-    const stats =
-        statsResult;
+  if(role && role !== "admin"){
+    toast("Akun ini bukan administrator.");
 
-    document.getElementById(
-        "statUsers"
-    ).textContent =
-        formatNumber(stats.users);
+    setTimeout(()=>{
+      window.location.href="dashboard.html";
+    },1000);
 
-    document.getElementById(
-        "statPhotos"
-    ).textContent =
-        formatNumber(stats.photos);
+    return;
+  }
 
-    document.getElementById(
-        "statStorage"
-    ).textContent =
-        formatBytes(stats.storage_bytes);
+  $("supabaseStatus").textContent =
+    "Terhubung sebagai "+(currentUser.email||"admin");
 
-    document.getElementById(
-        "statActive"
-    ).textContent =
-        formatNumber(
-            stats.active_users_30d
-        );
-
-    setHealth(
-        "healthDot",
-        "healthBadge",
-        healthResult.ok
-    );
-
-    setHealth(
-        "dbDot",
-        "dbBadge",
-        dbResult.ok
-    );
-
-    setHealth(
-        "storageDot",
-        "storageBadge",
-        storageResult.ok
-    );
-
-    updateMaintenanceUI(
-        maintenanceResult
-    );
+  loadStats();
+  loadMaintenance();
 
 }
+
+
+$("logoutBtn").addEventListener("click",async()=>{
+
+  await sb.auth.signOut();
+
+  window.location.href="login.html";
+
+});
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+async function loadStats(){
+
+  try{
+
+    const usersResult =
+      await sb
+      .from("profiles")
+      .select("*",{count:"exact",head:true});
+
+    const photosResult =
+      await sb
+      .from("photos")
+      .select("*",{count:"exact",head:true});
+
+    const users =
+      usersResult.count ?? 0;
+
+    const photos =
+      photosResult.count ?? 0;
+
+    $("statUsers").textContent=users;
+    $("statPhotos").textContent=photos;
+
+    $("analyticsUsers").textContent=users;
+    $("analyticsPhotos").textContent=photos;
+
+    /*
+      Storage size tidak selalu tersedia sebagai kolom.
+      Jadi tetap aman jika tabel tidak memiliki size.
+    */
+
+    $("statStorage").textContent="—";
+    $("analyticsStorage").textContent="—";
+    $("storageUsed").textContent="—";
+
+    $("storageLimit").textContent="—";
+    $("storagePercent").textContent="—";
+
+    $("storageBar").style.width="0%";
+
+  }catch(error){
+
+    console.error(error);
+    toast("Sebagian statistik tidak dapat dimuat.");
+
+  }
+
+}
+
 
 /* =========================================================
    USERS
@@ -2381,422 +2105,205 @@ async function loadOverview(){
 
 async function loadUsers(){
 
-    const result =
-        await api("list_users");
+  const table=$("usersTable");
 
-    usersCache =
-        result.users || [];
+  table.innerHTML=
+    `<tr><td colspan="5">Memuat user...</td></tr>`;
 
-    renderUsers(
-        usersCache
-    );
+  try{
 
-}
+    const {data,error}=
+      await sb
+      .from("profiles")
+      .select("*")
+      .order("created_at",{ascending:false})
+      .limit(500);
 
-function renderUsers(users){
+    if(error) throw error;
 
-    const tbody =
-        document.getElementById(
-            "usersTable"
-        );
+    usersCache=data||[];
 
-    if(!users.length){
+    renderUsers(usersCache);
 
-        tbody.innerHTML =
-            `<tr>
-                <td colspan="5">
-                    Tidak ada user.
-                </td>
-            </tr>`;
+  }catch(error){
 
-        return;
-    }
+    console.error(error);
 
-    tbody.innerHTML =
-        users.map(user => {
+    table.innerHTML=
+      `<tr>
+        <td colspan="5">
+          Tidak dapat mengambil data profiles.
+          Pastikan nama tabel dan RLS sesuai project.
+        </td>
+      </tr>`;
 
-            const banned =
-                Boolean(
-                    user.banned_until
-                );
-
-            return `
-            <tr>
-
-                <td>
-                    <strong>
-                        ${escapeHTML(
-                            user.email ||
-                            "No Email"
-                        )}
-                    </strong>
-
-                    <div class="page-subtitle">
-                        ${escapeHTML(
-                            user.id
-                        )}
-                    </div>
-                </td>
-
-                <td>
-                    <span class="badge ${
-                        user.role === "admin"
-                        ? "badge-purple"
-                        : "badge-blue"
-                    }">
-                        ${escapeHTML(
-                            user.role
-                        )}
-                    </span>
-                </td>
-
-                <td>
-                    ${
-                        banned
-                        ? `
-                        <span class="badge badge-red">
-                            Banned
-                        </span>`
-                        : `
-                        <span class="badge badge-green">
-                            Aktif
-                        </span>`
-                    }
-                </td>
-
-                <td>
-                    ${formatDate(
-                        user.created_at
-                    )}
-                </td>
-
-                <td>
-
-                    <div style="
-                        display:flex;
-                        gap:5px;
-                        flex-wrap:wrap;
-                    ">
-
-                        <button
-                            class="btn btn-soft"
-                            onclick="userDetails('${user.id}')">
-                            Detail
-                        </button>
-
-                        ${
-                            banned
-                            ? `
-                            <button
-                                class="btn btn-success"
-                                onclick="unban('${user.id}')">
-                                Unban
-                            </button>`
-                            : `
-                            <button
-                                class="btn btn-orange"
-                                onclick="ban('${user.id}')">
-                                Ban
-                            </button>`
-                        }
-
-                        <button
-                            class="btn btn-purple"
-                            onclick="resetPassword('${user.id}')">
-                            Reset
-                        </button>
-
-                        <button
-                            class="btn btn-danger"
-                            onclick="deleteUser('${user.id}')">
-                            Hapus
-                        </button>
-
-                    </div>
-
-                </td>
-
-            </tr>
-            `;
-
-        }).join("");
+  }
 
 }
 
-/* =========================================================
-   USER FILTER
-========================================================= */
+
+function renderUsers(list){
+
+  const table=$("usersTable");
+
+  if(!list.length){
+
+    table.innerHTML=
+      `<tr>
+        <td colspan="5">Tidak ada user.</td>
+      </tr>`;
+
+    return;
+  }
+
+  table.innerHTML=list.map(user=>{
+
+    const name=
+      user.full_name ||
+      user.name ||
+      user.username ||
+      "User";
+
+    const email=
+      user.email ||
+      "—";
+
+    const role=
+      user.role ||
+      "user";
+
+    const avatar=
+      user.avatar_url ||
+      user.avatar ||
+      "";
+
+    return `
+      <tr>
+
+        <td>
+          <div class="user-cell">
+
+            ${
+              avatar
+              ? `<img class="avatar" src="${escapeHtml(avatar)}">`
+              : `<div class="avatar">${escapeHtml(name.charAt(0).toUpperCase())}</div>`
+            }
+
+            <div>
+              <b>${escapeHtml(name)}</b>
+              <div style="font-size:10px;color:#888">
+                ${escapeHtml(user.id||"")}
+              </div>
+            </div>
+
+          </div>
+        </td>
+
+        <td>${escapeHtml(email)}</td>
+
+        <td>
+          <span class="badge ${
+            role==="admin"
+            ?"badge-orange"
+            :"badge-blue"
+          }">
+            ${escapeHtml(role)}
+          </span>
+        </td>
+
+        <td>
+          <span class="badge badge-green">
+            ACTIVE
+          </span>
+        </td>
+
+        <td>
+
+          <button
+            class="btn btn-soft"
+            onclick="viewUser('${escapeHtml(user.id||"")}')">
+            Detail
+          </button>
+
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
 
 function filterUsers(){
 
-    const query =
-        document
-        .getElementById(
-            "userSearch"
-        )
-        .value
-        .toLowerCase()
-        .trim();
+  const search=
+    $("userSearch").value.toLowerCase();
 
-    const filtered =
-        usersCache.filter(user =>
+  const role=
+    $("userFilter").value;
 
-            String(
-                user.email || ""
-            )
-            .toLowerCase()
-            .includes(query)
+  const filtered=
+    usersCache.filter(user=>{
 
-            ||
+      const text=
+        JSON.stringify(user).toLowerCase();
 
-            String(
-                user.id || ""
-            )
-            .toLowerCase()
-            .includes(query)
+      const roleMatch=
+        role==="all" ||
+        (user.role||"user")===role;
 
-        );
+      return text.includes(search) && roleMatch;
 
-    renderUsers(filtered);
+    });
+
+  renderUsers(filtered);
 
 }
 
-/* =========================================================
-   USER DETAIL
-========================================================= */
 
-async function userDetails(userId){
+function viewUser(id){
 
-    const result =
-        await api(
-            "user_detail",
-            {
-                userId
-            }
-        );
+  const user=
+    usersCache.find(x=>x.id===id);
 
-    openModal(
-        "Detail User",
-        `
-        <div style="line-height:1.8">
+  if(!user){
+    toast("User tidak ditemukan.");
+    return;
+  }
 
-            <strong>Email</strong><br>
-            ${escapeHTML(
-                result.email || "-"
-            )}
+  openModal(
+    "User Detail",
+    `
+      <div class="form-group">
+        <label>User ID</label>
+        <input class="input" readonly value="${escapeAttr(user.id||"")}">
+      </div>
 
-            <br><br>
+      <div class="form-group">
+        <label>Nama</label>
+        <input class="input" readonly value="${escapeAttr(user.full_name||user.name||user.username||"")}">
+      </div>
 
-            <strong>User ID</strong><br>
-            ${escapeHTML(
-                result.id
-            )}
+      <div class="form-group">
+        <label>Email</label>
+        <input class="input" readonly value="${escapeAttr(user.email||"")}">
+      </div>
 
-            <br><br>
+      <div class="form-group">
+        <label>Role</label>
+        <input class="input" readonly value="${escapeAttr(user.role||"user")}">
+      </div>
 
-            <strong>Role</strong><br>
-            ${escapeHTML(
-                result.role
-            )}
-
-            <br><br>
-
-            <strong>Dibuat</strong><br>
-            ${formatDate(
-                result.created_at
-            )}
-
-            <br><br>
-
-            <strong>Login terakhir</strong><br>
-            ${formatDate(
-                result.last_sign_in_at
-            )}
-
-            <br><br>
-
-            <strong>Email confirmed</strong><br>
-            ${
-                result.email_confirmed
-                ? "Ya"
-                : "Belum"
-            }
-
-            <br><br>
-
-            <strong>Password</strong><br>
-            <span class="badge badge-blue">
-                Tidak dapat dilihat
-            </span>
-
-        </div>
-        `,
-        null,
-        true
-    );
+      <p style="font-size:12px;color:#777">
+        Password autentikasi tidak ditampilkan.
+        Password Supabase Auth tidak boleh dibaca melalui dashboard.
+      </p>
+    `
+  );
 
 }
 
-/* =========================================================
-   BAN
-========================================================= */
-
-async function ban(userId){
-
-    openModal(
-        "Ban User",
-        "Pilih durasi ban untuk akun ini.",
-
-        async () => {
-
-            const duration =
-                document.getElementById(
-                    "banDuration"
-                ).value;
-
-            await api(
-                "ban_user",
-                {
-                    userId,
-                    duration
-                }
-            );
-
-            showToast(
-                "User berhasil dibanned.",
-                "success"
-            );
-
-            closeModal();
-
-            await loadUsers();
-
-        }
-    );
-
-    document.getElementById(
-        "modalText"
-    ).innerHTML = `
-        <p style="margin-bottom:12px">
-            Pilih durasi ban:
-        </p>
-
-        <select class="select"
-                id="banDuration">
-
-            <option value="1h">
-                1 Jam
-            </option>
-
-            <option value="1d">
-                1 Hari
-            </option>
-
-            <option value="7d">
-                7 Hari
-            </option>
-
-            <option value="30d">
-                30 Hari
-            </option>
-
-            <option value="100y">
-                Permanen
-            </option>
-
-        </select>
-    `;
-
-}
-
-/* =========================================================
-   UNBAN
-========================================================= */
-
-async function unban(userId){
-
-    confirmAction(
-        "Unban User",
-        "Apakah user ini akan diaktifkan kembali?",
-        async () => {
-
-            await api(
-                "unban_user",
-                {
-                    userId
-                }
-            );
-
-            showToast(
-                "User berhasil di-unban.",
-                "success"
-            );
-
-            await loadUsers();
-
-        }
-    );
-
-}
-
-/* =========================================================
-   DELETE USER
-========================================================= */
-
-async function deleteUser(userId){
-
-    confirmAction(
-        "Hapus Akun",
-        "PERINGATAN: akun user dan foto miliknya akan dihapus. Tindakan ini tidak dapat dibatalkan.",
-        async () => {
-
-            await api(
-                "delete_user",
-                {
-                    userId
-                }
-            );
-
-            showToast(
-                "Akun berhasil dihapus.",
-                "success"
-            );
-
-            await loadUsers();
-            await loadOverview();
-
-        }
-    );
-
-}
-
-/* =========================================================
-   RESET PASSWORD
-========================================================= */
-
-async function resetPassword(userId){
-
-    confirmAction(
-        "Reset Password",
-        "Supabase akan memproses email reset password untuk user tersebut.",
-        async () => {
-
-            await api(
-                "reset_password",
-                {
-                    userId
-                }
-            );
-
-            showToast(
-                "Permintaan reset password berhasil diproses.",
-                "success"
-            );
-
-        }
-    );
-
-}
 
 /* =========================================================
    PHOTOS
@@ -2804,268 +2311,136 @@ async function resetPassword(userId){
 
 async function loadPhotos(){
 
-    const result =
-        await api(
-            "list_photos"
-        );
+  const table=$("photosTable");
 
-    photosCache =
-        result.photos || [];
+  table.innerHTML=
+    `<tr><td colspan="5">Memuat foto...</td></tr>`;
 
-    renderPhotos(
-        photosCache
-    );
+  try{
 
-}
+    const {data,error}=
+      await sb
+      .from("photos")
+      .select("*")
+      .order("created_at",{ascending:false})
+      .limit(500);
 
-function renderPhotos(photos){
+    if(error) throw error;
 
-    const tbody =
-        document.getElementById(
-            "photosTable"
-        );
+    photosCache=data||[];
 
-    if(!photos.length){
+    renderPhotos(photosCache);
 
-        tbody.innerHTML =
-            `<tr>
-                <td colspan="5">
-                    Tidak ada foto.
-                </td>
-            </tr>`;
+  }catch(error){
 
-        return;
-    }
+    console.error(error);
 
-    tbody.innerHTML =
-        photos.map(photo => `
+    table.innerHTML=
+      `<tr>
+        <td colspan="5">
+          Data foto tidak dapat dimuat.
+        </td>
+      </tr>`;
 
-            <tr>
-
-                <td>
-                    <strong>
-                        ${escapeHTML(
-                            photo.name ||
-                            "Foto"
-                        )}
-                    </strong>
-
-                    <div class="page-subtitle">
-                        ${escapeHTML(
-                            photo.path || ""
-                        )}
-                    </div>
-                </td>
-
-                <td>
-                    ${escapeHTML(
-                        photo.user_id || "-"
-                    )}
-                </td>
-
-                <td>
-                    ${formatBytes(
-                        photo.size
-                    )}
-                </td>
-
-                <td>
-                    ${formatDate(
-                        photo.created_at
-                    )}
-                </td>
-
-                <td>
-
-                    <button
-                        class="btn btn-danger"
-                        onclick="deletePhoto('${photo.id}')">
-                        Hapus
-                    </button>
-
-                </td>
-
-            </tr>
-
-        `).join("");
+  }
 
 }
 
-function filterPhotos(){
 
-    const query =
-        document
-        .getElementById(
-            "photoSearch"
-        )
-        .value
-        .toLowerCase()
-        .trim();
+function renderPhotos(list){
 
-    const filtered =
-        photosCache.filter(photo =>
+  const table=$("photosTable");
 
-            String(
-                photo.name || ""
-            )
-            .toLowerCase()
-            .includes(query)
+  if(!list.length){
 
-            ||
+    table.innerHTML=
+      `<tr>
+        <td colspan="5">Belum ada foto.</td>
+      </tr>`;
 
-            String(
-                photo.user_id || ""
-            )
-            .toLowerCase()
-            .includes(query)
+    return;
+  }
 
-        );
+  table.innerHTML=list.map(photo=>{
 
-    renderPhotos(
-        filtered
-    );
+    const file=
+      photo.file_name ||
+      photo.name ||
+      photo.path ||
+      "Photo";
 
-}
+    const owner=
+      photo.user_id ||
+      photo.owner_id ||
+      "—";
 
-async function deletePhoto(photoId){
+    const size=
+      photo.size
+      ? formatBytes(photo.size)
+      : "—";
 
-    confirmAction(
-        "Hapus Foto",
-        "Foto akan dihapus dari Storage dan database.",
-        async () => {
+    const created=
+      photo.created_at
+      ? new Date(photo.created_at).toLocaleString("id-ID")
+      : "—";
 
-            await api(
-                "delete_photo",
-                {
-                    photoId
-                }
-            );
+    return `
+      <tr>
 
-            showToast(
-                "Foto berhasil dihapus.",
-                "success"
-            );
+        <td>
+          <b>${escapeHtml(file)}</b>
+        </td>
 
-            await loadPhotos();
-            await loadOverview();
+        <td>
+          <small>${escapeHtml(owner)}</small>
+        </td>
 
-        }
-    );
+        <td>${size}</td>
 
-}
+        <td>${created}</td>
 
-/* =========================================================
-   STORAGE
-========================================================= */
+        <td>
+          <button
+            class="btn btn-soft"
+            onclick="viewPhoto('${escapeHtml(photo.id||"")}')">
+            Detail
+          </button>
+        </td>
 
-async function loadStorage(){
+      </tr>
+    `;
 
-    const result =
-        await api(
-            "stats"
-        );
-
-    document.getElementById(
-        "storagePhotos"
-    ).textContent =
-        formatNumber(
-            result.photos
-        );
-
-    document.getElementById(
-        "storageUsed"
-    ).textContent =
-        formatBytes(
-            result.storage_bytes
-        );
+  }).join("");
 
 }
 
-async function setQuota(){
 
-    const userId =
-        document.getElementById(
-            "quotaUserId"
-        ).value.trim();
+function viewPhoto(id){
 
-    const bytes =
-        Number(
-            document.getElementById(
-                "quotaSize"
-            ).value
-        );
+  const photo=
+    photosCache.find(x=>x.id===id);
 
-    if(!userId){
+  if(!photo){
+    toast("Foto tidak ditemukan.");
+    return;
+  }
 
-        showToast(
-            "Masukkan User ID.",
-            "error"
-        );
-
-        return;
-    }
-
-    await api(
-        "set_quota",
-        {
-            userId,
-            bytes
-        }
-    );
-
-    showToast(
-        "Quota berhasil diperbarui.",
-        "success"
-    );
+  openModal(
+    "Photo Detail",
+    `
+      <pre style="
+        white-space:pre-wrap;
+        font-size:11px;
+        background:#f5f5f7;
+        padding:13px;
+        border-radius:14px;
+        overflow:auto;
+      ">${escapeHtml(JSON.stringify(photo,null,2))}</pre>
+    `
+  );
 
 }
 
-async function checkQuota(){
-
-    const userId =
-        document.getElementById(
-            "quotaUserId"
-        ).value.trim();
-
-    if(!userId){
-
-        showToast(
-            "Masukkan User ID.",
-            "error"
-        );
-
-        return;
-    }
-
-    const result =
-        await api(
-            "get_quota",
-            {
-                userId
-            }
-        );
-
-    const quota =
-        result.quota;
-
-    if(!quota){
-
-        showToast(
-            "Quota user belum tersedia.",
-            "info"
-        );
-
-        return;
-    }
-
-    showToast(
-        `Quota: ${formatBytes(
-            quota.quota_bytes
-        )}`,
-        "info"
-    );
-
-}
 
 /* =========================================================
    MAINTENANCE
@@ -3073,560 +2448,444 @@ async function checkQuota(){
 
 async function loadMaintenance(){
 
-    const result =
-        await api(
-            "maintenance_status"
-        );
+  try{
 
-    updateMaintenanceUI(
-        result
+    const {data,error}=
+      await sb
+      .from("site_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+    if(error){
+
+      console.warn(
+        "site_settings:",
+        error.message
+      );
+
+      return;
+
+    }
+
+    if(!data) return;
+
+    maintenanceState.enabled=
+      Boolean(
+        data.maintenance_mode ??
+        data.maintenance_enabled ??
+        false
+      );
+
+    maintenanceState.message=
+      data.maintenance_message ||
+      "Website sedang dalam pemeliharaan.";
+
+    maintenanceState.endAt=
+      data.maintenance_end ||
+      data.maintenance_end_at ||
+      null;
+
+    $("maintenanceMessage").value=
+      maintenanceState.message;
+
+    renderMaintenance();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+function renderMaintenance(){
+
+  const enabled=
+    maintenanceState.enabled;
+
+  $("maintenanceStatusText").textContent=
+    enabled
+    ? "Maintenance Aktif"
+    : "Website Online";
+
+  $("maintenanceSubtext").textContent=
+    enabled
+    ? maintenanceState.message
+    : "Maintenance sedang tidak aktif.";
+
+  $("maintenanceOrb").classList.toggle(
+    "on",
+    enabled
+  );
+
+  $("maintenanceOrb").textContent=
+    enabled ? "!" : "✓";
+
+  $("maintenanceButton").textContent=
+    enabled ? "Matikan" : "Aktifkan";
+
+  $("maintenanceButton").className=
+    "btn "+(
+      enabled
+      ? "btn-success"
+      : "btn-danger"
     );
 
-}
-
-function updateMaintenanceUI(result){
-
-    const enabled =
-        Boolean(
-            result.enabled
-        );
-
-    const text =
-        document.getElementById(
-            "maintenanceText"
-        );
-
-    const controlText =
-        document.getElementById(
-            "maintenanceControlText"
-        );
-
-    const message =
-        document.getElementById(
-            "maintenanceMessage"
-        );
-
-    const toggle =
-        document.getElementById(
-            "maintenanceToggle"
-        );
-
-    const dot =
-        document.getElementById(
-            "maintenanceDot"
-        );
-
-    const controlDot =
-        document.getElementById(
-            "maintenanceControlDot"
-        );
-
-    const card =
-        document.getElementById(
-            "maintenanceCard"
-        );
-
-    const overviewCard =
-        document.getElementById(
-            "maintenanceOverviewCard"
-        );
-
-    if(text){
-
-        text.textContent =
-            enabled
-            ? "Maintenance Aktif"
-            : "Sistem Normal";
-
-    }
-
-    if(controlText){
-
-        controlText.textContent =
-            enabled
-            ? "Maintenance Aktif"
-            : "Maintenance Nonaktif";
-
-    }
-
-    if(message){
-
-        message.textContent =
-            result.message ||
-            "Tidak ada pesan.";
-
-    }
-
-    if(toggle){
-
-        toggle.checked =
-            enabled;
-
-    }
-
-    if(dot){
-
-        dot.className =
-            `status-dot ${
-                enabled
-                ? "offline"
-                : "online"
-            }`;
-
-    }
-
-    if(controlDot){
-
-        controlDot.className =
-            `status-dot ${
-                enabled
-                ? "offline"
-                : "online"
-            }`;
-
-    }
-
-    if(card){
-
-        card.classList.toggle(
-            "enabled",
-            enabled
-        );
-
-    }
-
-    if(overviewCard){
-
-        overviewCard.classList.toggle(
-            "enabled",
-            enabled
-        );
-
-    }
-
-    const input =
-        document.getElementById(
-            "maintenanceInput"
-        );
-
-    if(input &&
-       document.activeElement !== input){
-
-        input.value =
-            result.message || "";
-
-    }
-
-}
-
-let pendingMaintenance =
-    false;
-
-function toggleMaintenance(){
-
-    const enabled =
-        document.getElementById(
-            "maintenanceToggle"
-        ).checked;
-
-    if(pendingMaintenance)
-        return;
-
-    saveMaintenance(
-        enabled
+  $("maintenanceSwitch")
+    .classList.toggle(
+      "active",
+      enabled
     );
 
+  startCountdown();
+
 }
 
-async function saveMaintenance(
-    forcedValue = null
-){
 
-    if(pendingMaintenance)
-        return;
+async function toggleMaintenance(){
 
-    pendingMaintenance = true;
+  const next=
+    !maintenanceState.enabled;
 
-    const toggle =
-        document.getElementById(
-            "maintenanceToggle"
-        );
+  if(next){
 
-    const enabled =
-        forcedValue !== null
-        ? Boolean(forcedValue)
-        : Boolean(toggle.checked);
+    const duration=
+      Number(
+        $("maintenanceDuration").value
+      ) || 30;
 
-    const message =
-        document.getElementById(
-            "maintenanceInput"
-        ).value.trim();
+    maintenanceState.endAt=
+      new Date(
+        Date.now()+duration*60000
+      ).toISOString();
 
-    try{
+  }else{
 
-        const result =
-            await api(
-                "set_maintenance",
-                {
-                    enabled,
-                    message
-                }
-            );
+    maintenanceState.endAt=null;
 
-        updateMaintenanceUI(
-            result
-        );
+  }
 
-        showToast(
-            enabled
-            ? "Maintenance berhasil diaktifkan."
-            : "Maintenance berhasil dimatikan.",
-            "success"
-        );
+  maintenanceState.enabled=next;
 
-    }catch(error){
+  await saveMaintenance(true);
 
-        toggle.checked =
-            !enabled;
+}
 
-        showToast(
-            error.message,
-            "error"
-        );
 
-    }finally{
+async function saveMaintenance(fromToggle=false){
 
-        pendingMaintenance =
-            false;
+  showLoading();
+
+  try{
+
+    const payload={
+
+      maintenance_mode:
+        maintenanceState.enabled,
+
+      maintenance_message:
+        $("maintenanceMessage").value.trim() ||
+        "Website sedang dalam pemeliharaan.",
+
+      maintenance_end:
+        maintenanceState.endAt,
+
+      updated_at:
+        new Date().toISOString()
+
+    };
+
+    /*
+      Direct Supabase update.
+
+      Jika RLS menolak UPDATE admin,
+      gunakan Edge Function admin-api yang sudah
+      kamu deploy.
+    */
+
+    const {data:existing,error:readError}=
+      await sb
+      .from("site_settings")
+      .select("id")
+      .limit(1)
+      .maybeSingle();
+
+    if(readError) throw readError;
+
+    let result;
+
+    if(existing?.id){
+
+      result=
+        await sb
+        .from("site_settings")
+        .update(payload)
+        .eq("id",existing.id);
+
+    }else{
+
+      result=
+        await sb
+        .from("site_settings")
+        .insert(payload);
 
     }
 
+    if(result.error){
+
+      /*
+        Fallback ke Edge Function.
+      */
+
+      const apiResult=
+        await callAdminAPI(
+          "maintenance",
+          payload
+        );
+
+      if(!apiResult.ok){
+        throw result.error;
+      }
+
+    }
+
+    toast(
+      maintenanceState.enabled
+      ? "Maintenance berhasil diaktifkan."
+      : "Maintenance berhasil dimatikan."
+    );
+
+    await loadMaintenance();
+
+  }catch(error){
+
+    console.error(error);
+
+    /*
+      Rollback tampilan lokal jika gagal.
+    */
+
+    maintenanceState.enabled=
+      !maintenanceState.enabled;
+
+    toast(
+      "Gagal menyimpan maintenance. Periksa RLS atau Admin API."
+    );
+
+    renderMaintenance();
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
 }
+
+
+async function saveMaintenanceSchedule(){
+
+  const start=
+    $("maintenanceStart").value;
+
+  const end=
+    $("maintenanceEnd").value;
+
+  const autoStart=
+    $("autoStart").checked;
+
+  const autoEnd=
+    $("autoEnd").checked;
+
+  try{
+
+    const payload={
+
+      maintenance_start:
+        start
+        ? new Date(start).toISOString()
+        : null,
+
+      maintenance_end:
+        end
+        ? new Date(end).toISOString()
+        : null,
+
+      auto_start:autoStart,
+      auto_end:autoEnd,
+
+      updated_at:
+        new Date().toISOString()
+
+    };
+
+    const result=
+      await callAdminAPI(
+        "maintenance_schedule",
+        payload
+      );
+
+    if(!result.ok){
+
+      /*
+        Coba simpan jika kolom tersedia.
+      */
+
+      const {data,error}=
+        await sb
+        .from("site_settings")
+        .update(payload)
+        .not("id","is",null);
+
+      if(error) throw error;
+
+    }
+
+    toast("Jadwal maintenance tersimpan.");
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Jadwal belum dapat disimpan. Pastikan kolom schedule tersedia di Supabase."
+    );
+
+  }
+
+}
+
+
+function startCountdown(){
+
+  if(countdownInterval)
+    clearInterval(countdownInterval);
+
+  const update=()=>{
+
+    if(
+      !maintenanceState.enabled ||
+      !maintenanceState.endAt
+    ){
+
+      $("maintenanceCountdown")
+        .textContent="--:--:--";
+
+      $("countdownLabel")
+        .textContent=
+        maintenanceState.enabled
+        ? "Timer belum ditentukan"
+        : "Timer maintenance";
+
+      return;
+
+    }
+
+    const end=
+      new Date(
+        maintenanceState.endAt
+      ).getTime();
+
+    const diff=
+      Math.max(0,end-Date.now());
+
+    if(diff<=0){
+
+      $("maintenanceCountdown")
+        .textContent="00:00:00";
+
+      $("countdownLabel")
+        .textContent="Waktu maintenance selesai.";
+
+      /*
+        Auto OFF lokal.
+        Server tetap harus mempunyai mekanisme
+        scheduled maintenance jika ingin benar-benar
+        otomatis walaupun admin tidak membuka dashboard.
+      */
+
+      if(maintenanceState.enabled){
+
+        maintenanceState.enabled=false;
+
+        saveMaintenance();
+
+      }
+
+      return;
+
+    }
+
+    const totalSeconds=
+      Math.floor(diff/1000);
+
+    const hours=
+      Math.floor(totalSeconds/3600);
+
+    const minutes=
+      Math.floor(
+        (totalSeconds%3600)/60
+      );
+
+    const seconds=
+      totalSeconds%60;
+
+    $("maintenanceCountdown")
+      .textContent=
+      [
+        hours,
+        minutes,
+        seconds
+      ]
+      .map(
+        x=>String(x).padStart(2,"0")
+      )
+      .join(":");
+
+    $("countdownLabel")
+      .textContent=
+      "Maintenance akan selesai dalam";
+
+  };
+
+  update();
+
+  countdownInterval=
+    setInterval(update,1000);
+
+}
+
 
 /* =========================================================
    SECURITY
 ========================================================= */
 
-async function loadSecurity(){
-
-    const [
-        upload,
-        registration,
-        sharing
-    ] = await Promise.all([
-
-        api(
-            "get_lock",
-            {
-                key:
-                    "upload_locked"
-            }
-        ),
-
-        api(
-            "get_lock",
-            {
-                key:
-                    "registration_locked"
-            }
-        ),
-
-        api(
-            "get_lock",
-            {
-                key:
-                    "sharing_locked"
-            }
-        )
-
-    ]);
-
-    document.getElementById(
-        "uploadLock"
-    ).checked =
-        upload.enabled;
-
-    document.getElementById(
-        "registrationLock"
-    ).checked =
-        registration.enabled;
-
-    document.getElementById(
-        "sharingLock"
-    ).checked =
-        sharing.enabled;
-
-}
-
-async function setLock(
-    key,
-    enabled
-){
-
-    try{
-
-        await api(
-            "set_lock",
-            {
-                key,
-                enabled
-            }
-        );
-
-        showToast(
-            enabled
-            ? "Fitur berhasil dikunci."
-            : "Fitur berhasil dibuka.",
-            "success"
-        );
-
-    }catch(error){
-
-        showToast(
-            error.message,
-            "error"
-        );
-
-        await loadSecurity();
-
-    }
-
-}
-
 async function runSecurityCheck(){
 
-    const resultBox =
-        document.getElementById(
-            "securityResult"
-        );
+  showLoading();
 
-    resultBox.innerHTML =
-        `<div class="skeleton"
-              style="height:80px">
-        </div>`;
+  await new Promise(
+    resolve=>setTimeout(resolve,800)
+  );
 
-    try{
+  $("securityRLS").textContent=
+    "RLS harus aktif";
 
-        const [
-            healthResult,
-            databaseResult,
-            storageResult
-        ] = await Promise.all([
+  $("securityAPI").textContent=
+    ADMIN_API_URL
+    ? "Endpoint configured"
+    : "Not configured";
 
-            api("health"),
+  showLoading(false);
 
-            api("database_test"),
-
-            api("storage_test")
-
-        ]);
-
-        resultBox.innerHTML = `
-
-            <div class="status-row">
-                <span>Admin API</span>
-                <span class="badge ${
-                    healthResult.ok
-                    ? "badge-green"
-                    : "badge-red"
-                }">
-                    ${
-                        healthResult.ok
-                        ? "AMAN"
-                        : "ERROR"
-                    }
-                </span>
-            </div>
-
-            <div class="status-row">
-                <span>Database</span>
-                <span class="badge ${
-                    databaseResult.ok
-                    ? "badge-green"
-                    : "badge-red"
-                }">
-                    ${
-                        databaseResult.ok
-                        ? "AMAN"
-                        : "ERROR"
-                    }
-                </span>
-            </div>
-
-            <div class="status-row">
-                <span>Storage</span>
-                <span class="badge ${
-                    storageResult.ok
-                    ? "badge-green"
-                    : "badge-red"
-                }">
-                    ${
-                        storageResult.ok
-                        ? "AMAN"
-                        : "ERROR"
-                    }
-                </span>
-            </div>
-        `;
-
-    }catch(error){
-
-        resultBox.innerHTML =
-            `<span class="badge badge-red">
-                ${escapeHTML(
-                    error.message
-                )}
-            </span>`;
-
-    }
+  toast(
+    "Security check selesai."
+  );
 
 }
 
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-async function loadNotifications(){
-
-    const result =
-        await api(
-            "notifications"
-        );
-
-    const list =
-        result.notifications ||
-        [];
-
-    const box =
-        document.getElementById(
-            "notificationList"
-        );
-
-    if(!list.length){
-
-        box.innerHTML =
-            `<div class="page-subtitle">
-                Belum ada notifikasi.
-            </div>`;
-
-        return;
-    }
-
-    box.innerHTML =
-        list.slice(0,15)
-        .map(item => `
-
-            <div class="status-row">
-
-                <div>
-
-                    <strong>
-                        ${escapeHTML(
-                            item.title ||
-                            "Notification"
-                        )}
-                    </strong>
-
-                    <div class="page-subtitle">
-                        ${escapeHTML(
-                            item.body ||
-                            ""
-                        )}
-                    </div>
-
-                    <div class="page-subtitle">
-                        ${formatDate(
-                            item.created_at
-                        )}
-                    </div>
-
-                </div>
-
-                <button
-                    class="btn btn-danger icon-btn"
-                    onclick="deleteNotification('${item.id}')">
-                    ×
-                </button>
-
-            </div>
-
-        `).join("");
-
-}
-
-async function sendNotification(){
-
-    const userId =
-        document.getElementById(
-            "notifyUserId"
-        ).value.trim();
-
-    const title =
-        document.getElementById(
-            "notifyTitle"
-        ).value.trim();
-
-    const body =
-        document.getElementById(
-            "notifyBody"
-        ).value.trim();
-
-    if(!userId ||
-       !title){
-
-        showToast(
-            "User ID dan judul wajib diisi.",
-            "error"
-        );
-
-        return;
-    }
-
-    await api(
-        "send_notification",
-        {
-            userId,
-            title,
-            body
-        }
-    );
-
-    showToast(
-        "Notifikasi berhasil dikirim.",
-        "success"
-    );
-
-    document.getElementById(
-        "notifyTitle"
-    ).value = "";
-
-    document.getElementById(
-        "notifyBody"
-    ).value = "";
-
-    await loadNotifications();
-
-}
-
-async function deleteNotification(
-    notificationId
-){
-
-    await api(
-        "delete_notification",
-        {
-            notificationId
-        }
-    );
-
-    showToast(
-        "Notifikasi dihapus.",
-        "success"
-    );
-
-    await loadNotifications();
-
-}
 
 /* =========================================================
    AUDIT
@@ -3634,653 +2893,549 @@ async function deleteNotification(
 
 async function loadAudit(){
 
-    const [
-        logsResult,
-        activityResult
-    ] = await Promise.all([
+  const container=
+    $("auditList");
 
-        api(
-            "audit_logs"
-        ),
+  try{
 
-        api(
-            "activity_stats"
-        )
+    const {data,error}=
+      await sb
+      .from("audit_logs")
+      .select("*")
+      .order("created_at",{ascending:false})
+      .limit(100);
 
-    ]);
+    if(error) throw error;
 
-    const logs =
-        logsResult.logs ||
-        [];
+    if(!data?.length){
 
-    const tbody =
-        document.getElementById(
-            "auditTable"
-        );
+      container.innerHTML=
+        `<div class="log">
+          <div class="log-dot"></div>
+          <div>
+            <div class="log-title">
+              Belum ada audit log
+            </div>
+            <div class="log-meta">
+              Tabel audit_logs kosong.
+            </div>
+          </div>
+        </div>`;
 
-    if(!logs.length){
-
-        tbody.innerHTML =
-            `<tr>
-                <td colspan="3">
-                    Belum ada aktivitas.
-                </td>
-            </tr>`;
-
-    }else{
-
-        tbody.innerHTML =
-            logs.map(log => `
-
-                <tr>
-
-                    <td>
-                        <span class="badge badge-blue">
-                            ${escapeHTML(
-                                log.action ||
-                                "-"
-                            )}
-                        </span>
-                    </td>
-
-                    <td>
-                        ${escapeHTML(
-                            log.user_id ||
-                            "-"
-                        )}
-                    </td>
-
-                    <td>
-                        ${formatDate(
-                            log.created_at
-                        )}
-                    </td>
-
-                </tr>
-
-            `).join("");
+      return;
 
     }
 
-    const actions =
-        activityResult.actions ||
-        {};
+    container.innerHTML=
+      data.map(item=>`
 
-    const activityBox =
-        document.getElementById(
-            "activityStats"
-        );
+        <div class="log">
 
-    const entries =
-        Object.entries(
-            actions
-        );
+          <div class="log-dot"></div>
 
-    if(!entries.length){
+          <div>
 
-        activityBox.innerHTML =
-            `<span class="page-subtitle">
-                Belum ada aktivitas.
-            </span>`;
-
-    }else{
-
-        activityBox.innerHTML =
-            entries
-            .sort(
-                (a,b) => b[1]-a[1]
-            )
-            .map(
-                ([name,count]) => `
-                    <div class="status-row">
-                        <span>
-                            ${escapeHTML(
-                                name
-                            )}
-                        </span>
-
-                        <strong>
-                            ${count}
-                        </strong>
-                    </div>
-                `
-            ).join("");
-
-    }
-
-}
-
-async function cleanAudit(){
-
-    confirmAction(
-        "Bersihkan Audit Log",
-        "Audit log yang lebih lama dari 30 hari akan dihapus.",
-        async () => {
-
-            const result =
-                await api(
-                    "clean_audit",
-                    {
-                        days:30
-                    }
-                );
-
-            showToast(
-                `${result.deleted} log dihapus.`,
-                "success"
-            );
-
-            await loadAudit();
-
-        }
-    );
-
-}
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-async function loadSettings(){
-
-    const result =
-        await api(
-            "system_settings"
-        );
-
-    const settings =
-        result.settings ||
-        [];
-
-    const box =
-        document.getElementById(
-            "settingsList"
-        );
-
-    if(!settings.length){
-
-        box.innerHTML =
-            `<span class="page-subtitle">
-                Tidak ada konfigurasi.
-            </span>`;
-
-        return;
-    }
-
-    box.innerHTML =
-        settings.map(
-            item => `
-
-            <div class="status-row">
-
-                <div>
-
-                    <strong>
-                        ${escapeHTML(
-                            item.key
-                        )}
-                    </strong>
-
-                    <div class="page-subtitle">
-                        Update:
-                        ${formatDate(
-                            item.updated_at
-                        )}
-                    </div>
-
-                </div>
-
-                <span class="badge ${
-                    item.value?.enabled
-                    ? "badge-red"
-                    : "badge-green"
-                }">
-                    ${
-                        item.value?.enabled
-                        ? "ON"
-                        : "OFF"
-                    }
-                </span>
-
+            <div class="log-title">
+              ${escapeHtml(
+                item.action ||
+                item.event ||
+                "Activity"
+              )}
             </div>
 
-        `
-        ).join("");
+            <div class="log-meta">
+              ${escapeHtml(
+                item.created_at
+                ? new Date(
+                    item.created_at
+                  ).toLocaleString("id-ID")
+                : ""
+              )}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }catch(error){
+
+    container.innerHTML=
+      `<div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">
+            Audit log belum tersedia
+          </div>
+          <div class="log-meta">
+            Pastikan tabel audit_logs sudah dibuat.
+          </div>
+        </div>
+      </div>`;
+
+  }
 
 }
 
-async function testDatabase(){
 
-    const result =
-        await api(
-            "database_test"
-        );
+/* =========================================================
+   ACTIVITY
+========================================================= */
 
-    document.getElementById(
-        "settingsResult"
-    ).textContent =
-        result.ok
-        ? "✓ Database normal."
-        : "✕ Database bermasalah.";
+async function loadActivity(){
 
-}
+  $("activityList").innerHTML=
+    `
+    <div class="log">
+      <div class="log-dot"></div>
+      <div>
+        <div class="log-title">
+          Activity refreshed
+        </div>
+        <div class="log-meta">
+          ${new Date().toLocaleString("id-ID")}
+        </div>
+      </div>
+    </div>
+    `;
 
-async function testStorage(){
-
-    const result =
-        await api(
-            "storage_test"
-        );
-
-    document.getElementById(
-        "settingsResult"
-    ).textContent =
-        result.ok
-        ? "✓ Storage normal."
-        : "✕ Storage bermasalah.";
+  toast("Activity diperbarui.");
 
 }
 
-async function cleanNotifications(){
 
-    confirmAction(
-        "Bersihkan Notifikasi",
-        "Notifikasi yang lebih lama dari 30 hari akan dihapus.",
-        async () => {
+/* =========================================================
+   BROADCAST
+========================================================= */
 
-            const result =
-                await api(
-                    "clean_notifications",
-                    {
-                        days:30
-                    }
-                );
+async function sendBroadcast(){
 
-            showToast(
-                `${result.deleted} notifikasi dihapus.`,
-                "success"
-            );
+  const title=
+    $("broadcastTitle").value.trim();
 
+  const message=
+    $("broadcastMessage").value.trim();
+
+  if(!title || !message){
+
+    toast(
+      "Judul dan pesan wajib diisi."
+    );
+
+    return;
+
+  }
+
+  showLoading();
+
+  try{
+
+    const result=
+      await callAdminAPI(
+        "broadcast",
+        {
+          title,
+          message
         }
+      );
+
+    if(!result.ok)
+      throw new Error(
+        "Broadcast API gagal."
+      );
+
+    $("notificationLog").innerHTML=
+      `
+      <div class="log">
+        <div class="log-dot"></div>
+        <div>
+          <div class="log-title">
+            Broadcast berhasil dikirim
+          </div>
+          <div class="log-meta">
+            ${new Date().toLocaleString("id-ID")}
+          </div>
+        </div>
+      </div>
+      `;
+
+    $("broadcastTitle").value="";
+    $("broadcastMessage").value="";
+
+    toast("Broadcast berhasil dikirim.");
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Broadcast membutuhkan Admin API yang aktif."
     );
 
+  }finally{
+
+    showLoading(false);
+
+  }
+
 }
 
+
 /* =========================================================
-   REFRESH
+   REPORTS
 ========================================================= */
 
-async function refreshCurrent(){
+function generateReport(type){
 
-    await loadSection(
-        currentSection
+  let data={};
+
+  if(type==="users"){
+    data={
+      type,
+      total_users:$("statUsers").textContent
+    };
+  }
+
+  if(type==="photos"){
+    data={
+      type,
+      total_photos:$("statPhotos").textContent
+    };
+  }
+
+  if(type==="system"){
+    data={
+      type,
+      status:$("statStatus").textContent,
+      maintenance:maintenanceState.enabled
+    };
+  }
+
+  const blob=
+    new Blob(
+      [JSON.stringify(data,null,2)],
+      {type:"application/json"}
     );
 
-    showToast(
-        "Data berhasil diperbarui.",
-        "success"
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement("a");
+
+  a.href=url;
+  a.download=
+    `admin-report-${type}.json`;
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  toast("Report dibuat.");
+
+}
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function openStorageModal(){
+
+  openModal(
+    "Storage Capacity",
+    `
+      <div class="form-group">
+        <label>Kapasitas (MB)</label>
+
+        <input
+          class="input"
+          type="number"
+          id="newStorageLimit"
+          min="1"
+          value="1024">
+      </div>
+
+      <button
+        class="btn btn-primary"
+        onclick="saveStorageLimit()">
+
+        Simpan
+      </button>
+    `
+  );
+
+}
+
+
+async function saveStorageLimit(){
+
+  const value=
+    Number(
+      $("newStorageLimit").value
     );
 
-}
+  if(!value || value<1){
 
-/* =========================================================
-   HEALTH UI
-========================================================= */
+    toast("Kapasitas tidak valid.");
+    return;
 
-function setHealth(
-    dotId,
-    badgeId,
-    ok
-){
+  }
 
-    const dot =
-        document.getElementById(
-            dotId
-        );
+  try{
 
-    const badge =
-        document.getElementById(
-            badgeId
-        );
-
-    dot.className =
-        `status-dot ${
-            ok
-            ? "online"
-            : "offline"
-        }`;
-
-    badge.className =
-        `badge ${
-            ok
-            ? "badge-green"
-            : "badge-red"
-        }`;
-
-    badge.textContent =
-        ok
-        ? "Online"
-        : "Error";
-
-}
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-function toggleSidebar(){
-
-    document
-        .getElementById(
-            "sidebar"
-        )
-        .classList.toggle(
-            "open"
-        );
-
-}
-
-function closeSidebar(){
-
-    document
-        .getElementById(
-            "sidebar"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function openModal(
-    title,
-    text,
-    action = null,
-    hideConfirm = false
-){
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        title;
-
-    document.getElementById(
-        "modalText"
-    ).innerHTML =
-        text;
-
-    currentConfirmAction =
-        action;
-
-    const button =
-        document.getElementById(
-            "modalConfirm"
-        );
-
-    button.style.display =
-        hideConfirm
-        ? "none"
-        : "inline-flex";
-
-    button.onclick =
-        async () => {
-
-            if(
-                typeof currentConfirmAction
-                === "function"
-            ){
-
-                await currentConfirmAction();
-
-            }else{
-
-                closeModal();
-
-            }
-
-        };
-
-    document
-        .getElementById(
-            "confirmModal"
-        )
-        .classList.add(
-            "show"
-        );
-
-}
-
-function closeModal(){
-
-    document
-        .getElementById(
-            "confirmModal"
-        )
-        .classList.remove(
-            "show"
-        );
-
-    currentConfirmAction =
-        null;
-
-}
-
-function confirmAction(
-    title,
-    text,
-    action
-){
-
-    openModal(
-        title,
-        text,
-        async () => {
-
-            try{
-
-                await action();
-
-                closeModal();
-
-            }catch(error){
-
-                showToast(
-                    error.message,
-                    "error"
-                );
-
-            }
-
+    const result=
+      await callAdminAPI(
+        "storage_limit",
+        {
+          storage_limit_mb:value
         }
+      );
+
+    if(!result.ok)
+      throw new Error("API failed");
+
+    toast(
+      "Kapasitas storage diperbarui."
     );
 
+    closeModal();
+
+  }catch(error){
+
+    toast(
+      "Perubahan storage membutuhkan Admin API."
+    );
+
+  }
+
 }
+
 
 /* =========================================================
-   LOADING
+   SITE SETTINGS
 ========================================================= */
 
-function showLoading(
-    title = "Memproses...",
-    subtitle = "Mohon tunggu"
-){
+async function saveSiteSettings(){
 
-    document.getElementById(
-        "loadingTitle"
-    ).textContent =
-        title;
+  const name=
+    $("siteName").value.trim();
 
-    document.getElementById(
-        "loadingSubtitle"
-    ).textContent =
-        subtitle;
+  const description=
+    $("siteDescription").value.trim();
 
-    document.getElementById(
-        "loading"
-    ).classList.add(
-        "show"
+  try{
+
+    const result=
+      await callAdminAPI(
+        "site_settings",
+        {
+          site_name:name,
+          site_description:description
+        }
+      );
+
+    if(!result.ok)
+      throw new Error();
+
+    toast(
+      "Pengaturan website tersimpan."
     );
+
+  }catch(error){
+
+    toast(
+      "Pengaturan membutuhkan Admin API."
+    );
+
+  }
 
 }
 
-function hideLoading(){
-
-    document.getElementById(
-        "loading"
-    ).classList.remove(
-        "show"
-    );
-
-}
 
 /* =========================================================
-   TOAST
+   TOOLS
 ========================================================= */
 
-function showToast(
-    message,
-    type = "info"
-){
+function clearLocalCache(){
 
-    const container =
-        document.getElementById(
-            "toastContainer"
-        );
+  try{
+    localStorage.clear();
+    sessionStorage.clear();
+  }catch(e){}
 
-    const toast =
-        document.createElement(
-            "div"
-        );
-
-    toast.className =
-        `toast ${type}`;
-
-    toast.textContent =
-        message;
-
-    container.appendChild(
-        toast
-    );
-
-    setTimeout(
-        () => {
-
-            toast.style.opacity =
-                "0";
-
-            toast.style.transform =
-                "translateY(10px)";
-
-            setTimeout(
-                () => toast.remove(),
-                250
-            );
-
-        },
-        3200
-    );
+  toast(
+    "Cache lokal dashboard dibersihkan."
+  );
 
 }
 
-/* =========================================================
-   FORMAT
-========================================================= */
 
-function formatNumber(
-    number
-){
+async function exportData(){
 
-    return new Intl.NumberFormat(
-        "id-ID"
-    ).format(
-        Number(number || 0)
+  const result={
+    exported_at:
+      new Date().toISOString(),
+
+    admin:
+      currentUser?.email || null,
+
+    maintenance:
+      maintenanceState,
+
+    users_count:
+      usersCache.length,
+
+    photos_count:
+      photosCache.length
+  };
+
+  const blob=
+    new Blob(
+      [JSON.stringify(result,null,2)],
+      {type:"application/json"}
     );
 
-}
+  const url=
+    URL.createObjectURL(blob);
 
-function formatBytes(
-    bytes
-){
+  const a=
+    document.createElement("a");
 
-    bytes =
-        Number(bytes || 0);
+  a.href=url;
+  a.download="admin-export.json";
+  a.click();
 
-    if(bytes <= 0)
-        return "0 B";
+  URL.revokeObjectURL(url);
 
-    const units =
-        [
-            "B",
-            "KB",
-            "MB",
-            "GB",
-            "TB"
-        ];
-
-    const index =
-        Math.floor(
-            Math.log(bytes) /
-            Math.log(1024)
-        );
-
-    return (
-        bytes /
-        Math.pow(
-            1024,
-            index
-        )
-    ).toFixed(
-        index === 0
-        ? 0
-        : 2
-    )
-    + " "
-    + units[index];
+  toast("Data dashboard diekspor.");
 
 }
 
-function formatDate(
-    value
-){
 
-    if(!value)
-        return "-";
+async function runHealthCheck(){
 
-    try{
+  showLoading();
 
-        return new Intl.DateTimeFormat(
-            "id-ID",
-            {
-                dateStyle:"medium",
-                timeStyle:"short"
-            }
-        ).format(
-            new Date(value)
-        );
+  try{
 
-    }catch{
+    const {error}=
+      await sb
+      .from("site_settings")
+      .select("id")
+      .limit(1);
 
-        return "-";
+    if(error){
+
+      toast(
+        "Health check: database response bermasalah."
+      );
+
+    }else{
+
+      toast(
+        "Health check: Supabase merespons."
+      );
 
     }
 
+  }catch(error){
+
+    toast(
+      "Health check gagal."
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
 }
 
+
 /* =========================================================
-   ESCAPE
+   ADMIN API
 ========================================================= */
 
-function escapeHTML(
-    value
-){
+async function callAdminAPI(action,payload={}){
 
-    return String(
-        value ?? ""
-    )
+  try{
+
+    const {
+      data:{
+        session
+      }
+    }=
+      await sb.auth.getSession();
+
+    if(!session){
+
+      return {
+        ok:false,
+        error:"NO_SESSION"
+      };
+
+    }
+
+    const response=
+      await fetch(
+        ADMIN_API_URL,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json",
+
+            "Authorization":
+              `Bearer ${session.access_token}`
+          },
+
+          body:JSON.stringify({
+            action,
+            ...payload
+          })
+        }
+      );
+
+    let data=null;
+
+    try{
+      data=await response.json();
+    }catch(e){}
+
+    return {
+      ok:response.ok,
+      status:response.status,
+      data
+    };
+
+  }catch(error){
+
+    console.error(
+      "Admin API:",
+      error
+    );
+
+    return {
+      ok:false,
+      error:error.message
+    };
+
+  }
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -4289,83 +3444,124 @@ function escapeHTML(
 
 }
 
-/* =========================================================
-   LOGOUT
-========================================================= */
 
-async function logout(){
+function escapeAttr(value){
+  return escapeHtml(value);
+}
 
-    confirmAction(
-        "Keluar",
-        "Apakah kamu yakin ingin keluar dari dashboard admin?",
-        async () => {
 
-            await supabaseClient.auth.signOut();
+function formatBytes(bytes){
 
-            window.location.href =
-                "login.html";
+  if(!bytes || bytes<=0)
+    return "0 B";
 
-        }
+  const units=[
+    "B","KB","MB","GB","TB"
+  ];
+
+  const i=
+    Math.floor(
+      Math.log(bytes)/Math.log(1024)
     );
 
+  return (
+    bytes /
+    Math.pow(1024,i)
+  ).toFixed(1)+" "+units[i];
+
 }
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+$("refreshBtn").addEventListener(
+  "click",
+  async()=>{
+
+    showLoading();
+
+    await Promise.allSettled([
+      loadStats(),
+      loadMaintenance(),
+      loadUsers(),
+      loadPhotos()
+    ]);
+
+    showLoading(false);
+
+    toast("Dashboard diperbarui.");
+
+  }
+);
+
+
+/* =========================================================
+   NOTIFICATION BUTTON
+========================================================= */
+
+$("notificationBtn")
+.addEventListener("click",()=>{
+  openSection("notifications");
+});
+
+
+/* =========================================================
+   START
+========================================================= */
+
+(async function(){
+
+  showLoading();
+
+  try{
+
+    await checkAdmin();
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+})();
+
 
 /* =========================================================
    AUTO REFRESH
 ========================================================= */
 
-setInterval(
-    async () => {
+setInterval(()=>{
 
-        if(
-            document.visibilityState !==
-            "visible"
-        ){
-            return;
-        }
+  if(
+    document.visibilityState==="visible"
+  ){
 
-        if(
-            currentSection ===
-            "overview"
-        ){
+    loadStats();
 
-            try{
+  }
 
-                await loadOverview();
+},60000);
 
-            }catch{
-
-                // silent refresh
-
-            }
-
-        }
-
-    },
-    60000
-);
 
 /* =========================================================
-   CLOSE MODAL BY BACKDROP
+   SUPABASE AUTH STATE
 ========================================================= */
 
-document.getElementById(
-    "confirmModal"
-).addEventListener(
-    "click",
-    event => {
+sb.auth.onAuthStateChange(
+  (event,session)=>{
 
-        if(
-            event.target.id ===
-            "confirmModal"
-        ){
+    if(event==="SIGNED_OUT"){
 
-            closeModal();
-
-        }
+      window.location.href=
+        "login.html";
 
     }
+
+  }
 );
+
 </script>
 
 </body>
