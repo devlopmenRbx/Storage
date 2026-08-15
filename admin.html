@@ -1,7 +1,3610 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Dashboard — FotoVault</title><link rel="stylesheet" href="style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script></head><body>
-<header class="nav glass"><div class="row"><div><div class="brand">Foto<span class="gold">Vault</span></div><small class="muted">Admin Center</small></div><div class="row"><button class="btn btn-light" onclick="location.reload()">Refresh</button><button class="btn btn-dark" onclick="FV.signOut()">Keluar</button></div></div></header>
-<main class="wrap" style="padding-top:38px;padding-bottom:80px"><div id="guard" class="glass card"><span class="pill">SECURITY CHECK</span><h1 class="serif">Memeriksa akses admin...</h1><p class="muted">Tunggu sebentar.</p></div><div id="app" style="display:none"><section class="hero" style="min-height:auto;padding:50px 0 35px;text-align:left"><div><span class="pill">ADMIN DASHBOARD</span><h1 class="serif">Control Center.</h1><p class="muted">Kelola pengguna, foto, kapasitas, maintenance, keamanan, dan audit.</p></div></section><div class="cards"><div class="card glass"><span class="gold">USERS</span><h2 id="users">—</h2><p class="muted">Pengguna terdaftar</p></div><div class="card glass"><span class="gold">PHOTOS</span><h2 id="photos">—</h2><p class="muted">Foto tersimpan</p></div><div class="card glass"><span class="gold">SYSTEM</span><h2 id="maintenance">—</h2><p class="muted">Maintenance mode</p></div></div><section class="section" style="padding-top:45px"><div class="card glass"><h2 class="serif">Admin API</h2><p class="muted">Dashboard admin lengkap yang memakai Edge Function dapat dipasang di sini. Password user sengaja tidak ditampilkan karena Supabase Auth tidak menyediakan password plaintext untuk admin.</p></div></section></div></main>
+<!doctype html>
+<html lang="id">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>FotoVault — Admin Center</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+<style>
+
+/* =========================================================
+   PREMIUM ADMIN UI
+========================================================= */
+
+:root{
+    --admin-gold:#b99350;
+    --admin-gold-light:#d9bb7e;
+    --admin-bg:#f5f1e9;
+    --admin-text:#24211c;
+    --admin-muted:#827b70;
+    --admin-card:rgba(255,255,255,.67);
+    --admin-border:rgba(255,255,255,.85);
+    --admin-shadow:0 20px 60px rgba(54,45,30,.09);
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(218,190,137,.18),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(255,255,255,.8),
+            transparent 35%
+        ),
+        var(--admin-bg);
+    color:var(--admin-text);
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:80;
+    width:245px;
+    padding:24px 16px;
+    border-right:1px solid rgba(80,65,40,.08);
+    background:rgba(255,255,255,.63);
+    backdrop-filter:blur(25px);
+    -webkit-backdrop-filter:blur(25px);
+}
+
+.sidebar-brand{
+    padding:5px 10px 25px;
+}
+
+.sidebar-brand .brand{
+    font-size:23px;
+    font-weight:800;
+}
+
+.admin-label{
+    margin-top:5px;
+    color:var(--admin-muted);
+    font-size:11px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.menu-button{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    width:100%;
+    min-height:43px;
+    padding:9px 11px;
+    border:0;
+    border-radius:14px;
+    color:#5c564d;
+    background:transparent;
+    cursor:pointer;
+    text-align:left;
+    transition:.22s ease;
+}
+
+.menu-button:hover{
+    color:var(--admin-text);
+    background:rgba(255,255,255,.72);
+    transform:translateX(2px);
+}
+
+.menu-button.active{
+    color:#342b1e;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(218,190,137,.35),
+            rgba(255,255,255,.75)
+        );
+    box-shadow:
+        inset 0 0 0 1px rgba(185,147,80,.12);
+}
+
+.menu-icon{
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    background:rgba(255,255,255,.6);
+    font-size:14px;
+}
+
+.main-area{
+    width:calc(100% - 245px);
+    margin-left:245px;
+    min-width:0;
+}
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:60;
+    padding:14px 25px;
+    border-bottom:1px solid rgba(80,65,40,.07);
+    background:rgba(245,241,233,.68);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+}
+
+.topbar-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    max-width:1400px;
+    margin:auto;
+}
+
+.page{
+    max-width:1400px;
+    margin:auto;
+    padding:28px 25px 70px;
+}
+
+.page-title{
+    margin:0;
+    font-size:clamp(32px,5vw,55px);
+}
+
+.page-subtitle{
+    margin:8px 0 0;
+    color:var(--admin-muted);
+}
+
+.admin-section{
+    display:none;
+    animation:sectionIn .4s ease;
+}
+
+.admin-section.active{
+    display:block;
+}
+
+@keyframes sectionIn{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0,1fr)
+        );
+    gap:15px;
+    margin-top:25px;
+}
+
+.stat-card{
+    padding:20px;
+    border:1px solid var(--admin-border);
+    border-radius:22px;
+    background:var(--admin-card);
+    box-shadow:var(--admin-shadow);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    transition:.25s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-3px);
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    color:var(--admin-muted);
+    font-size:12px;
+}
+
+.stat-icon{
+    display:grid;
+    place-items:center;
+    width:35px;
+    height:35px;
+    border-radius:12px;
+    background:rgba(185,147,80,.12);
+}
+
+.stat-number{
+    margin:12px 0 2px;
+    font-size:31px;
+    font-weight:800;
+}
+
+.card{
+    margin-top:20px;
+    padding:22px;
+    border:1px solid var(--admin-border);
+    border-radius:24px;
+    background:var(--admin-card);
+    box-shadow:var(--admin-shadow);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+}
+
+.card-title{
+    margin:0;
+    font-size:20px;
+}
+
+.toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:18px;
+}
+
+.admin-input,
+.admin-select{
+    min-height:39px;
+    padding:8px 12px;
+    border:1px solid rgba(70,60,45,.10);
+    border-radius:12px;
+    outline:none;
+    color:var(--admin-text);
+    background:rgba(255,255,255,.72);
+}
+
+.admin-input{
+    min-width:230px;
+}
+
+.admin-input:focus,
+.admin-select:focus{
+    border-color:rgba(185,147,80,.55);
+    box-shadow:0 0 0 3px rgba(185,147,80,.08);
+}
+
+.small-btn{
+    min-height:37px;
+    padding:7px 12px;
+    border:1px solid rgba(70,60,45,.08);
+    border-radius:11px;
+    cursor:pointer;
+    background:rgba(255,255,255,.7);
+    transition:.2s ease;
+}
+
+.small-btn:hover{
+    transform:translateY(-1px);
+}
+
+.small-btn.danger{
+    color:#8d2727;
+    background:rgba(196,65,65,.08);
+}
+
+.small-btn.gold{
+    color:#6e5125;
+    background:rgba(185,147,80,.14);
+}
+
+.table-wrap{
+    width:100%;
+    overflow-x:auto;
+    margin-top:15px;
+}
+
+table{
+    width:100%;
+    min-width:650px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:13px 10px;
+    border-bottom:1px solid rgba(60,50,35,.07);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    color:var(--admin-muted);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.status.ok{
+    color:#356c43;
+    background:rgba(61,137,80,.10);
+}
+
+.status.warn{
+    color:#806020;
+    background:rgba(185,147,80,.13);
+}
+
+.status.danger{
+    color:#8d2727;
+    background:rgba(196,65,65,.10);
+}
+
+.photo-admin-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(150px,1fr)
+        );
+    gap:13px;
+    margin-top:20px;
+}
+
+.admin-photo{
+    position:relative;
+    overflow:hidden;
+    aspect-ratio:1;
+    border-radius:18px;
+    background:#eee9df;
+}
+
+.admin-photo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    transition:.45s ease;
+}
+
+.admin-photo:hover img{
+    transform:scale(1.045);
+}
+
+.photo-overlay{
+    position:absolute;
+    left:8px;
+    right:8px;
+    bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    gap:6px;
+}
+
+.overlay-btn{
+    width:35px;
+    height:35px;
+    border:0;
+    border-radius:11px;
+    cursor:pointer;
+    background:rgba(255,255,255,.84);
+    backdrop-filter:blur(10px);
+}
+
+.security-list{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
+.security-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:14px;
+    border-radius:15px;
+    background:rgba(255,255,255,.48);
+}
+
+.security-left{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.security-icon{
+    display:grid;
+    place-items:center;
+    width:36px;
+    height:36px;
+    border-radius:11px;
+    background:rgba(185,147,80,.11);
+}
+
+.log-list{
+    display:grid;
+    gap:8px;
+    margin-top:15px;
+}
+
+.log-item{
+    padding:13px;
+    border-left:3px solid rgba(185,147,80,.6);
+    border-radius:12px;
+    background:rgba(255,255,255,.48);
+}
+
+.log-time{
+    color:var(--admin-muted);
+    font-size:10px;
+}
+
+.health-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0,1fr)
+        );
+    gap:13px;
+    margin-top:17px;
+}
+
+.health-item{
+    padding:17px;
+    border-radius:17px;
+    background:rgba(255,255,255,.5);
+}
+
+.health-name{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+}
+
+.health-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#4c9b5a;
+    box-shadow:0 0 0 5px rgba(76,155,90,.09);
+}
+
+.maintenance-box{
+    padding:20px;
+    border-radius:18px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(185,147,80,.13),
+            rgba(255,255,255,.55)
+        );
+}
+
+.toggle{
+    position:relative;
+    width:50px;
+    height:28px;
+    border:0;
+    border-radius:999px;
+    cursor:pointer;
+    background:#d6d0c5;
+    transition:.25s ease;
+}
+
+.toggle::after{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    top:3px;
+    left:3px;
+    border-radius:50%;
+    background:white;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+    transition:.25s ease;
+}
+
+.toggle.on{
+    background:var(--admin-gold);
+}
+
+.toggle.on::after{
+    transform:translateX(22px);
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(35,30,23,.30);
+    backdrop-filter:blur(12px);
+}
+
+.modal.hidden{
+    display:none;
+}
+
+.modal-box{
+    width:min(500px,100%);
+    max-height:85vh;
+    overflow:auto;
+    padding:23px;
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:25px;
+    background:rgba(255,255,255,.86);
+    box-shadow:0 30px 90px rgba(0,0,0,.18);
+}
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    z-index:300;
+    max-width:calc(100% - 30px);
+    padding:12px 16px;
+    border-radius:15px;
+    color:#29251e;
+    background:rgba(255,255,255,.9);
+    box-shadow:0 15px 45px rgba(0,0,0,.13);
+    backdrop-filter:blur(18px);
+    transform:translate(-50%,20px);
+    opacity:0;
+    pointer-events:none;
+    transition:.3s ease;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+.loading{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    border:2px solid rgba(185,147,80,.2);
+    border-top-color:var(--admin-gold);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    vertical-align:middle;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.mobile-menu{
+    display:none;
+}
+
+.empty{
+    padding:35px;
+    color:var(--admin-muted);
+    text-align:center;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:950px){
+
+    .sidebar{
+        transform:translateX(-105%);
+        transition:.3s ease;
+        box-shadow:20px 0 60px rgba(0,0,0,.08);
+    }
+
+    .sidebar.open{
+        transform:none;
+    }
+
+    .main-area{
+        width:100%;
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:grid;
+        place-items:center;
+        width:38px;
+        height:38px;
+        border:0;
+        border-radius:12px;
+        background:rgba(255,255,255,.7);
+    }
+
+    .stat-grid{
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+
+}
+
+@media(max-width:600px){
+
+    .page{
+        padding:22px 15px 60px;
+    }
+
+    .topbar{
+        padding:10px 15px;
+    }
+
+    .stat-grid{
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+    }
+
+    .stat-card{
+        padding:14px;
+        border-radius:18px;
+    }
+
+    .stat-number{
+        font-size:24px;
+    }
+
+    .health-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-input{
+        min-width:100%;
+        width:100%;
+    }
+
+    .toolbar > *{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="admin-layout">
+
+
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside
+    id="sidebar"
+    class="sidebar"
+>
+
+<div class="sidebar-brand">
+
+<div class="brand">
+Foto<span class="gold">Vault</span>
+</div>
+
+<div class="admin-label">
+ADMIN CENTER
+</div>
+
+</div>
+
+
+<nav class="menu">
+
+<button
+    class="menu-button active"
+    data-section="overview"
+>
+    <span class="menu-icon">⌂</span>
+    Overview
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="users"
+>
+    <span class="menu-icon">♙</span>
+    Users
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="photos"
+>
+    <span class="menu-icon">▧</span>
+    Photos
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="storage"
+>
+    <span class="menu-icon">◫</span>
+    Storage
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="maintenance"
+>
+    <span class="menu-icon">⚙</span>
+    Maintenance
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="security"
+>
+    <span class="menu-icon">⌾</span>
+    Security
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="audit"
+>
+    <span class="menu-icon">≡</span>
+    Audit Log
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="notifications"
+>
+    <span class="menu-icon">◉</span>
+    Notifications
+</button>
+
+
+<button
+    class="menu-button"
+    data-section="system"
+>
+    <span class="menu-icon">◇</span>
+    System Health
+</button>
+
+</nav>
+
+</aside>
+
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<div class="main-area">
+
+
+<header class="topbar">
+
+<div class="topbar-inner">
+
+<button
+    id="mobileMenu"
+    class="mobile-menu"
+>
+    ☰
+</button>
+
+
+<div>
+
+<strong>
+FotoVault Admin
+</strong>
+
+<div
+    id="adminEmail"
+    class="admin-label"
+>
+    Memeriksa sesi...
+</div>
+
+</div>
+
+
+<div
+    style="
+        display:flex;
+        gap:7px;
+        align-items:center;
+    "
+>
+
+<button
+    id="globalRefresh"
+    class="small-btn"
+>
+    ↻ Refresh
+</button>
+
+
+<button
+    id="logout"
+    class="small-btn"
+>
+    Keluar
+</button>
+
+</div>
+
+</div>
+
+</header>
+
+
+
+<main class="page">
+
+
+<!-- =====================================================
+     OVERVIEW
+===================================================== -->
+
+<section
+    id="section-overview"
+    class="admin-section active"
+>
+
+<span class="pill">
+ADMIN DASHBOARD
+</span>
+
+<h1 class="serif page-title">
+Control Center.
+</h1>
+
+<p class="page-subtitle">
+Kelola FotoVault dari satu tempat.
+</p>
+
+
+<div class="stat-grid">
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+Users
+<span class="stat-icon">♙</span>
+</div>
+
+<div
+    id="statUsers"
+    class="stat-number"
+>
+—
+</div>
+
+<span class="admin-label">
+Pengguna
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+Photos
+<span class="stat-icon">▧</span>
+</div>
+
+<div
+    id="statPhotos"
+    class="stat-number"
+>
+—
+</div>
+
+<span class="admin-label">
+Foto
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+Storage
+<span class="stat-icon">◫</span>
+</div>
+
+<div
+    id="statStorage"
+    class="stat-number"
+>
+—
+</div>
+
+<span class="admin-label">
+Digunakan
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-top">
+Maintenance
+<span class="stat-icon">⚙</span>
+</div>
+
+<div
+    id="statMaintenance"
+    class="stat-number"
+    style="font-size:23px"
+>
+—
+</div>
+
+<span class="admin-label">
+Status sistem
+</span>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2 class="card-title">
+Quick Actions
+</h2>
+
+<div class="toolbar">
+
+<button
+    class="small-btn gold"
+    data-section="users"
+>
+    Kelola Users
+</button>
+
+<button
+    class="small-btn gold"
+    data-section="photos"
+>
+    Kelola Photos
+</button>
+
+<button
+    class="small-btn"
+    data-section="security"
+>
+    Security Center
+</button>
+
+<button
+    class="small-btn"
+    data-section="maintenance"
+>
+    Maintenance
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2 class="card-title">
+System Health
+</h2>
+
+<div class="health-grid">
+
+<div class="health-item">
+<div class="health-name">
+Supabase
+<span class="health-dot"></span>
+</div>
+<p class="admin-label">
+Database connection
+</p>
+</div>
+
+
+<div class="health-item">
+<div class="health-name">
+Authentication
+<span class="health-dot"></span>
+</div>
+<p class="admin-label">
+Session system
+</p>
+</div>
+
+
+<div class="health-item">
+<div class="health-name">
+Frontend
+<span class="health-dot"></span>
+</div>
+<p class="admin-label">
+Dashboard online
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     USERS
+===================================================== -->
+
+<section
+    id="section-users"
+    class="admin-section"
+>
+
+<span class="pill">
+USER MANAGEMENT
+</span>
+
+<h1 class="serif page-title">
+Users
+</h1>
+
+<p class="page-subtitle">
+Pantau akun dan role pengguna.
+</p>
+
+
+<div class="card">
+
+<div class="toolbar">
+
+<input
+    id="userSearch"
+    class="admin-input"
+    placeholder="Cari berdasarkan User ID..."
+>
+
+
+<select
+    id="roleFilter"
+    class="admin-select"
+>
+
+<option value="">
+Semua Role
+</option>
+
+<option value="admin">
+Admin
+</option>
+
+<option value="user">
+User
+</option>
+
+</select>
+
+
+<button
+    id="loadUsers"
+    class="small-btn gold"
+>
+    Muat User
+</button>
+
+</div>
+
+
+<div
+    id="usersTable"
+    class="table-wrap"
+>
+
+<div class="empty">
+Tekan "Muat User" untuk menampilkan data.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PHOTOS
+===================================================== -->
+
+<section
+    id="section-photos"
+    class="admin-section"
+>
+
+<span class="pill">
+PHOTO MANAGEMENT
+</span>
+
+<h1 class="serif page-title">
+Photos
+</h1>
+
+<p class="page-subtitle">
+Pantau foto yang tersimpan di database.
+</p>
+
+
+<div class="card">
+
+<div class="toolbar">
+
+<input
+    id="photoSearch"
+    class="admin-input"
+    placeholder="Cari nama foto..."
+>
+
+
+<button
+    id="loadPhotos"
+    class="small-btn gold"
+>
+    Muat Photos
+</button>
+
+</div>
+
+
+<div
+    id="photosGrid"
+    class="photo-admin-grid"
+>
+
+<div class="empty">
+Tekan "Muat Photos".
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STORAGE
+===================================================== -->
+
+<section
+    id="section-storage"
+    class="admin-section"
+>
+
+<span class="pill">
+STORAGE
+</span>
+
+<h1 class="serif page-title">
+Storage
+</h1>
+
+<p class="page-subtitle">
+Monitoring kapasitas penyimpanan.
+</p>
+
+
+<div class="card">
+
+<h2 class="card-title">
+Storage Overview
+</h2>
+
+<div class="health-grid">
+
+<div class="health-item">
+<div class="health-name">
+Total Photos
+<strong id="storagePhotos">
+—</strong>
+</div>
+</div>
+
+
+<div class="health-item">
+<div class="health-name">
+Used
+<strong id="storageUsed">
+—
+</strong>
+</div>
+</div>
+
+
+<div class="health-item">
+<div class="health-name">
+Quota
+<strong>
+1 GB
+</strong>
+</div>
+</div>
+
+</div>
+
+
+<p
+    class="admin-label"
+    style="margin-top:20px"
+>
+Catatan: kapasitas sebenarnya tetap mengikuti quota Storage pada project Supabase kamu.
+</p>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MAINTENANCE
+===================================================== -->
+
+<section
+    id="section-maintenance"
+    class="admin-section"
+>
+
+<span class="pill">
+SYSTEM CONTROL
+</span>
+
+<h1 class="serif page-title">
+Maintenance
+</h1>
+
+<p class="page-subtitle">
+Kontrol status maintenance website.
+</p>
+
+
+<div class="card">
+
+<div class="maintenance-box">
+
+<div class="row">
+
+<div>
+
+<h2
+    class="card-title"
+    style="margin-bottom:6px"
+>
+Maintenance Mode
+</h2>
+
+<p class="admin-label">
+Jika aktif, website dapat menampilkan halaman maintenance kepada user.
+</p>
+
+</div>
+
+
+<button
+    id="maintenanceToggle"
+    class="toggle"
+    aria-label="Toggle maintenance"
+>
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2 class="card-title">
+Peringatan
+</h2>
+
+<p class="admin-label">
+Perubahan maintenance sebaiknya dilakukan melalui Edge Function atau endpoint admin yang tervalidasi, bukan dengan memberikan service-role key ke browser.
+</p>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SECURITY
+===================================================== -->
+
+<section
+    id="section-security"
+    class="admin-section"
+>
+
+<span class="pill">
+SECURITY CENTER
+</span>
+
+<h1 class="serif page-title">
+Security
+</h1>
+
+<p class="page-subtitle">
+Pemeriksaan keamanan dashboard.
+</p>
+
+
+<div class="card">
+
+<div class="security-list">
+
+
+<div class="security-row">
+
+<div class="security-left">
+
+<div class="security-icon">
+✓
+</div>
+
+<div>
+<strong>
+Admin Role Check
+</strong>
+
+<div class="admin-label">
+Role diperiksa melalui user_roles.
+</div>
+
+</div>
+
+</div>
+
+<span class="status ok">
+ACTIVE
+</span>
+
+</div>
+
+
+<div class="security-row">
+
+<div class="security-left">
+
+<div class="security-icon">
+✓
+</div>
+
+<div>
+<strong>
+Service Role Protection
+</strong>
+
+<div class="admin-label">
+Tidak diletakkan di HTML.
+</div>
+
+</div>
+
+</div>
+
+<span class="status ok">
+SAFE
+</span>
+
+</div>
+
+
+<div class="security-row">
+
+<div class="security-left">
+
+<div class="security-icon">
+✓
+</div>
+
+<div>
+<strong>
+RLS
+</strong>
+
+<div class="admin-label">
+Database protection harus tetap aktif.
+</div>
+
+</div>
+
+</div>
+
+<span class="status warn">
+CHECK
+</span>
+
+</div>
+
+
+<div class="security-row">
+
+<div class="security-left">
+
+<div class="security-icon">
+✓
+</div>
+
+<div>
+<strong>
+Edge Function
+</strong>
+
+<div class="admin-label">
+Operasi sensitif dipindahkan ke server.
+</div>
+
+</div>
+
+</div>
+
+<span class="status ok">
+ACTIVE
+</span>
+
+</div>
+
+
+<div class="security-row">
+
+<div class="security-left">
+
+<div class="security-icon">
+✓
+</div>
+
+<div>
+<strong>
+Password Protection
+</strong>
+
+<div class="admin-label">
+Password plaintext tidak ditampilkan.
+</div>
+
+</div>
+
+</div>
+
+<span class="status ok">
+PROTECTED
+</span>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     AUDIT LOG
+===================================================== -->
+
+<section
+    id="section-audit"
+    class="admin-section"
+>
+
+<span class="pill">
+AUDIT
+</span>
+
+<h1 class="serif page-title">
+Audit Log
+</h1>
+
+<p class="page-subtitle">
+Aktivitas administratif pada dashboard.
+</p>
+
+
+<div class="card">
+
+<div class="toolbar">
+
+<button
+    id="refreshAudit"
+    class="small-btn gold"
+>
+    Refresh Log
+</button>
+
+</div>
+
+
+<div
+    id="auditList"
+    class="log-list"
+>
+
+<div class="empty">
+Belum ada audit log yang dimuat.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     NOTIFICATIONS
+===================================================== -->
+
+<section
+    id="section-notifications"
+    class="admin-section"
+>
+
+<span class="pill">
+NOTIFICATION CENTER
+</span>
+
+<h1 class="serif page-title">
+Notifications
+</h1>
+
+<p class="page-subtitle">
+Pantau notifikasi yang tersimpan.
+</p>
+
+
+<div class="card">
+
+<div
+    id="notificationList"
+    class="log-list"
+>
+
+<div class="empty">
+Tekan refresh untuk memuat notifikasi.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SYSTEM
+===================================================== -->
+
+<section
+    id="section-system"
+    class="admin-section"
+>
+
+<span class="pill">
+SYSTEM HEALTH
+</span>
+
+<h1 class="serif page-title">
+System
+</h1>
+
+<p class="page-subtitle">
+Status komponen utama aplikasi.
+</p>
+
+
+<div class="health-grid">
+
+<div class="health-item">
+
+<div class="health-name">
+Supabase Database
+<span class="health-dot"></span>
+</div>
+
+<p class="admin-label">
+Connection checked from browser.
+</p>
+
+</div>
+
+
+<div class="health-item">
+
+<div class="health-name">
+Authentication
+<span class="health-dot"></span>
+</div>
+
+<p class="admin-label">
+Current admin session.
+</p>
+
+</div>
+
+
+<div class="health-item">
+
+<div class="health-name">
+Storage
+<span class="health-dot"></span>
+</div>
+
+<p class="admin-label">
+Photos bucket.
+</p>
+
+</div>
+
+
+<div class="health-item">
+
+<div class="health-name">
+Edge Function
+<span
+    id="edgeStatusDot"
+    class="health-dot"
+></span>
+</div>
+
+<p
+    id="edgeStatusText"
+    class="admin-label"
+>
+Belum diuji.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2 class="card-title">
+Security Architecture
+</h2>
+
+<p class="admin-label">
+Browser → Supabase Auth → RLS → Edge Function untuk operasi sensitif.
+Service Role Key tidak boleh dimasukkan ke frontend.
+</p>
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+</div>
+
+
+
+<!-- =======================================================
+     CONFIRM MODAL
+======================================================= -->
+
+<div
+    id="confirmModal"
+    class="modal hidden"
+>
+
+<div class="modal-box">
+
+<h2
+    id="confirmTitle"
+    class="serif"
+>
+Konfirmasi
+</h2>
+
+<p
+    id="confirmText"
+    class="page-subtitle"
+>
+Apakah kamu yakin?
+</p>
+
+
+<div
+    style="
+        display:flex;
+        justify-content:flex-end;
+        gap:8px;
+        margin-top:22px;
+    "
+>
+
+<button
+    id="confirmCancel"
+    class="small-btn"
+>
+    Batal
+</button>
+
+
+<button
+    id="confirmOk"
+    class="small-btn danger"
+>
+    Lanjutkan
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =======================================================
+     PHOTO PREVIEW MODAL
+======================================================= -->
+
+<div
+    id="photoModal"
+    class="modal hidden"
+>
+
+<div
+    class="modal-box"
+    style="text-align:center"
+>
+
+<button
+    id="closePhoto"
+    class="small-btn"
+    style="float:right"
+>
+    ×
+</button>
+
+
+<img
+    id="previewImage"
+    src=""
+    alt="Preview"
+    style="
+        max-width:100%;
+        max-height:70vh;
+        border-radius:18px;
+        object-fit:contain;
+    "
+>
+
+</div>
+
+</div>
+
+
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+
 <script>
-(async()=>{try{const s=await FV.getSession();if(!s){location.replace('login.html');return}const {data,error}=await FV.db.from('user_roles').select('role').eq('user_id',s.user.id).maybeSingle();if(error)throw error;if(String(data?.role||'').toLowerCase()!=='admin'){location.replace('dashboard.html');return}document.getElementById('guard').style.display='none';document.getElementById('app').style.display='block';
-const [{count:uc},{count:pc},{data:st}]=await Promise.all([FV.db.from('user_roles').select('*',{count:'exact',head:true}),FV.db.from('photos').select('*',{count:'exact',head:true}),FV.db.from('system_settings').select('value').eq('key','maintenance_mode').maybeSingle()]);document.getElementById('users').textContent=uc??0;document.getElementById('photos').textContent=pc??0;document.getElementById('maintenance').textContent=st?.value==='true'?'ON':'OFF';}catch(e){console.error(e);document.getElementById('guard').innerHTML='<h2>Akses admin gagal</h2><p class="muted">'+FV.escapeHtml(e.message)+'</p>'}})();
-</script></body></html>
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let session = null;
+
+let adminUser = null;
+
+let allUsers = [];
+
+let allPhotos = [];
+
+let maintenanceEnabled = false;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value){
+
+    if(
+        typeof FV !== "undefined" &&
+        typeof FV.escapeHtml === "function"
+    ){
+
+        return FV.escapeHtml(
+            value
+        );
+
+    }
+
+
+    return String(
+        value ?? ""
+    )
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+function showToast(
+    message
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        window.__toastTimer
+    );
+
+
+    window.__toastTimer =
+        setTimeout(
+            ()=>{
+                toast.classList.remove(
+                    "show"
+                );
+            },
+            3000
+        );
+
+}
+
+
+function formatBytes(
+    value
+){
+
+    if(
+        typeof FV !== "undefined" &&
+        typeof FV.bytes === "function"
+    ){
+
+        return FV.bytes(
+            value
+        );
+
+    }
+
+
+    let n =
+        Number(value) || 0;
+
+    const units =
+        ["B","KB","MB","GB"];
+
+    let i = 0;
+
+
+    while(
+        n >= 1024 &&
+        i < 3
+    ){
+
+        n /= 1024;
+
+        i++;
+
+    }
+
+
+    return `${n.toFixed(i ? 1 : 0)} ${units[i]}`;
+
+}
+
+
+/* =========================================================
+   SECTION NAVIGATION
+========================================================= */
+
+function openSection(
+    name
+){
+
+    document
+        .querySelectorAll(
+            ".admin-section"
+        )
+        .forEach(
+            section =>
+                section.classList.remove(
+                    "active"
+                )
+        );
+
+
+    const target =
+        document.getElementById(
+            `section-${name}`
+        );
+
+
+    if(target){
+
+        target.classList.add(
+            "active"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".menu-button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.section ===
+                    name
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "sidebar"
+        )
+        .classList.remove(
+            "open"
+        );
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+document
+    .querySelectorAll(
+        "[data-section]"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                ()=>{
+                    openSection(
+                        button.dataset.section
+                    );
+                }
+            );
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "mobileMenu"
+    )
+    .onclick =
+    ()=>{
+        document
+            .getElementById(
+                "sidebar"
+            )
+            .classList.toggle(
+                "open"
+            );
+    };
+
+
+/* =========================================================
+   CONFIRM
+========================================================= */
+
+let confirmResolver =
+    null;
+
+
+function confirmAction(
+    title,
+    text
+){
+
+    return new Promise(
+        resolve => {
+
+            confirmResolver =
+                resolve;
+
+
+            document
+                .getElementById(
+                    "confirmTitle"
+                )
+                .textContent =
+                title;
+
+
+            document
+                .getElementById(
+                    "confirmText"
+                )
+                .textContent =
+                text;
+
+
+            document
+                .getElementById(
+                    "confirmModal"
+                )
+                .classList
+                .remove(
+                    "hidden"
+                );
+
+        }
+    );
+
+}
+
+
+document
+    .getElementById(
+        "confirmCancel"
+    )
+    .onclick =
+    ()=>{
+        document
+            .getElementById(
+                "confirmModal"
+            )
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+        if(confirmResolver)
+            confirmResolver(
+                false
+            );
+
+
+        confirmResolver =
+            null;
+    };
+
+
+document
+    .getElementById(
+        "confirmOk"
+    )
+    .onclick =
+    ()=>{
+        document
+            .getElementById(
+                "confirmModal"
+            )
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+        if(confirmResolver)
+            confirmResolver(
+                true
+            );
+
+
+        confirmResolver =
+            null;
+    };
+
+
+/* =========================================================
+   LOAD OVERVIEW
+========================================================= */
+
+async function loadOverview(){
+
+    try{
+
+        const [
+            usersResult,
+            photosResult,
+            storageResult,
+            maintenanceResult
+        ] =
+        await Promise.all([
+
+            FV.db
+                .from(
+                    "user_roles"
+                )
+                .select(
+                    "*",
+                    {
+                        count:"exact",
+                        head:true
+                    }
+                ),
+
+            FV.db
+                .from(
+                    "photos"
+                )
+                .select(
+                    "*",
+                    {
+                        count:"exact",
+                        head:true
+                    }
+                ),
+
+            FV.db
+                .from(
+                    "photos"
+                )
+                .select(
+                    "size"
+                ),
+
+            FV.db
+                .from(
+                    "system_settings"
+                )
+                .select(
+                    "value"
+                )
+                .eq(
+                    "key",
+                    "maintenance_mode"
+                )
+                .maybeSingle()
+
+        ]);
+
+
+        document
+            .getElementById(
+                "statUsers"
+            )
+            .textContent =
+            usersResult.count ?? 0;
+
+
+        document
+            .getElementById(
+                "statPhotos"
+            )
+            .textContent =
+            photosResult.count ?? 0;
+
+
+        const total =
+            (
+                storageResult.data ||
+                []
+            )
+                .reduce(
+                    (
+                        sum,
+                        row
+                    ) =>
+                        sum +
+                        Number(
+                            row.size ||
+                            0
+                        ),
+                    0
+                );
+
+
+        document
+            .getElementById(
+                "statStorage"
+            )
+            .textContent =
+            formatBytes(
+                total
+            );
+
+
+        maintenanceEnabled =
+            String(
+                maintenanceResult
+                    .data
+                    ?.value ||
+                ""
+            )
+                .toLowerCase() ===
+            "true";
+
+
+        document
+            .getElementById(
+                "statMaintenance"
+            )
+            .textContent =
+            maintenanceEnabled
+                ? "ON"
+                : "OFF";
+
+
+        document
+            .getElementById(
+                "maintenanceToggle"
+            )
+            .classList
+            .toggle(
+                "on",
+                maintenanceEnabled
+            );
+
+
+        document
+            .getElementById(
+                "storagePhotos"
+            )
+            .textContent =
+            photosResult.count ?? 0;
+
+
+        document
+            .getElementById(
+                "storageUsed"
+            )
+            .textContent =
+            formatBytes(
+                total
+            );
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        showToast(
+            "Gagal memuat statistik."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   USERS
+========================================================= */
+
+async function loadUsers(){
+
+    const container =
+        document.getElementById(
+            "usersTable"
+        );
+
+
+    container.innerHTML =
+        `
+        <div class="empty">
+            <span class="loading"></span>
+            Memuat users...
+        </div>
+        `;
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .from(
+                    "user_roles"
+                )
+                .select(
+                    "user_id,role"
+                )
+                .order(
+                    "role"
+                );
+
+
+        if(error)
+            throw error;
+
+
+        allUsers =
+            data || [];
+
+
+        renderUsers();
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        container.innerHTML =
+            `
+            <div class="empty">
+                Gagal memuat users:
+                ${esc(error.message)}
+            </div>
+            `;
+
+    }
+
+}
+
+
+function renderUsers(){
+
+    const search =
+        document
+            .getElementById(
+                "userSearch"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const role =
+        document
+            .getElementById(
+                "roleFilter"
+            )
+            .value;
+
+
+    const rows =
+        allUsers.filter(
+            user => {
+
+                const matchesSearch =
+                    !search ||
+                    String(
+                        user.user_id
+                    )
+                        .toLowerCase()
+                        .includes(
+                            search
+                        );
+
+
+                const matchesRole =
+                    !role ||
+                    user.role ===
+                    role;
+
+
+                return (
+                    matchesSearch &&
+                    matchesRole
+                );
+
+            }
+        );
+
+
+    if(!rows.length){
+
+        document
+            .getElementById(
+                "usersTable"
+            )
+            .innerHTML =
+            `
+            <div class="empty">
+                Tidak ada user yang cocok.
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    document
+        .getElementById(
+            "usersTable"
+        )
+        .innerHTML =
+        `
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${rows.map(
+                    user => `
+
+                    <tr>
+
+                        <td>
+                            <code>
+                                ${esc(
+                                    user.user_id
+                                )}
+                            </code>
+                        </td>
+
+                        <td>
+                            ${esc(
+                                user.role
+                            )}
+                        </td>
+
+                        <td>
+
+                            <span
+                                class="status ok"
+                            >
+                                TERDAFTAR
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="small-btn"
+                                data-copy-user="${esc(
+                                    user.user_id
+                                )}"
+                            >
+                                Copy ID
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    `
+                ).join("")}
+
+            </tbody>
+
+        </table>
+        `;
+
+
+    document
+        .querySelectorAll(
+            "[data-copy-user]"
+        )
+        .forEach(
+            button => {
+
+                button.onclick =
+                    async ()=>{
+
+                        try{
+
+                            await navigator.clipboard
+                                .writeText(
+                                    button.dataset.copyUser
+                                );
+
+
+                            showToast(
+                                "User ID disalin."
+                            );
+
+                        }catch{
+
+                            showToast(
+                                "Clipboard tidak tersedia."
+                            );
+
+                        }
+
+                    };
+
+            }
+        );
+
+}
+
+
+document
+    .getElementById(
+        "loadUsers"
+    )
+    .onclick =
+    loadUsers;
+
+
+document
+    .getElementById(
+        "userSearch"
+    )
+    .oninput =
+    renderUsers;
+
+
+document
+    .getElementById(
+        "roleFilter"
+    )
+    .onchange =
+    renderUsers;
+
+
+/* =========================================================
+   PHOTOS
+========================================================= */
+
+async function loadPhotos(){
+
+    const grid =
+        document
+            .getElementById(
+                "photosGrid"
+            );
+
+
+    grid.innerHTML =
+        `
+        <div class="empty">
+            <span class="loading"></span>
+            Memuat photos...
+        </div>
+        `;
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .from(
+                    "photos"
+                )
+                .select(
+                    "id,user_id,name,path,size,mime_type,created_at"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending:false
+                    }
+                )
+                .limit(
+                    100
+                );
+
+
+        if(error)
+            throw error;
+
+
+        allPhotos =
+            data || [];
+
+
+        await renderPhotos();
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        grid.innerHTML =
+            `
+            <div class="empty">
+                Gagal memuat photos:
+                ${esc(error.message)}
+            </div>
+            `;
+
+    }
+
+}
+
+
+async function renderPhotos(){
+
+    const grid =
+        document
+            .getElementById(
+                "photosGrid"
+            );
+
+
+    const search =
+        document
+            .getElementById(
+                "photoSearch"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const rows =
+        allPhotos.filter(
+            photo =>
+                !search ||
+                String(
+                    photo.name
+                )
+                    .toLowerCase()
+                    .includes(
+                        search
+                    )
+        );
+
+
+    if(!rows.length){
+
+        grid.innerHTML =
+            `
+            <div class="empty">
+                Tidak ada foto.
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        "";
+
+
+    for(
+        const photo of rows
+    ){
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "admin-photo";
+
+
+        card.innerHTML =
+            `
+            <div
+                style="
+                    width:100%;
+                    height:100%;
+                    display:grid;
+                    place-items:center;
+                "
+            >
+                <span class="loading"></span>
+            </div>
+            `;
+
+
+        grid.appendChild(
+            card
+        );
+
+
+        try{
+
+            const {
+                data,
+                error
+            } =
+                await FV.db
+                    .storage
+                    .from(
+                        "photos"
+                    )
+                    .createSignedUrl(
+                        photo.path,
+                        300
+                    );
+
+
+            if(error)
+                throw error;
+
+
+            card.innerHTML =
+                `
+                <img
+                    src="${esc(
+                        data.signedUrl
+                    )}"
+                    alt="${esc(
+                        photo.name
+                    )}"
+                    loading="lazy"
+                >
+
+                <div class="photo-overlay">
+
+                    <button
+                        class="overlay-btn preview-photo"
+                        title="Preview"
+                    >
+                        ◉
+                    </button>
+
+                    <button
+                        class="overlay-btn delete-photo"
+                        title="Hapus"
+                    >
+                        ×
+                    </button>
+
+                </div>
+                `;
+
+
+            card
+                .querySelector(
+                    ".preview-photo"
+                )
+                .onclick =
+                ()=>{
+                    document
+                        .getElementById(
+                            "previewImage"
+                        )
+                        .src =
+                        data.signedUrl;
+
+
+                    document
+                        .getElementById(
+                            "photoModal"
+                        )
+                        .classList
+                        .remove(
+                            "hidden"
+                        );
+                };
+
+
+            card
+                .querySelector(
+                    ".delete-photo"
+                )
+                .onclick =
+                async ()=>{
+
+                    const ok =
+                        await confirmAction(
+                            "Hapus foto?",
+                            `Foto "${photo.name}" akan dihapus.`
+                        );
+
+
+                    if(!ok)
+                        return;
+
+
+                    /*
+                     * Untuk penghapusan production,
+                     * gunakan Edge Function admin.
+                     *
+                     * Tidak menggunakan service-role
+                     * dari browser.
+                     */
+
+                    showToast(
+                        "Penghapusan foto harus dilakukan melalui Admin API."
+                    );
+
+                };
+
+
+        }catch(error){
+
+            card.innerHTML =
+                `
+                <div
+                    style="
+                        padding:15px;
+                        display:grid;
+                        place-items:center;
+                        height:100%;
+                        text-align:center;
+                    "
+                >
+                    <small>
+                        Preview tidak tersedia.
+                    </small>
+                </div>
+                `;
+
+        }
+
+    }
+
+}
+
+
+document
+    .getElementById(
+        "loadPhotos"
+    )
+    .onclick =
+    loadPhotos;
+
+
+document
+    .getElementById(
+        "photoSearch"
+    )
+    .oninput =
+    renderPhotos;
+
+
+document
+    .getElementById(
+        "closePhoto"
+    )
+    .onclick =
+    ()=>{
+        document
+            .getElementById(
+                "photoModal"
+            )
+            .classList
+            .add(
+                "hidden"
+            );
+    };
+
+
+/* =========================================================
+   MAINTENANCE
+========================================================= */
+
+document
+    .getElementById(
+        "maintenanceToggle"
+    )
+    .onclick =
+    async ()=>{
+
+        const next =
+            !maintenanceEnabled;
+
+
+        const ok =
+            await confirmAction(
+                next
+                    ? "Aktifkan maintenance?"
+                    : "Nonaktifkan maintenance?",
+                next
+                    ? "User akan melihat sistem dalam mode maintenance."
+                    : "Website akan kembali normal."
+            );
+
+
+        if(!ok)
+            return;
+
+
+        /*
+         * Jangan mengubah system_settings
+         * dengan service-role dari browser.
+         *
+         * Sistem production seharusnya memanggil
+         * Edge Function admin-api.
+         */
+
+        showToast(
+            "Maintenance membutuhkan action Edge Function."
+        );
+
+    };
+
+
+/* =========================================================
+   AUDIT LOG
+========================================================= */
+
+async function loadAudit(){
+
+    const list =
+        document
+            .getElementById(
+                "auditList"
+            );
+
+
+    list.innerHTML =
+        `
+        <div class="empty">
+            <span class="loading"></span>
+            Memuat audit log...
+        </div>
+        `;
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .from(
+                    "audit_logs"
+                )
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending:false
+                    }
+                )
+                .limit(
+                    50
+                );
+
+
+        if(error)
+            throw error;
+
+
+        if(
+            !data ||
+            !data.length
+        ){
+
+            list.innerHTML =
+                `
+                <div class="empty">
+                    Belum ada audit log.
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        list.innerHTML =
+            data
+                .map(
+                    log => `
+
+                    <div class="log-item">
+
+                        <strong>
+                            ${esc(
+                                log.action ||
+                                "Activity"
+                            )}
+                        </strong>
+
+                        <div class="admin-label">
+                            ${esc(
+                                log.user_id ||
+                                ""
+                            )}
+                        </div>
+
+                        <div class="log-time">
+                            ${log.created_at
+                                ? new Date(
+                                    log.created_at
+                                ).toLocaleString(
+                                    "id-ID"
+                                )
+                                : ""
+                            }
+                        </div>
+
+                    </div>
+
+                    `
+                )
+                .join("");
+
+
+    }catch(error){
+
+        list.innerHTML =
+            `
+            <div class="empty">
+                Audit log belum tersedia:
+                ${esc(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
+
+}
+
+
+document
+    .getElementById(
+        "refreshAudit"
+    )
+    .onclick =
+    loadAudit;
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+async function loadNotifications(){
+
+    const list =
+        document
+            .getElementById(
+                "notificationList"
+            );
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .from(
+                    "notifications"
+                )
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending:false
+                    }
+                )
+                .limit(
+                    50
+                );
+
+
+        if(error)
+            throw error;
+
+
+        if(
+            !data ||
+            !data.length
+        ){
+
+            list.innerHTML =
+                `
+                <div class="empty">
+                    Tidak ada notifikasi.
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        list.innerHTML =
+            data
+                .map(
+                    notification => `
+
+                    <div class="log-item">
+
+                        <strong>
+                            ${esc(
+                                notification.title ||
+                                "Notification"
+                            )}
+                        </strong>
+
+                        <p class="admin-label">
+                            ${esc(
+                                notification.body ||
+                                ""
+                            )}
+                        </p>
+
+                        <div class="log-time">
+                            ${notification.created_at
+                                ? new Date(
+                                    notification.created_at
+                                ).toLocaleString(
+                                    "id-ID"
+                                )
+                                : ""
+                            }
+                        </div>
+
+                    </div>
+
+                    `
+                )
+                .join("");
+
+
+    }catch(error){
+
+        list.innerHTML =
+            `
+            <div class="empty">
+                Notifikasi belum dapat dimuat:
+                ${esc(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
+
+}
+
+
+/* =========================================================
+   EDGE FUNCTION HEALTH
+========================================================= */
+
+async function checkEdgeFunction(){
+
+    const dot =
+        document
+            .getElementById(
+                "edgeStatusDot"
+            );
+
+
+    const text =
+        document
+            .getElementById(
+                "edgeStatusText"
+            );
+
+
+    try{
+
+        /*
+         * Hanya menguji endpoint.
+         *
+         * Jangan pernah menaruh service role
+         * key di sini.
+         */
+
+        const {
+            data,
+            error
+        } =
+            await FV.db.functions.invoke(
+                "admin-api",
+                {
+                    body:{
+                        action:
+                            "health"
+                    }
+                }
+            );
+
+
+        if(error)
+            throw error;
+
+
+        dot.style.background =
+            "#4c9b5a";
+
+
+        text.textContent =
+            data?.message ||
+            "Edge Function merespons.";
+
+    }catch(error){
+
+        console.warn(
+            "Edge health:",
+            error
+        );
+
+
+        dot.style.background =
+            "#b99350";
+
+
+        text.textContent =
+            "Health endpoint belum tersedia atau action health belum dibuat.";
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOBAL REFRESH
+========================================================= */
+
+document
+    .getElementById(
+        "globalRefresh"
+    )
+    .onclick =
+    async ()=>{
+
+        const button =
+            document.getElementById(
+                "globalRefresh"
+            );
+
+
+        button.disabled =
+            true;
+
+
+        const old =
+            button.textContent;
+
+
+        button.innerHTML =
+            `
+            <span class="loading"></span>
+            `;
+
+
+        try{
+
+            await loadOverview();
+
+            showToast(
+                "Dashboard diperbarui."
+            );
+
+        }finally{
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                old;
+
+        }
+
+    };
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+document
+    .getElementById(
+        "logout"
+    )
+    .onclick =
+    async ()=>{
+
+        try{
+
+            await FV.signOut();
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+
+            location.replace(
+                "login.html"
+            );
+
+        }
+
+    };
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+(async()=>{
+
+    try{
+
+        /*
+         * Pastikan user login.
+         */
+
+        session =
+            await FV.getSession();
+
+
+        if(
+            !session ||
+            !session.user
+        ){
+
+            location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        adminUser =
+            session.user;
+
+
+        document
+            .getElementById(
+                "adminEmail"
+            )
+            .textContent =
+            adminUser.email ||
+            "Admin";
+
+
+        /*
+         * Role check.
+         *
+         * Tetap dilakukan di database dengan RLS.
+         */
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .from(
+                    "user_roles"
+                )
+                .select(
+                    "role"
+                )
+                .eq(
+                    "user_id",
+                    adminUser.id
+                )
+                .maybeSingle();
+
+
+        if(error)
+            throw error;
+
+
+        if(
+            String(
+                data?.role ||
+                ""
+            )
+                .toLowerCase() !==
+            "admin"
+        ){
+
+            location.replace(
+                "dashboard.html"
+            );
+
+            return;
+
+        }
+
+
+        await loadOverview();
+
+
+        await checkEdgeFunction();
+
+
+    }catch(error){
+
+        console.error(
+            "ADMIN INIT:",
+            error
+        );
+
+
+        document.body.innerHTML =
+            `
+            <main
+                style="
+                    min-height:100vh;
+                    display:grid;
+                    place-items:center;
+                    padding:25px;
+                    text-align:center;
+                "
+            >
+
+                <div>
+
+                    <h1>
+                        Akses Admin Gagal
+                    </h1>
+
+                    <p>
+                        ${esc(
+                            error.message ||
+                            "Terjadi kesalahan."
+                        )}
+                    </p>
+
+                    <button
+                        class="small-btn"
+                        onclick="
+                            location.replace('login.html')
+                        "
+                    >
+                        Kembali Login
+                    </button>
+
+                </div>
+
+            </main>
+            `;
+
+    }
+
+})();
+
+
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
+setInterval(
+    ()=>{
+        if(
+            document.visibilityState ===
+            "visible"
+        ){
+
+            loadOverview();
+
+        }
+    },
+    30000
+);
+
+</script>
+
+</body>
+
+</html>
