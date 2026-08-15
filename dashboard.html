@@ -1,549 +1,242 @@
-```html
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FotoVault — Dashboard</title>
+
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>Dashboard — FotoVault</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="app.js"></script>
 
 <style>
-:root{
-    --gold:#bd9349;
-    --gold-dark:#8d682d;
-    --ink:#171613;
-    --muted:#777269;
-    --bg:#f7f4ed;
-    --card:rgba(255,255,255,.72);
-    --line:rgba(30,25,18,.08);
-}
 
-*{box-sizing:border-box}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    margin:0;
-    min-height:100vh;
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif;
-    background:
-        radial-gradient(circle at 8% 0%,rgba(211,178,106,.20),transparent 28%),
-        radial-gradient(circle at 92% 15%,rgba(255,255,255,.95),transparent 30%),
-        var(--bg);
-}
-
-button,input{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.shell{
-    width:min(1380px,94%);
-    margin:auto;
-}
-
-/* NAV */
-
-.topbar{
-    position:sticky;
-    top:12px;
-    z-index:50;
-    padding-top:12px;
-}
-
-.nav{
-    min-height:62px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:8px 10px 8px 17px;
-    border:1px solid rgba(255,255,255,.85);
-    border-radius:23px;
-    background:rgba(255,255,255,.68);
-    backdrop-filter:blur(26px) saturate(145%);
-    -webkit-backdrop-filter:blur(26px) saturate(145%);
-    box-shadow:
-        0 18px 55px rgba(50,40,20,.08),
-        inset 0 1px rgba(255,255,255,.9);
-}
-
-.logo{
-    color:var(--ink);
-    text-decoration:none;
-    font-family:Georgia,serif;
-    font-weight:700;
-    font-size:21px;
-}
-
-.logo span{
-    color:var(--gold);
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:7px;
-}
-
-.icon{
-    width:40px;
-    height:40px;
-    display:grid;
-    place-items:center;
-    border:1px solid var(--line);
-    border-radius:14px;
-    color:#5d574f;
-    background:rgba(255,255,255,.62);
-    transition:.25s ease;
-}
-
-.icon:hover{
-    transform:translateY(-2px);
-    background:#fff;
-}
-
-.profile{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:3px 10px 3px 4px;
-    border:1px solid var(--line);
-    border-radius:999px;
-    background:rgba(255,255,255,.72);
-}
-
-.avatar{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    object-fit:cover;
-    background:#eee1c8;
-}
-
-.profile-name{
-    max-width:120px;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    font-size:12px;
-    font-weight:700;
-}
-
-/* HERO */
-
-.hero{
-    position:relative;
-    overflow:hidden;
-    margin-top:28px;
-    padding:36px;
-    border:1px solid rgba(255,255,255,.82);
-    border-radius:34px;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.80),
-            rgba(247,235,207,.62)
-        );
-    box-shadow:0 30px 90px rgba(45,35,18,.08);
-}
-
-.hero:before{
-    content:"";
-    position:absolute;
-    width:300px;
-    height:300px;
-    right:-120px;
-    top:-160px;
-    border-radius:50%;
-    background:rgba(193,148,70,.16);
-    animation:float 7s ease-in-out infinite;
-}
-
-@keyframes float{
-    0%,100%{transform:translate(0,0)}
-    50%{transform:translate(-18px,25px)}
-}
-
-.kicker{
-    color:var(--gold-dark);
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:.18em;
-}
-
-.hero h1{
-    position:relative;
-    z-index:1;
-    margin:8px 0;
-    font-family:Georgia,serif;
-    font-size:clamp(34px,6vw,61px);
-    line-height:.98;
-    letter-spacing:-.045em;
-}
-
-.hero p{
-    position:relative;
-    z-index:1;
-    max-width:680px;
-    margin:15px 0 0;
-    color:var(--muted);
-    line-height:1.7;
-}
-
-/* TOOLBAR */
-
-.toolbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin:24px 0 15px;
-}
-
-.tools{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.primary,
-.secondary{
-    height:40px;
-    padding:0 15px;
-    border-radius:14px;
-    border:1px solid var(--line);
-    transition:.25s ease;
-}
-
-.primary{
-    border:0;
-    color:#fff;
-    background:linear-gradient(135deg,var(--gold),var(--gold-dark));
-    box-shadow:0 10px 25px rgba(173,129,54,.20);
-}
-
-.secondary{
-    background:rgba(255,255,255,.7);
-}
-
-.primary:hover,
-.secondary:hover{
-    transform:translateY(-2px);
-}
-
-.search{
-    width:min(300px,45vw);
-    height:40px;
-    padding:0 14px;
-    outline:none;
-    border:1px solid var(--line);
-    border-radius:14px;
-    background:rgba(255,255,255,.68);
-}
-
-.search:focus{
-    border-color:rgba(189,147,73,.55);
-    box-shadow:0 0 0 4px rgba(189,147,73,.09);
-}
-
-/* GALLERY */
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-    gap:14px;
-}
+/* =========================================================
+   DASHBOARD ENHANCEMENT
+========================================================= */
 
 .photo{
     position:relative;
     overflow:hidden;
-    aspect-ratio:1;
     border-radius:22px;
-    border:1px solid rgba(255,255,255,.85);
-    background:#e9e3d8;
-    box-shadow:0 14px 40px rgba(40,30,15,.08);
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.75);
     opacity:0;
-    transform:translateY(16px) scale(.985);
-    animation:photoIn .6s cubic-bezier(.16,1,.3,1) forwards;
+    transform:translateY(18px) scale(.985);
+    transition:
+        transform .55s cubic-bezier(.16,1,.3,1),
+        opacity .55s ease,
+        box-shadow .35s ease;
 }
 
-@keyframes photoIn{
-    to{
-        opacity:1;
-        transform:none;
-    }
+.photo.show{
+    opacity:1;
+    transform:none;
+}
+
+.photo:hover{
+    transform:translateY(-4px) scale(1.01);
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.10);
 }
 
 .photo img{
-    width:100%;
-    height:100%;
     display:block;
+    width:100%;
+    aspect-ratio:1/1;
     object-fit:cover;
     opacity:0;
-    transform:scale(1.035);
+    transform:scale(1.025);
     transition:
         opacity .55s ease,
-        transform .75s cubic-bezier(.16,1,.3,1);
+        transform .7s cubic-bezier(.16,1,.3,1);
 }
 
-.photo img.loaded{
+.photo.loaded img{
     opacity:1;
     transform:scale(1);
 }
 
-.skeleton{
+.photo-loading{
     position:absolute;
     inset:0;
-    background:
-        linear-gradient(
-            105deg,
-            #e9e2d6 20%,
-            #f7f3eb 35%,
-            #e9e2d6 50%
-        );
-    background-size:220% 100%;
-    animation:shimmer 1.4s linear infinite;
-}
-
-@keyframes shimmer{
-    to{background-position:-220% 0}
-}
-
-.photo.ready .skeleton{
-    opacity:0;
-}
-
-.overlay{
-    position:absolute;
-    left:9px;
-    right:9px;
-    bottom:9px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:7px;
-    padding:8px;
-    border-radius:14px;
-    color:white;
-    background:rgba(20,18,15,.43);
-    backdrop-filter:blur(13px);
-    -webkit-backdrop-filter:blur(13px);
+    justify-content:center;
+    background:
+        linear-gradient(
+            110deg,
+            rgba(230,224,214,.8),
+            rgba(250,247,241,.95),
+            rgba(230,224,214,.8)
+        );
+    background-size:220% 100%;
+    animation:
+        photoShimmer 1.45s linear infinite;
 }
 
-.photo-name{
-    min-width:0;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    font-size:11px;
-    font-weight:700;
+.photo.loaded .photo-loading{
+    opacity:0;
+    pointer-events:none;
+}
+
+@keyframes photoShimmer{
+    from{
+        background-position:220% 0;
+    }
+
+    to{
+        background-position:-220% 0;
+    }
+}
+
+.photo-loading-ring{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    border:2px solid rgba(170,130,65,.20);
+    border-top-color:#b99350;
+    animation:photoSpin .8s linear infinite;
+}
+
+@keyframes photoSpin{
+    to{
+        transform:rotate(360deg);
+    }
 }
 
 .photo-actions{
-    display:flex;
-    gap:5px;
+    position:absolute;
+    right:10px;
+    bottom:10px;
+    z-index:5;
+    opacity:0;
+    transform:translateY(5px);
+    transition:.25s ease;
 }
 
-.mini{
-    width:30px;
-    height:30px;
+.photo:hover .photo-actions,
+.photo:focus-within .photo-actions{
+    opacity:1;
+    transform:none;
+}
+
+.iconbtn{
     display:grid;
     place-items:center;
-    padding:0;
-    border:0;
-    border-radius:10px;
-    color:white;
-    background:rgba(255,255,255,.18);
-    transition:.2s ease;
-}
-
-.mini:hover{
-    background:rgba(255,255,255,.32);
-}
-
-/* STATES */
-
-.state{
-    min-height:260px;
-    display:grid;
-    place-items:center;
-    text-align:center;
-    color:var(--muted);
-}
-
-.spinner{
-    width:42px;
-    height:42px;
-    margin:auto;
-    border:3px solid rgba(189,147,73,.18);
-    border-top-color:var(--gold);
-    border-radius:50%;
-    animation:spin .9s linear infinite;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg)}
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    z-index:100;
-    display:none;
-    place-items:center;
-    padding:18px;
-    background:rgba(18,16,13,.58);
-    backdrop-filter:blur(16px);
-}
-
-.modal.open{
-    display:grid;
-    animation:fade .22s ease;
-}
-
-@keyframes fade{
-    from{opacity:0}
-    to{opacity:1}
-}
-
-.modal-card{
-    width:min(455px,100%);
-    padding:23px;
-    border:1px solid rgba(255,255,255,.9);
-    border-radius:28px;
-    background:rgba(255,255,255,.91);
-    box-shadow:0 40px 100px rgba(0,0,0,.25);
-    animation:modalIn .42s cubic-bezier(.16,1,.3,1);
-}
-
-@keyframes modalIn{
-    from{
-        opacity:0;
-        transform:translateY(22px) scale(.96);
-    }
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-.modal-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.modal-title{
-    margin:4px 0 0;
-    font-family:Georgia,serif;
-    font-size:25px;
-}
-
-.close{
     width:38px;
     height:38px;
-    border:1px solid var(--line);
+    border:1px solid rgba(255,255,255,.75);
     border-radius:13px;
-    background:#fff;
-    font-size:22px;
+    color:#24211c;
+    background:rgba(255,255,255,.78);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    cursor:pointer;
+    transition:.25s ease;
 }
 
-.modal-file{
-    margin:18px 0 0;
-    padding:11px 12px;
-    border-radius:13px;
-    background:#f5f1e8;
-    color:var(--muted);
-    font-size:12px;
-}
-
-.email{
-    width:100%;
-    height:46px;
-    margin-top:12px;
-    padding:0 14px;
-    border:1px solid var(--line);
-    border-radius:15px;
-    outline:none;
+.iconbtn:hover{
+    transform:translateY(-2px);
     background:#fff;
 }
 
-.email:focus{
-    border-color:var(--gold);
+.btn{
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        opacity .25s ease;
 }
 
-.modal-actions{
-    display:flex;
-    gap:8px;
-    margin-top:13px;
+.btn:hover{
+    transform:translateY(-2px);
 }
 
-.modal-actions>*{
-    flex:1;
+.btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
 }
 
-/* SCAN */
 
-.scan{
-    display:none;
+/* =========================================================
+   SHARE SCANNING
+========================================================= */
+
+.scan-modal-content{
     text-align:center;
-    padding:18px 0 4px;
+    padding:35px 25px;
 }
 
-.scan.active{
-    display:block;
-}
-
-.orb{
+.scan-orb{
     position:relative;
     width:108px;
     height:108px;
-    display:grid;
-    place-items:center;
-    margin:8px auto 0;
+    margin:0 auto 25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     border-radius:50%;
-    background:radial-gradient(circle,#fff,#f1e2c3);
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.98),
+            rgba(239,226,198,.95)
+        );
     box-shadow:
-        0 0 0 1px #d9bd80,
-        0 0 0 11px rgba(189,147,73,.08),
-        0 0 55px rgba(189,147,73,.24);
+        0 0 0 1px rgba(183,145,76,.45),
+        0 0 0 12px rgba(183,145,76,.07),
+        0 0 45px rgba(183,145,76,.22);
 }
 
-.orb:before,
-.orb:after{
+.scan-orb::before,
+.scan-orb::after{
     content:"";
     position:absolute;
-    inset:-15px;
-    border:1px solid rgba(189,147,73,.45);
+    inset:-14px;
+    border:1px solid rgba(183,145,76,.35);
     border-radius:50%;
-    animation:pulse 1.7s ease-out infinite;
+    animation:scanPulse 1.8s ease-out infinite;
 }
 
-.orb:after{
-    animation-delay:.85s;
+.scan-orb::after{
+    animation-delay:.9s;
 }
 
-@keyframes pulse{
+@keyframes scanPulse{
+
     0%{
         opacity:0;
         transform:scale(.72);
     }
-    25%{opacity:1}
+
+    25%{
+        opacity:1;
+    }
+
     100%{
         opacity:0;
-        transform:scale(1.35);
+        transform:scale(1.32);
     }
+
+}
+
+.scan-orb svg{
+    position:relative;
+    z-index:2;
 }
 
 .scan-line{
@@ -551,190 +244,393 @@ button{
     left:18px;
     right:18px;
     height:2px;
-    background:linear-gradient(90deg,transparent,var(--gold),transparent);
-    box-shadow:0 0 12px var(--gold);
-    animation:scan 1.3s ease-in-out infinite;
+    z-index:3;
+    border-radius:999px;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #b99350,
+            transparent
+        );
+    box-shadow:
+        0 0 14px rgba(185,147,80,.8);
+    animation:scanMove 1.25s ease-in-out infinite;
 }
 
-@keyframes scan{
-    0%,100%{top:25px}
-    50%{top:83px}
+@keyframes scanMove{
+
+    0%,
+    100%{
+        top:24px;
+    }
+
+    50%{
+        top:82px;
+    }
+
 }
 
-.scan-text{
-    margin:25px 0 12px;
-    color:var(--muted);
+.scan-status{
+    min-height:22px;
+    margin-bottom:14px;
     font-size:13px;
 }
 
-.progress{
+.scan-progress{
+    width:100%;
     height:5px;
     overflow:hidden;
     border-radius:999px;
-    background:#eee7db;
+    background:rgba(100,90,75,.10);
 }
 
-.progress span{
-    display:block;
-    width:0;
+.scan-progress-bar{
+    width:0%;
     height:100%;
     border-radius:999px;
-    background:linear-gradient(90deg,var(--gold-dark),var(--gold));
-    transition:width .3s ease;
+    background:
+        linear-gradient(
+            90deg,
+            #8d682d,
+            #d2ae68
+        );
+    transition:
+        width .35s cubic-bezier(.16,1,.3,1);
 }
 
-/* TOAST */
 
-.toast{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    z-index:200;
-    max-width:340px;
-    padding:13px 15px;
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+.notification-item{
+    padding:15px;
     border-radius:16px;
-    color:white;
-    background:rgba(25,23,20,.92);
-    backdrop-filter:blur(15px);
-    box-shadow:0 20px 50px rgba(0,0,0,.22);
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(40,35,25,.07);
+    transition:.25s ease;
+}
+
+.notification-item:hover{
+    transform:translateY(-2px);
+    background:rgba(255,255,255,.8);
+}
+
+.notification-unread{
+    border-color:rgba(189,147,73,.25);
+    box-shadow:
+        inset 3px 0 #b99350;
+}
+
+
+/* =========================================================
+   UPLOAD PROGRESS
+========================================================= */
+
+.upload-status{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    z-index:100;
+    width:min(380px,calc(100% - 30px));
+    padding:14px 16px;
+    border-radius:18px;
+    color:#24211c;
+    background:rgba(255,255,255,.86);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.13);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    transform:translate(-50%,20px);
     opacity:0;
-    transform:translateY(18px);
     pointer-events:none;
     transition:.3s ease;
 }
 
-.toast.show{
+.upload-status.show{
+    transform:translate(-50%,0);
     opacity:1;
-    transform:none;
 }
 
-/* MOBILE */
+.upload-status-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.upload-progress{
+    height:4px;
+    margin-top:10px;
+    overflow:hidden;
+    border-radius:999px;
+    background:#eee9df;
+}
+
+.upload-progress-bar{
+    width:0%;
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#8d682d,#d5b06c);
+    transition:width .25s ease;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:700px){
 
-    .shell{
-        width:92%;
+    .photo-actions{
+        opacity:1;
+        transform:none;
     }
 
-    .hero{
-        padding:27px;
-        border-radius:28px;
+    .iconbtn{
+        width:36px;
+        height:36px;
     }
 
-    .toolbar{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .tools{
-        width:100%;
-    }
-
-    .search{
-        width:100%;
-    }
-
-    .grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:9px;
-    }
-
-    .profile-name{
-        display:none;
-    }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<header class="topbar shell">
-<nav class="nav">
 
-<a href="index.html" class="logo">
-Foto<span>Vault</span>
+<!-- =======================================================
+     NAVIGATION
+======================================================= -->
+
+<header class="nav glass">
+
+<div class="row">
+
+<a
+    class="brand"
+    href="index.html"
+>
+    Foto<span class="gold">Vault</span>
 </a>
 
-<div class="nav-right">
 
-<button class="icon" id="notificationBtn" title="Notifikasi">
-<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-width="1.8" stroke-linecap="round" d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>
-</svg>
+<div class="row">
+
+<button
+    class="btn btn-light bell"
+    id="notifBtn"
+    aria-label="Notifikasi"
+>
+    ◉
+    <span
+        id="notifDot"
+        class="notice-dot hidden"
+    ></span>
 </button>
 
-<button class="icon" id="refreshBtn" title="Refresh">
-<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-width="1.8" stroke-linecap="round" d="M20 11a8 8 0 0 0-14.9-4M4 4v5h5M4 13a8 8 0 0 0 14.9 4M20 20v-5h-5"/>
-</svg>
-</button>
 
-<button class="profile" id="profileBtn">
-<img class="avatar" id="avatar" alt="Profile">
-<span class="profile-name" id="profileName">Memuat...</span>
+<a
+    class="btn btn-light"
+    href="profile.html"
+    aria-label="Profil"
+>
+    ◯
+</a>
+
+
+<button
+    class="btn btn-dark"
+    id="logoutBtn"
+>
+    Keluar
 </button>
 
 </div>
-</nav>
+
+</div>
+
 </header>
 
 
-<main class="shell">
 
-<section class="hero">
+<!-- =======================================================
+     MAIN
+======================================================= -->
 
-<div class="kicker">
-PRIVATE PHOTO VAULT
-</div>
+<main
+    class="wrap"
+    style="padding:35px 0 80px"
+>
 
-<h1>
-Ruang pribadi<br>
-untuk kenangan kamu.
+
+<section class="reveal">
+
+<div class="row">
+
+<div>
+
+<span class="pill">
+PRIVATE SPACE
+</span>
+
+<h1
+    class="serif"
+    style="font-size:clamp(42px,7vw,70px);margin:15px 0 5px"
+>
+    Koleksi kamu.
 </h1>
 
-<p>
-Simpan foto secara pribadi dan bagikan hanya kepada akun
-yang kamu pilih. Akses foto dikontrol oleh Supabase RLS.
+<p class="muted">
+    Foto pribadi, tersusun lembut dan aman.
 </p>
 
-</section>
+</div>
 
 
-<section class="toolbar">
-
-<div class="tools">
-
-<button class="primary" id="uploadBtn">
-Upload Foto
+<button
+    class="btn btn-dark"
+    id="uploadBtn"
+>
+    ＋ Upload
 </button>
 
+
 <input
-type="file"
-id="fileInput"
-accept="image/*"
-multiple
-hidden
+    id="file"
+    type="file"
+    accept="image/*"
+    multiple
+    hidden
 >
 
 </div>
-
-<input
-class="search"
-id="searchInput"
-type="search"
-placeholder="Cari foto..."
->
 
 </section>
 
 
-<section id="gallery">
 
-<div class="state">
-<div>
-<div class="spinner"></div>
-<p>Menyiapkan Vault...</p>
+<!-- =======================================================
+     STATISTICS
+======================================================= -->
+
+<div
+    class="grid reveal"
+    style="margin:28px 0"
+>
+
+<div class="stat glass">
+
+<span class="muted">
+    Foto
+</span>
+
+<strong id="count">
+    0
+</strong>
+
 </div>
+
+
+<div class="stat glass">
+
+<span class="muted">
+    Storage
+</span>
+
+<strong id="used">
+    0 B
+</strong>
+
+</div>
+
+
+<div class="stat glass">
+
+<span class="muted">
+    Quota
+</span>
+
+<strong>
+    1 GB
+</strong>
+
+</div>
+
+
+<div class="stat glass">
+
+<span class="muted">
+    Akses
+</span>
+
+<strong class="gold">
+    Private
+</strong>
+
+</div>
+
+</div>
+
+
+
+<!-- =======================================================
+     GALLERY
+======================================================= -->
+
+<section
+    class="maincard glass reveal"
+>
+
+<div class="row">
+
+<div>
+
+<span class="pill">
+YOUR GALLERY
+</span>
+
+<h2
+    class="serif"
+    style="margin:10px 0 0"
+>
+    Galeri
+</h2>
+
+</div>
+
+
+<button
+    class="btn btn-light"
+    id="refresh"
+>
+    Refresh
+</button>
+
+</div>
+
+
+<div
+    id="gallery"
+    class="photo-grid"
+    style="margin-top:20px"
+>
+</div>
+
+
+<div
+    id="empty"
+    class="muted"
+    style="text-align:center;padding:45px 10px"
+>
+    Belum ada foto. Upload foto pertama kamu.
 </div>
 
 </section>
@@ -742,46 +638,56 @@ placeholder="Cari foto..."
 </main>
 
 
-<!-- SHARE MODAL -->
 
-<div class="modal" id="shareModal">
+<!-- =======================================================
+     SHARE MODAL
+======================================================= -->
 
-<div class="modal-card">
-
-<div class="modal-head">
-
-<div>
-<div class="kicker">SECURE SHARING</div>
-<h2 class="modal-title">Bagikan foto</h2>
-</div>
-
-<button class="close" id="closeShare">×</button>
-
-</div>
-
-
-<div id="shareForm">
-
-<div class="modal-file" id="shareFile">
-Foto
-</div>
-
-<input
-class="email"
-id="recipientEmail"
-type="email"
-placeholder="Email penerima"
-autocomplete="off"
+<div
+    id="shareModal"
+    class="modal hidden"
 >
 
-<div class="modal-actions">
+<div class="modalbox glass">
 
-<button class="secondary" id="cancelShare">
-Batal
+<div class="row">
+
+<h2 class="serif">
+    Bagikan foto
+</h2>
+
+
+<button
+    class="iconbtn"
+    id="closeShare"
+    aria-label="Tutup"
+>
+    ×
 </button>
 
-<button class="primary" id="sendShare">
-Bagikan
+</div>
+
+
+<p class="muted">
+    Masukkan email akun penerima.
+</p>
+
+
+<input
+    id="recipientEmail"
+    class="input"
+    type="email"
+    placeholder="teman@email.com"
+    autocomplete="email"
+>
+
+
+<button
+    class="btn btn-dark"
+    id="shareBtn"
+    style="width:100%;margin-top:12px"
+>
+    Bagikan
 </button>
 
 </div>
@@ -789,140 +695,296 @@ Bagikan
 </div>
 
 
-<div class="scan" id="scan">
 
-<div class="orb">
+<!-- =======================================================
+     SCANNING MODAL
+======================================================= -->
+
+<div
+    id="scanModal"
+    class="modal hidden"
+>
+
+<div
+    class="modalbox glass scan-modal-content"
+>
+
+<div class="scan-orb">
 
 <div class="scan-line"></div>
 
-<svg width="32" height="32" fill="none" stroke="var(--gold-dark)" viewBox="0 0 24 24">
-<path stroke-width="1.5" stroke-linecap="round" d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/>
+<svg
+    width="34"
+    height="34"
+    fill="none"
+    stroke="#8d682d"
+    viewBox="0 0 24 24"
+>
+<path
+    stroke-width="1.5"
+    stroke-linecap="round"
+    d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"
+/>
 </svg>
 
 </div>
 
-<div class="scan-text" id="scanText">
-Menghubungkan ke server aman...
-</div>
 
-<div class="progress">
-<span id="progress"></span>
-</div>
-
-</div>
-
-</div>
-</div>
+<h2 class="serif">
+    Memindai & mengirim
+</h2>
 
 
-<div class="toast" id="toast"></div>
+<p
+    id="scanStatus"
+    class="muted scan-status"
+>
+    Menghubungkan ke server aman...
+</p>
+
+
+<div class="scan-progress">
+
+<div
+    id="scanProgress"
+    class="scan-progress-bar"
+></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =======================================================
+     NOTIFICATION MODAL
+======================================================= -->
+
+<div
+    id="notifModal"
+    class="modal hidden"
+>
+
+<div class="modalbox glass">
+
+<div class="row">
+
+<h2 class="serif">
+    Notifikasi
+</h2>
+
+
+<button
+    class="iconbtn"
+    id="closeNotif"
+>
+    ×
+</button>
+
+</div>
+
+
+<div
+    id="notifs"
+    class="stack"
+    style="margin-top:12px"
+>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- =======================================================
+     TOAST
+======================================================= -->
+
+<div
+    id="toast"
+    class="toast hidden"
+></div>
+
+
+
+<!-- =======================================================
+     UPLOAD STATUS
+======================================================= -->
+
+<div
+    id="uploadStatus"
+    class="upload-status"
+>
+
+<div class="upload-status-title">
+
+<span id="uploadStatusText">
+    Mengupload...
+</span>
+
+<span id="uploadPercent">
+    0%
+</span>
+
+</div>
+
+
+<div class="upload-progress">
+
+<div
+    id="uploadProgressBar"
+    class="upload-progress-bar"
+></div>
+
+</div>
+
+</div>
+
 
 
 <script>
+
 /* =========================================================
-   SUPABASE
+   GLOBAL STATE
 ========================================================= */
 
-const db = FV.db;
+let session = null;
 
-const BUCKET = "photos";
-const SHARE_FUNCTION = "admin-api";
+let user = null;
 
-let currentUser = null;
+let currentPhoto = null;
+
 let photos = [];
-let selectedPhoto = null;
+
+let shareBusy = false;
+
+let uploadBusy = false;
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function $(id){
-    return document.getElementById(id);
+const $ = id =>
+    document.getElementById(id);
+
+
+function toast(message){
+
+    const t =
+        $("toast");
+
+    t.textContent =
+        message;
+
+    t.classList.remove(
+        "hidden"
+    );
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+    window.toastTimer =
+        setTimeout(
+            ()=>{
+                t.classList.add(
+                    "hidden"
+                );
+            },
+            2800
+        );
+
 }
 
-function escapeHTML(value){
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-}
 
-function showToast(message){
-    const t = $("toast");
-
-    t.textContent = message;
-    t.classList.add("show");
-
-    clearTimeout(showToast.timer);
-
-    showToast.timer = setTimeout(()=>{
-        t.classList.remove("show");
-    },3500);
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-async function init(){
-
-    const {
-        data,
-        error
-    } = await db.auth.getUser();
+function escapeHtml(value){
 
     if(
-        error ||
-        !data ||
-        !data.user
+        typeof FV !== "undefined" &&
+        typeof FV.escapeHtml === "function"
     ){
-        location.href="login.html";
-        return;
+        return FV.escapeHtml(
+            value
+        );
     }
 
-    currentUser = data.user;
 
-    renderProfile();
+    return String(
+        value ?? ""
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
-    await loadPhotos();
 }
 
-function renderProfile(){
 
-    const name =
-        currentUser.user_metadata?.display_name ||
-        currentUser.user_metadata?.full_name ||
-        currentUser.email?.split("@")[0] ||
-        "User";
+function bytes(value){
 
-    $("profileName").textContent = name;
-
-    const avatar =
-        currentUser.user_metadata?.avatar_url;
-
-    if(avatar){
-        $("avatar").src = avatar;
-    }else{
-        $("avatar").src =
-            "data:image/svg+xml;charset=UTF-8," +
-            encodeURIComponent(`
-                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-                    <rect width="100%" height="100%" rx="40" fill="#efe2c7"/>
-                    <text x="50%" y="55%"
-                        text-anchor="middle"
-                        dominant-baseline="middle"
-                        font-family="Arial"
-                        font-size="32"
-                        fill="#8d682d">
-                        ${name.charAt(0).toUpperCase()}
-                    </text>
-                </svg>
-            `);
+    if(
+        typeof FV !== "undefined" &&
+        typeof FV.bytes === "function"
+    ){
+        return FV.bytes(
+            value
+        );
     }
+
+
+    const units =
+        [
+            "B",
+            "KB",
+            "MB",
+            "GB"
+        ];
+
+
+    let size =
+        Number(value) || 0;
+
+    let i = 0;
+
+
+    while(
+        size >= 1024 &&
+        i < units.length - 1
+    ){
+
+        size /= 1024;
+
+        i++;
+
+    }
+
+
+    return `${
+        size < 10 && i > 0
+            ? size.toFixed(1)
+            : Math.round(size)
+    } ${units[i]}`;
+
 }
 
 
@@ -930,240 +992,864 @@ function renderProfile(){
    LOAD PHOTOS
 ========================================================= */
 
-async function loadPhotos(){
+async function load(){
 
-    $("gallery").innerHTML = `
-        <div class="state">
-            <div>
-                <div class="spinner"></div>
-                <p>Memuat foto...</p>
-            </div>
+    const gallery =
+        $("gallery");
+
+
+    gallery.innerHTML = `
+        <div
+            class="muted"
+            style="
+                padding:45px 10px;
+                text-align:center;
+            "
+        >
+            <div
+                style="
+                    width:30px;
+                    height:30px;
+                    margin:0 auto 12px;
+                    border-radius:50%;
+                    border:2px solid rgba(185,147,80,.18);
+                    border-top-color:#b99350;
+                    animation:photoSpin .8s linear infinite;
+                "
+            ></div>
+
+            Menyiapkan galeri...
         </div>
     `;
 
 
-    /*
-     * RLS menentukan foto apa yang boleh dikembalikan.
-     *
-     * Tidak ada user_id dari URL/query yang dipercaya.
-     */
-
-    const {
-        data,
-        error
-    } = await db
-        .from("photos")
-        .select(`
-            id,
-            user_id,
-            name,
-            path,
-            size,
-            mime_type,
-            created_at
-        `)
-        .order(
-            "created_at",
-            {ascending:false}
+    $("empty")
+        .classList
+        .add(
+            "hidden"
         );
 
 
-    if(error){
+    try{
 
-        console.error(error);
-
-        $("gallery").innerHTML = `
-            <div class="state">
-                <div>
-                    <strong>Gagal memuat foto</strong>
-                    <p>${escapeHTML(error.message)}</p>
-                </div>
-            </div>
-        `;
-
-        return;
-    }
-
-
-    photos = data || [];
-
-
-    if(!photos.length){
-
-        $("gallery").innerHTML = `
-            <div class="state">
-                <div>
-                    <h3 style="font-family:Georgia,serif">
-                        Vault masih kosong
-                    </h3>
-                    <p>Upload foto pertama kamu.</p>
-                </div>
-            </div>
-        `;
-
-        return;
-    }
-
-
-    $("gallery").innerHTML = `
-        <div class="grid">
-            ${photos.map((photo,index)=>`
-                <article
-                    class="photo"
-                    data-id="${escapeHTML(photo.id)}"
-                    data-name="${escapeHTML(photo.name)}"
-                    style="animation-delay:${Math.min(index,20)*45}ms"
-                >
-
-                    <div class="skeleton"></div>
-
-                    <img
-                        data-image
-                        alt="${escapeHTML(photo.name)}"
-                        loading="lazy"
-                        decoding="async"
-                    >
-
-                    <div class="overlay">
-
-                        <span class="photo-name">
-                            ${escapeHTML(photo.name)}
-                        </span>
-
-                        <div class="photo-actions">
-
-                            <button
-                                class="mini shareBtn"
-                                data-id="${escapeHTML(photo.id)}"
-                                title="Bagikan"
-                            >
-                                ↗
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </article>
-            `).join("")}
-        </div>
-    `;
-
-
-    /*
-     * Signed URL diproses paralel.
-     * Ini membuat galeri jauh lebih smooth daripada
-     * membuat URL satu per satu secara serial.
-     */
-
-    const signedResults =
-        await Promise.allSettled(
-            photos.map(photo =>
-                db.storage
-                    .from(BUCKET)
-                    .createSignedUrl(
-                        photo.path,
-                        600
-                    )
+        const {
+            data,
+            error
+        } = await FV.db
+            .from("photos")
+            .select(
+                `
+                id,
+                user_id,
+                name,
+                path,
+                size,
+                mime_type,
+                created_at
+                `
             )
-        );
-
-
-    signedResults.forEach((result,index)=>{
-
-        const photo = photos[index];
-
-        const card =
-            document.querySelector(
-                `.photo[data-id="${CSS.escape(photo.id)}"]`
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
             );
 
-        if(!card)
+
+        if(error)
+            throw error;
+
+
+        photos =
+            data || [];
+
+
+        $("count")
+            .textContent =
+            photos.length;
+
+
+        $("used")
+            .textContent =
+            bytes(
+                photos.reduce(
+                    (
+                        total,
+                        photo
+                    ) =>
+                        total +
+                        Number(
+                            photo.size ||
+                            0
+                        ),
+                    0
+                )
+            );
+
+
+        if(!photos.length){
+
+            gallery.innerHTML =
+                "";
+
+            $("empty")
+                .classList
+                .remove(
+                    "hidden"
+                );
+
             return;
-
-        const img =
-            card.querySelector("[data-image]");
-
-
-        if(
-            result.status === "fulfilled" &&
-            result.value?.data?.signedUrl
-        ){
-
-            img.src =
-                result.value.data.signedUrl;
-
-            img.onload = ()=>{
-
-                img.classList.add("loaded");
-                card.classList.add("ready");
-
-            };
-
-            img.onerror = ()=>{
-                card.classList.add("ready");
-            };
-
-        }else{
-
-            card.classList.add("ready");
 
         }
 
-    });
+
+        $("empty")
+            .classList
+            .add(
+                "hidden"
+            );
 
 
-    document
-        .querySelectorAll(".shareBtn")
-        .forEach(button=>{
+        gallery.innerHTML =
+            "";
 
-            button.addEventListener(
-                "click",
-                ()=>{
 
-                    const photo =
-                        photos.find(
-                            item =>
-                                String(item.id) ===
-                                String(button.dataset.id)
+        /*
+         * Buat semua kartu dahulu.
+         * URL signed dibuat paralel supaya
+         * gambar tidak muncul patah-patah
+         * satu per satu secara serial.
+         */
+
+        const signed =
+            await Promise.all(
+                photos.map(
+                    async photo => {
+
+                        try{
+
+                            const {
+                                data:
+                                    signedData,
+                                error:
+                                    signedError
+                            } =
+                                await FV.db
+                                    .storage
+                                    .from(
+                                        "photos"
+                                    )
+                                    .createSignedUrl(
+                                        photo.path,
+                                        600
+                                    );
+
+
+                            if(
+                                signedError
+                            ){
+                                console.error(
+                                    signedError
+                                );
+
+                                return {
+                                    ...photo,
+                                    url:""
+                                };
+                            }
+
+
+                            return {
+                                ...photo,
+                                url:
+                                    signedData
+                                        ?.signedUrl ||
+                                    ""
+                            };
+
+                        }catch(error){
+
+                            console.error(
+                                error
+                            );
+
+                            return {
+                                ...photo,
+                                url:""
+                            };
+
+                        }
+
+                    }
+                )
+            );
+
+
+        signed.forEach(
+            (
+                photo,
+                index
+            )=>{
+
+                const card =
+                    document
+                        .createElement(
+                            "div"
                         );
 
-                    if(photo)
-                        openShare(photo);
+
+                card.className =
+                    "photo";
+
+
+                card.dataset.id =
+                    photo.id;
+
+
+                card.innerHTML = `
+
+                    ${
+                        photo.url
+                            ? `
+                                <div class="photo-loading">
+                                    <div class="photo-loading-ring"></div>
+                                </div>
+
+                                <img
+                                    loading="lazy"
+                                    decoding="async"
+                                    src="${escapeHtml(photo.url)}"
+                                    alt="${escapeHtml(photo.name)}"
+                                >
+                              `
+                            : `
+                                <div
+                                    style="
+                                        padding:20px;
+                                        min-height:180px;
+                                        display:flex;
+                                        align-items:center;
+                                        justify-content:center;
+                                        text-align:center;
+                                    "
+                                >
+                                    ${escapeHtml(photo.name)}
+                                </div>
+                              `
+                    }
+
+
+                    ${
+                        photo.url
+                            ? `
+                                <div class="photo-actions">
+
+                                    <button
+                                        class="iconbtn share-trigger"
+                                        data-id="${escapeHtml(photo.id)}"
+                                        aria-label="Bagikan foto"
+                                        title="Bagikan foto"
+                                    >
+                                        ↗
+                                    </button>
+
+                                </div>
+                              `
+                            : ""
+                    }
+
+                `;
+
+
+                gallery.appendChild(
+                    card
+                );
+
+
+                if(photo.url){
+
+                    const image =
+                        card.querySelector(
+                            "img"
+                        );
+
+
+                    image.addEventListener(
+                        "load",
+                        ()=>{
+                            card.classList.add(
+                                "loaded"
+                            );
+                        },
+                        {
+                            once:true
+                        }
+                    );
+
+
+                    image.addEventListener(
+                        "error",
+                        ()=>{
+                            card.classList.add(
+                                "loaded"
+                            );
+
+                            image.style.display =
+                                "none";
+
+                        },
+                        {
+                            once:true
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * Stagger animation.
+                 */
+
+                setTimeout(
+                    ()=>{
+                        card.classList.add(
+                            "show"
+                        );
+                    },
+                    Math.min(
+                        index * 40,
+                        450
+                    )
+                );
+
+            }
+        );
+
+
+        gallery
+            .querySelectorAll(
+                ".share-trigger"
+            )
+            .forEach(
+                button => {
+
+                    button.onclick =
+                        ()=>{
+
+                            const photo =
+                                photos.find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(
+                                            button.dataset.id
+                                        )
+                                );
+
+
+                            if(!photo)
+                                return;
+
+
+                            currentPhoto =
+                                photo;
+
+
+                            $("recipientEmail")
+                                .value =
+                                "";
+
+
+                            $("shareModal")
+                                .classList
+                                .remove(
+                                    "hidden"
+                                );
+
+
+                            setTimeout(
+                                ()=>{
+                                    $("recipientEmail")
+                                        .focus();
+                                },
+                                180
+                            );
+
+                        };
 
                 }
             );
 
-        });
+
+    }catch(error){
+
+        console.error(
+            "LOAD PHOTOS ERROR:",
+            error
+        );
+
+
+        gallery.innerHTML = `
+
+            <div
+                class="muted"
+                style="
+                    text-align:center;
+                    padding:45px 10px;
+                "
+            >
+                Gagal memuat galeri.
+
+                <br>
+
+                <small>
+                    ${escapeHtml(
+                        error.message ||
+                        "Unknown error"
+                    )}
+                </small>
+            </div>
+
+        `;
+
+    }
+
 }
 
 
 /* =========================================================
-   SEARCH
+   SHARE MODAL
 ========================================================= */
 
-$("searchInput")
-.addEventListener("input",event=>{
+function closeShare(){
 
-    const query =
-        event.target.value
-            .toLowerCase()
-            .trim();
+    if(shareBusy)
+        return;
 
-    document
-        .querySelectorAll(".photo")
-        .forEach(card=>{
 
-            const name =
-                (card.dataset.name || "")
-                    .toLowerCase();
+    currentPhoto =
+        null;
 
-            card.style.display =
-                !query || name.includes(query)
-                    ? ""
-                    : "none";
-        });
-});
+
+    $("recipientEmail")
+        .value =
+        "";
+
+
+    $("shareModal")
+        .classList
+        .add(
+            "hidden"
+        );
+
+}
+
+
+$("closeShare")
+    .onclick =
+    closeShare;
+
+
+/* =========================================================
+   SCAN UI
+========================================================= */
+
+function startScan(){
+
+    $("scanModal")
+        .classList
+        .remove(
+            "hidden"
+        );
+
+
+    $("scanProgress")
+        .style
+        .width =
+        "8%";
+
+
+    $("scanStatus")
+        .textContent =
+        "Menghubungkan ke server aman...";
+
+
+    setTimeout(
+        ()=>{
+            $("scanProgress")
+                .style
+                .width =
+                "27%";
+
+            $("scanStatus")
+                .textContent =
+                "Memverifikasi akun kamu...";
+        },
+        350
+    );
+
+
+    setTimeout(
+        ()=>{
+            $("scanProgress")
+                .style
+                .width =
+                "48%";
+
+            $("scanStatus")
+                .textContent =
+                "Memeriksa kepemilikan foto...";
+        },
+        750
+    );
+
+
+    setTimeout(
+        ()=>{
+            $("scanProgress")
+                .style
+                .width =
+                "66%";
+
+            $("scanStatus")
+                .textContent =
+                "Mencari akun penerima...";
+        },
+        1100
+    );
+
+
+    setTimeout(
+        ()=>{
+            $("scanProgress")
+                .style
+                .width =
+                "82%";
+
+            $("scanStatus")
+                .textContent =
+                "Membuat akses berbagi...";
+        },
+        1450
+    );
+
+}
+
+
+function finishScan(
+    success,
+    message
+){
+
+    $("scanProgress")
+        .style
+        .width =
+        success
+            ? "100%"
+            : "100%";
+
+
+    $("scanStatus")
+        .textContent =
+        message;
+
+
+    setTimeout(
+        ()=>{
+            $("scanModal")
+                .classList
+                .add(
+                    "hidden"
+                );
+        },
+        success
+            ? 700
+            : 900
+    );
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function share(){
+
+    if(shareBusy)
+        return;
+
+
+    if(!currentPhoto){
+
+        toast(
+            "Foto belum dipilih."
+        );
+
+        return;
+
+    }
+
+
+    const email =
+        $("recipientEmail")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    if(!email){
+
+        toast(
+            "Masukkan email penerima."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            .test(email)
+    ){
+
+        toast(
+            "Format email tidak valid."
+        );
+
+        return;
+
+    }
+
+
+    shareBusy =
+        true;
+
+
+    $("shareBtn")
+        .disabled =
+        true;
+
+
+    $("shareBtn")
+        .textContent =
+        "Memproses...";
+
+
+    $("shareModal")
+        .classList
+        .add(
+            "hidden"
+        );
+
+
+    startScan();
+
+
+    try{
+
+        /*
+         * PENTING:
+         *
+         * Tidak lagi menggunakan:
+         *
+         * find_user_by_email_for_share
+         *
+         * dan tidak lagi mencari user
+         * dari browser.
+         *
+         * Edge Function yang melakukan
+         * validasi dan pencarian recipient.
+         */
+
+        const {
+            data,
+            error
+        } =
+            await FV.db
+                .functions
+                .invoke(
+                    "admin-api",
+                    {
+                        body:{
+                            action:
+                                "share_photo",
+
+                            photo_id:
+                                currentPhoto.id,
+
+                            recipient_email:
+                                email
+                        }
+                    }
+                );
+
+
+        if(error){
+
+            /*
+             * Supabase Functions biasanya
+             * memberikan error wrapper.
+             */
+
+            throw new Error(
+                error.message ||
+                "Edge Function gagal dipanggil."
+            );
+
+        }
+
+
+        if(
+            !data ||
+            data.success !== true
+        ){
+
+            throw new Error(
+                data?.message ||
+                "Foto gagal dibagikan."
+            );
+
+        }
+
+
+        finishScan(
+            true,
+            "Foto berhasil dibagikan & notifikasi dikirim."
+        );
+
+
+        toast(
+            "Foto berhasil dibagikan."
+        );
+
+
+        $("recipientEmail")
+            .value =
+            "";
+
+
+        /*
+         * Refresh notification badge
+         * setelah share.
+         */
+
+        await checkNotif();
+
+
+    }catch(error){
+
+        console.error(
+            "SHARE ERROR:",
+            error
+        );
+
+
+        finishScan(
+            false,
+            error.message ||
+            "Gagal membagikan foto."
+        );
+
+
+        toast(
+            error.message ||
+            "Gagal membagikan foto."
+        );
+
+    }finally{
+
+        shareBusy =
+            false;
+
+
+        $("shareBtn")
+            .disabled =
+            false;
+
+
+        $("shareBtn")
+            .textContent =
+            "Bagikan";
+
+
+        currentPhoto =
+            null;
+
+    }
+
+}
+
+
+$("shareBtn")
+    .onclick =
+    share;
+
+
+$("recipientEmail")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if(
+                event.key ===
+                "Enter"
+            ){
+
+                event.preventDefault();
+
+                share();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   UPLOAD STATUS
+========================================================= */
+
+function uploadStatus(
+    visible,
+    text="Mengupload...",
+    percent=0
+){
+
+    const box =
+        $("uploadStatus");
+
+
+    $("uploadStatusText")
+        .textContent =
+        text;
+
+
+    $("uploadPercent")
+        .textContent =
+        `${Math.round(percent)}%`;
+
+
+    $("uploadProgressBar")
+        .style
+        .width =
+        `${Math.max(
+            0,
+            Math.min(
+                100,
+                percent
+            )
+        )}%`;
+
+
+    box.classList.toggle(
+        "show",
+        visible
+    );
+
+}
 
 
 /* =========================================================
@@ -1171,90 +1857,147 @@ $("searchInput")
 ========================================================= */
 
 $("uploadBtn")
-.addEventListener(
-    "click",
-    ()=>$("fileInput").click()
-);
+    .onclick =
+    () =>
+        $("file").click();
 
 
-$("fileInput")
-.addEventListener(
-    "change",
-    async event=>{
+$("file")
+    .onchange =
+    async event => {
 
         const files =
-            [...event.target.files];
+            [
+                ...event.target.files
+            ];
+
 
         if(!files.length)
             return;
 
-        $("uploadBtn").disabled = true;
-        $("uploadBtn").textContent = "Mengupload...";
+
+        if(uploadBusy)
+            return;
+
+
+        uploadBusy =
+            true;
+
+
+        $("uploadBtn")
+            .disabled =
+            true;
+
+
+        let completed =
+            0;
 
 
         try{
 
-            for(const file of files){
+            for(
+                const file
+                of files
+            ){
 
-                if(!file.type.startsWith("image/"))
+                if(
+                    !file.type.startsWith(
+                        "image/"
+                    )
+                ){
+
+                    toast(
+                        `${file.name} bukan file gambar.`
+                    );
+
                     continue;
 
+                }
 
-                const extension =
+
+                const safeName =
+                    file.name
+                        .replace(
+                            /[^a-zA-Z0-9._-]/g,
+                            "_"
+                        );
+
+
+                const path =
+                    `${user.id}/${crypto.randomUUID()}-${safeName}`;
+
+
+                uploadStatus(
+                    true,
+                    `Mengupload ${file.name}...`,
                     (
-                        file.name
-                            .split(".")
-                            .pop() ||
-                        "jpg"
-                    )
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]/g,"");
-
-
-                const filename =
-                    `${crypto.randomUUID()}.${extension}`;
+                        completed /
+                        files.length
+                    ) * 100
+                );
 
 
                 /*
-                 * Folder pertama harus UID user.
+                 * Storage:
+                 *
+                 * user_id/
+                 * random-file-name
+                 *
+                 * RLS Storage membatasi folder
+                 * berdasarkan auth.uid().
                  */
 
-                const path =
-                    `${currentUser.id}/${filename}`;
-
-
                 const {
-                    error:uploadError
+                    error:
+                        uploadError
                 } =
-                    await db.storage
-                        .from(BUCKET)
+                    await FV.db
+                        .storage
+                        .from(
+                            "photos"
+                        )
                         .upload(
                             path,
                             file,
                             {
-                                upsert:false,
-                                contentType:file.type
+                                contentType:
+                                    file.type,
+
+                                upsert:
+                                    false
                             }
                         );
 
 
-                if(uploadError)
-                    throw uploadError;
+                if(uploadError){
+
+                    toast(
+                        uploadError.message
+                    );
+
+                    continue;
+
+                }
 
 
                 /*
-                 * DATABASE KAMU MENGGUNAKAN
-                 * kolom "name", bukan "filename".
+                 * Database:
+                 *
+                 * photos.name
+                 * photos.path
                  */
 
                 const {
-                    error:insertError
+                    error:
+                        insertError
                 } =
-                    await db
-                        .from("photos")
+                    await FV.db
+                        .from(
+                            "photos"
+                        )
                         .insert({
                             user_id:
-                                currentUser.id,
+                                user.id,
 
                             name:
                                 file.name,
@@ -1270,267 +2013,165 @@ $("fileInput")
                         });
 
 
-                if(insertError)
-                    throw insertError;
-            }
+                if(insertError){
 
+                    /*
+                     * Jika database gagal,
+                     * hapus object storage supaya
+                     * tidak meninggalkan file yatim.
+                     */
 
-            showToast(
-                "Foto berhasil diupload."
-            );
+                    await FV.db
+                        .storage
+                        .from(
+                            "photos"
+                        )
+                        .remove([
+                            path
+                        ]);
 
-            await loadPhotos();
 
-        }catch(error){
+                    toast(
+                        insertError.message
+                    );
 
-            console.error(error);
+                    continue;
 
-            showToast(
-                error.message ||
-                "Upload gagal."
-            );
+                }
 
-        }finally{
 
-            $("uploadBtn").disabled = false;
-            $("uploadBtn").textContent = "Upload Foto";
-            $("fileInput").value = "";
+                completed++;
 
-        }
 
-    }
-);
-
-
-/* =========================================================
-   SHARE MODAL
-========================================================= */
-
-function openShare(photo){
-
-    selectedPhoto = photo;
-
-    $("shareFile").textContent =
-        photo.name;
-
-    $("recipientEmail").value = "";
-
-    $("shareForm").style.display = "block";
-    $("scan").classList.remove("active");
-
-    $("progress").style.width = "0%";
-
-    $("shareModal").classList.add("open");
-
-    setTimeout(
-        ()=>$("recipientEmail").focus(),
-        250
-    );
-}
-
-function closeShare(){
-
-    selectedPhoto = null;
-
-    $("shareModal").classList.remove("open");
-
-    $("shareForm").style.display = "block";
-
-    $("scan").classList.remove("active");
-
-    $("progress").style.width = "0%";
-}
-
-$("closeShare").onclick = closeShare;
-$("cancelShare").onclick = closeShare;
-
-$("shareModal").addEventListener(
-    "click",
-    event=>{
-        if(event.target === $("shareModal"))
-            closeShare();
-    }
-);
-
-
-/* =========================================================
-   SCANNING
-========================================================= */
-
-function startScan(){
-
-    $("shareForm").style.display = "none";
-    $("scan").classList.add("active");
-
-    $("progress").style.width = "8%";
-
-    $("scanText").textContent =
-        "Menghubungkan ke server aman...";
-
-
-    setTimeout(()=>{
-        $("progress").style.width = "30%";
-        $("scanText").textContent =
-            "Memverifikasi akun penerima...";
-    },350);
-
-
-    setTimeout(()=>{
-        $("progress").style.width = "52%";
-        $("scanText").textContent =
-            "Memeriksa kepemilikan foto...";
-    },750);
-
-
-    setTimeout(()=>{
-        $("progress").style.width = "73%";
-        $("scanText").textContent =
-            "Membuat akses berbagi...";
-    },1100);
-
-}
-
-
-/* =========================================================
-   SHARE
-========================================================= */
-
-$("sendShare").addEventListener(
-    "click",
-    async ()=>{
-
-        if(!selectedPhoto)
-            return;
-
-
-        const email =
-            $("recipientEmail")
-                .value
-                .trim()
-                .toLowerCase();
-
-
-        if(!email){
-            showToast(
-                "Masukkan email penerima."
-            );
-            return;
-        }
-
-
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-            showToast(
-                "Format email tidak valid."
-            );
-            return;
-        }
-
-
-        startScan();
-
-
-        try{
-
-            /*
-             * Edge Function menerima:
-             *
-             * photo_id
-             * recipient_email
-             *
-             * Edge Function sendiri yang mencari
-             * user Auth.
-             */
-
-            const {
-                data,
-                error
-            } =
-                await db.functions.invoke(
-                    SHARE_FUNCTION,
-                    {
-                        body:{
-                            action:
-                                "share_photo",
-
-                            photo_id:
-                                selectedPhoto.id,
-
-                            recipient_email:
-                                email
-                        }
-                    }
-                );
-
-
-            if(error)
-                throw error;
-
-
-            if(
-                !data ||
-                data.success !== true
-            ){
-
-                throw new Error(
-                    data?.message ||
-                    "Foto gagal dibagikan."
+                uploadStatus(
+                    true,
+                    `${completed} dari ${files.length} selesai`,
+                    (
+                        completed /
+                        files.length
+                    ) * 100
                 );
 
             }
 
 
-            $("progress").style.width = "100%";
+            uploadStatus(
+                true,
+                "Upload selesai.",
+                100
+            );
 
-            $("scanText").textContent =
-                "Foto berhasil dibagikan.";
+
+            await load();
 
 
-            setTimeout(()=>{
-
-                closeShare();
-
-                showToast(
-                    "Foto berhasil dibagikan. Notifikasi telah dikirim."
-                );
-
-            },650);
+            setTimeout(
+                ()=>{
+                    uploadStatus(
+                        false
+                    );
+                },
+                900
+            );
 
 
         }catch(error){
 
             console.error(
-                "SHARE ERROR:",
+                "UPLOAD ERROR:",
                 error
             );
 
-            closeShare();
 
-            showToast(
+            toast(
                 error.message ||
-                "Gagal membagikan foto."
+                "Upload gagal."
             );
+
+
+            uploadStatus(
+                false
+            );
+
+        }finally{
+
+            uploadBusy =
+                false;
+
+
+            $("uploadBtn")
+                .disabled =
+                false;
+
+
+            $("file")
+                .value =
+                "";
 
         }
 
-    }
-);
+    };
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+$("refresh")
+    .onclick =
+    async ()=>{
+
+        const button =
+            $("refresh");
+
+
+        button.disabled =
+            true;
+
+
+        const oldText =
+            button.textContent;
+
+
+        button.textContent =
+            "Memuat...";
+
+
+        try{
+
+            await load();
+
+        }finally{
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                oldText;
+
+        }
+
+    };
 
 
 /* =========================================================
    NOTIFICATIONS
 ========================================================= */
 
-$("notificationBtn").addEventListener(
-    "click",
-    async ()=>{
+async function notifications(){
+
+    try{
 
         const {
             data,
             error
         } =
-            await db
-                .from("notifications")
-                .select(`
+            await FV.db
+                .from(
+                    "notifications"
+                )
+                .select(
+                    `
                     id,
                     type,
                     title,
@@ -1538,122 +2179,488 @@ $("notificationBtn").addEventListener(
                     photo_id,
                     is_read,
                     created_at
-                `)
+                    `
+                )
                 .eq(
                     "recipient_id",
-                    currentUser.id
+                    user.id
                 )
                 .order(
                     "created_at",
-                    {ascending:false}
+                    {
+                        ascending:false
+                    }
                 )
-                .limit(20);
+                .limit(
+                    20
+                );
 
 
-        if(error){
+        if(error)
+            throw error;
 
-            console.error(error);
 
-            showToast(
-                "Notifikasi gagal dimuat."
-            );
+        const list =
+            $("notifs");
+
+
+        if(
+            !data ||
+            !data.length
+        ){
+
+            list.innerHTML = `
+                <p class="muted">
+                    Belum ada notifikasi.
+                </p>
+            `;
 
             return;
+
         }
 
 
-        if(!data?.length){
+        list.innerHTML =
+            data
+                .map(
+                    notification => `
 
-            showToast(
-                "Belum ada notifikasi."
-            );
+                        <div
+                            class="
+                                notification-item
+                                ${
+                                    notification.is_read
+                                        ? ""
+                                        : "notification-unread"
+                                }
+                            "
+                        >
 
-            return;
-        }
+                            <strong>
+                                ${escapeHtml(
+                                    notification.title
+                                )}
+                            </strong>
 
+                            <p
+                                class="muted"
+                                style="
+                                    margin:5px 0;
+                                "
+                            >
+                                ${escapeHtml(
+                                    notification.body
+                                )}
+                            </p>
+
+                            <small
+                                class="muted"
+                            >
+                                ${new Date(
+                                    notification.created_at
+                                ).toLocaleString(
+                                    "id-ID"
+                                )}
+                            </small>
+
+                        </div>
+
+                    `
+                )
+                .join("");
+
+
+        /*
+         * Tandai hanya notifikasi milik
+         * user saat ini.
+         */
 
         const unread =
-            data.filter(
-                item => !item.is_read
-            );
-
-
-        showToast(
-            unread.length
-                ? `${unread.length} notifikasi baru.`
-                : `Ada ${data.length} notifikasi.`
-        );
+            data
+                .filter(
+                    item =>
+                        !item.is_read
+                )
+                .map(
+                    item =>
+                        item.id
+                );
 
 
         if(unread.length){
 
-            const ids =
-                unread.map(
-                    item => item.id
-                );
-
-
-            await db
-                .from("notifications")
+            await FV.db
+                .from(
+                    "notifications"
+                )
                 .update({
                     is_read:true
                 })
                 .in(
                     "id",
-                    ids
+                    unread
                 );
 
         }
 
+
+        $("notifDot")
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+    }catch(error){
+
+        console.error(
+            "NOTIFICATION ERROR:",
+            error
+        );
+
+
+        toast(
+            error.message ||
+            "Notifikasi gagal dimuat."
+        );
+
     }
-);
+
+}
 
 
 /* =========================================================
-   NAVIGATION
+   NOTIFICATION COUNT
 ========================================================= */
 
-$("profileBtn").onclick = ()=>{
-    location.href="profile.html";
-};
+async function checkNotif(){
+
+    try{
+
+        const {
+            count,
+            error
+        } =
+            await FV.db
+                .from(
+                    "notifications"
+                )
+                .select(
+                    "id",
+                    {
+                        count:"exact",
+                        head:true
+                    }
+                )
+                .eq(
+                    "recipient_id",
+                    user.id
+                )
+                .eq(
+                    "is_read",
+                    false
+                );
 
 
-$("refreshBtn").onclick = async ()=>{
+        if(error)
+            throw error;
 
-    $("refreshBtn").style.transform =
-        "rotate(360deg)";
 
-    await loadPhotos();
+        $("notifDot")
+            .classList
+            .toggle(
+                "hidden",
+                !(count > 0)
+            );
 
-    setTimeout(()=>{
-        $("refreshBtn").style.transform = "";
-    },500);
-};
+
+    }catch(error){
+
+        console.error(
+            "NOTIFICATION COUNT ERROR:",
+            error
+        );
+
+    }
+
+}
 
 
 /* =========================================================
-   AUTH
+   NOTIFICATION UI
 ========================================================= */
 
-db.auth.onAuthStateChange(
-    (event)=>{
+$("notifBtn")
+    .onclick =
+    async ()=>{
 
-        if(event === "SIGNED_OUT"){
-            location.href="login.html";
+        $("notifModal")
+            .classList
+            .remove(
+                "hidden"
+            );
+
+
+        await notifications();
+
+    };
+
+
+$("closeNotif")
+    .onclick =
+    () =>
+        $("notifModal")
+            .classList
+            .add(
+                "hidden"
+            );
+
+
+$("notifModal")
+    .addEventListener(
+        "click",
+        event => {
+
+            if(
+                event.target ===
+                $("notifModal")
+            ){
+
+                $("notifModal")
+                    .classList
+                    .add(
+                        "hidden"
+                    );
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn")
+    .onclick =
+    async ()=>{
+
+        try{
+
+            if(
+                typeof FV !== "undefined" &&
+                typeof FV.signOut === "function"
+            ){
+
+                await FV.signOut();
+
+                return;
+
+            }
+
+
+            await FV.db.auth.signOut();
+
+            location.href =
+                "login.html";
+
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+
+            toast(
+                "Gagal keluar."
+            );
+
         }
 
+    };
+
+
+/* =========================================================
+   MODAL ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key !==
+            "Escape"
+        )
+            return;
+
+
+        if(
+            !shareBusy
+        ){
+
+            $("shareModal")
+                .classList
+                .add(
+                    "hidden"
+                );
+
+        }
+
+
+        $("notifModal")
+            .classList
+            .add(
+                "hidden"
+            );
+
     }
 );
 
 
 /* =========================================================
-   START
+   AUTH + ADMIN REDIRECT
 ========================================================= */
 
-init();
+(async()=>{
+
+    try{
+
+        /*
+         * requireSession() tetap menggunakan
+         * sistem auth dari app.js kamu.
+         */
+
+        session =
+            await FV.requireSession();
+
+
+        if(
+            !session ||
+            !session.user
+        ){
+
+            location.replace(
+                "login.html"
+            );
+
+            return;
+
+        }
+
+
+        user =
+            session.user;
+
+
+        /*
+         * Admin tidak boleh berhenti di dashboard user.
+         * Cek role dari tabel user_roles.
+         */
+
+        const {
+            data:role,
+            error:roleError
+        } =
+            await FV.db
+                .from(
+                    "user_roles"
+                )
+                .select(
+                    "role"
+                )
+                .eq(
+                    "user_id",
+                    user.id
+                )
+                .maybeSingle();
+
+
+        if(roleError){
+
+            console.error(
+                "ROLE CHECK ERROR:",
+                roleError
+            );
+
+        }
+
+
+        if(
+            String(
+                role?.role || ""
+            )
+                .toLowerCase() ===
+            "admin"
+        ){
+
+            location.replace(
+                "admin.html"
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * User biasa.
+         */
+
+        await load();
+
+        await checkNotif();
+
+
+        /*
+         * Cek notifikasi setiap 15 detik.
+         */
+
+        setInterval(
+            checkNotif,
+            15000
+        );
+
+
+        /*
+         * Jalankan animation reveal.
+         */
+
+        document
+            .querySelectorAll(
+                ".reveal"
+            )
+            .forEach(
+                element => {
+
+                    element.classList.add(
+                        "show"
+                    );
+
+                }
+            );
+
+
+    }catch(error){
+
+        console.error(
+            "DASHBOARD INIT ERROR:",
+            error
+        );
+
+
+        location.replace(
+            "login.html"
+        );
+
+    }
+
+})();
 
 </script>
 
 </body>
+
 </html>
-```
+
