@@ -23,8 +23,11 @@
             --gold: #C5A059;
             --gold-light: #F3E2C8;
             --gold-dark: #9A7730;
-            --bg-warm: #FAF9F6;
-            --obsidian: #121212;
+            --bg-warm: #F8F9FA;
+            --ios-card: rgba(255, 255, 255, 0.75);
+            --ios-glass: rgba(255, 255, 255, 0.65);
+            --ios-border: rgba(255, 255, 255, 0.8);
+            --shadow-ios: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -33,9 +36,9 @@
         }
 
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; 
             background-color: var(--bg-warm); 
-            color: #1a1a1a; 
+            color: #1c1c1e; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
         }
@@ -45,69 +48,59 @@
         .bg-gold { background-color: var(--gold); }
         .border-gold { border-color: var(--gold); }
 
-        /* Lightweight GPU-friendly Cards */
-        .luxury-header { 
-            background: rgba(255, 255, 255, 0.92); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        /* Modern iOS Glassmorphism Card */
+        .ios-header { 
+            background: rgba(248, 249, 250, 0.78); 
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
         }
 
-        .luxury-card {
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-            border-radius: 1.25rem;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .ios-card {
+            background: var(--ios-card);
+            backdrop-filter: blur(25px) saturate(190%);
+            -webkit-backdrop-filter: blur(25px) saturate(190%);
+            border: 1px solid var(--ios-border);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+            border-radius: 1.75rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @media (hover: hover) {
-            .luxury-card:hover {
-                transform: translateY(-2px);
-                border-color: rgba(197, 160, 89, 0.5);
-                box-shadow: 0 10px 25px rgba(197, 160, 89, 0.12);
+            .ios-card:hover {
+                transform: translateY(-4px) scale(1.005);
+                border-color: rgba(197, 160, 89, 0.4);
+                box-shadow: 0 16px 40px rgba(197, 160, 89, 0.12);
             }
         }
 
         .luxury-dark {
-            background: #1a1a1a;
+            background: rgba(24, 24, 27, 0.92);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(197, 160, 89, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            border-radius: 1.25rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-radius: 1.75rem;
         }
 
-        /* FAQ Card Styling & Animation */
+        /* iOS FAQ Accordion */
         .faq-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(253,251,247,0.98) 100%);
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .faq-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 0%;
-            background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-            transition: height 0.35s ease;
-        }
-
-        .faq-card.open::before {
-            height: 100%;
-        }
-
         .faq-card.open {
-            border-color: rgba(197, 160, 89, 0.6);
-            box-shadow: 0 12px 30px rgba(197, 160, 89, 0.12);
-            background: #ffffff;
+            border-color: rgba(197, 160, 89, 0.5);
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.1);
+            background: rgba(255, 255, 255, 0.95);
         }
 
-        /* Hardware Accelerated CSS Grid Accordion Transition */
         .accordion-wrapper {
             display: grid;
             grid-template-rows: 0fr;
@@ -115,9 +108,7 @@
             opacity: 0;
         }
 
-        .accordion-wrapper > div {
-            overflow: hidden;
-        }
+        .accordion-wrapper > div { overflow: hidden; }
 
         .faq-card.open .accordion-wrapper {
             grid-template-rows: 1fr;
@@ -130,71 +121,18 @@
 
         .faq-card.open .accordion-icon {
             transform: rotate(180deg);
-            background-color: #1a1a1a;
+            background-color: #121212;
             color: var(--gold);
         }
 
-        /* Gold Shimmer Text Effect */
-        .shimmer-text {
-            background: linear-gradient(90deg, #1a1a1a 0%, #C5A059 50%, #1a1a1a 100%);
+        /* Shimmer & Glow Animations */
+        .gold-shine-text {
+            background: linear-gradient(120deg, #1a1a1a 0%, #9A7730 25%, #F3E2C8 50%, #C5A059 75%, #1a1a1a 100%);
             background-size: 200% auto;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            animation: shimmer 6s linear infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* Soft Pulse Glow */
-        .gold-glow {
-            box-shadow: 0 0 25px rgba(197, 160, 89, 0.25);
-        }
-
-        /* Nav active state */
-        .nav-item.active {
-            background-color: #1a1a1a !important;
-            color: var(--gold) !important;
-        }
-
-        /* Smooth Modal Pop-up Animation */
-        .modal-overlay {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            transform: scale(0.92) translateY(10px);
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-
-        /* LUXURY HERO ANIMATIONS & EFFECTS */
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(1.5deg); }
-        }
-
-        @keyframes floatReverse {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(10px) rotate(-1.5deg); }
-        }
-
-        @keyframes goldPulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(197, 160, 89, 0.25), 0 0 30px rgba(197, 160, 89, 0.1); }
-            50% { box-shadow: 0 0 30px rgba(197, 160, 89, 0.55), 0 0 50px rgba(197, 160, 89, 0.25); }
+            animation: metallicShimmer 5s linear infinite;
         }
 
         @keyframes metallicShimmer {
@@ -203,741 +141,425 @@
         }
 
         @keyframes orbBreathe {
-            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.5; }
-            50% { transform: scale(1.15) translate(10px, -15px); opacity: 0.85; }
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+            50% { transform: scale(1.15) translate(10px, -15px); opacity: 0.7; }
         }
 
-        .gold-shine-text {
-            background: linear-gradient(120deg, #121212 0%, #9A7730 25%, #F3E2C8 50%, #C5A059 75%, #121212 100%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: metallicShimmer 5s linear infinite;
+        .hero-orb-1 { animation: orbBreathe 8s ease-in-out infinite; }
+        .hero-orb-2 { animation: orbBreathe 10s ease-in-out infinite reverse; }
+
+        /* Modal iOS Pop-up Spring */
+        .modal-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
-        .animated-gold-border {
-            position: relative;
-            background: #ffffff;
-            border-radius: 9999px;
-            padding: 1px;
+        .modal-content {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
 
-        .animated-gold-border::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 9999px;
-            background: linear-gradient(90deg, #C5A059, #F3E2C8, #9A7730, #C5A059);
-            background-size: 300% 300%;
-            z-index: -1;
-            animation: metallicShimmer 4s ease infinite;
+        /* iOS Form Input styling */
+        .ios-input {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.25s ease;
         }
-
-        .hero-orb-1 {
-            animation: orbBreathe 8s ease-in-out infinite;
-        }
-
-        .hero-orb-2 {
-            animation: orbBreathe 10s ease-in-out infinite reverse;
-        }
-
-        .floating-card-1 {
-            animation: floatSlow 6s ease-in-out infinite;
-        }
-
-        .floating-card-2 {
-            animation: floatReverse 7s ease-in-out infinite 0.5s;
-        }
-
-        .btn-luxury-primary {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #0d0d0d 100%);
-            border: 1px solid rgba(197, 160, 89, 0.4);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .btn-luxury-primary:hover {
-            border-color: rgba(197, 160, 89, 0.9);
-            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .btn-luxury-secondary {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            transition: all 0.35s ease;
-        }
-
-        .btn-luxury-secondary:hover {
+        .ios-input:focus {
             background: #ffffff;
             border-color: var(--gold);
-            box-shadow: 0 8px 25px rgba(197, 160, 89, 0.18);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15);
+        }
+
+        .nav-item.active {
+            background-color: #121212 !important;
+            color: var(--gold) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
         .hidden { display: none !important; }
     </style>
 </head>
-<body class="bg-[var(--bg-warm)] text-[#1a1a1a] flex flex-col min-h-screen selection:bg-[var(--gold)] selection:text-white relative">
+<body class="bg-[var(--bg-warm)] text-[#1c1c1e] flex flex-col min-h-screen selection:bg-[var(--gold)] selection:text-white relative">
 
-    <!-- =====================================================
-         LANDING & SHOWCASE VIEW (PUBLIC LANDING PAGE)
-    ===================================================== -->
+    <!-- LANDING & SHOWCASE VIEW -->
     <section id="authView" class="min-h-screen flex flex-col justify-between relative z-10">
         
-        <!-- STICKY NAVBAR -->
-        <nav class="w-full px-4 sm:px-8 py-3.5 sticky top-0 z-40 luxury-header">
+        <!-- STICKY iOS NAVBAR -->
+        <nav class="w-full px-4 sm:px-8 py-3.5 sticky top-0 z-40 ios-header">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <!-- Brand Logo -->
                 <div class="flex items-center space-x-2.5 select-none cursor-pointer">
-                    <div class="w-9 h-9 rounded-full bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-sm gold-glow">
+                    <div class="w-9 h-9 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <div class="flex flex-col">
-                        <b class="serif text-lg italic font-semibold leading-none text-[#1a1a1a] tracking-tight">FotoVault</b>
-                        <span class="text-[7px] uppercase tracking-[0.2em] text-[var(--gold)] font-bold mt-0.5">Luxury Cloud</span>
+                        <b class="serif text-lg italic font-semibold leading-none text-[#121212] tracking-tight">FotoVault</b>
+                        <span class="text-[7px] uppercase tracking-[0.25em] text-[var(--gold)] font-bold mt-0.5">Luxury Cloud</span>
                     </div>
                 </div>
 
-                <!-- Navigation Links (Desktop) -->
-                <div class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-wider text-gray-600">
+                <div class="hidden md:flex items-center space-x-8 text-xs font-medium uppercase tracking-wider text-gray-500">
                     <a href="#fitur" class="hover:text-[var(--gold)] transition-colors">Fitur Utama</a>
                     <a href="#harga" class="hover:text-[var(--gold)] transition-colors">Paket Kapasitas</a>
                     <a href="#faq" class="hover:text-[var(--gold)] transition-colors">Bantuan & FAQ</a>
                 </div>
 
-                <!-- Open Auth Modal Action Button -->
-        <button type="button" data-open-auth
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1a1a1a] active:scale-95 text-[var(--gold)] font-semibold text-[11px] tracking-wider uppercase shadow-md hover:bg-black transition-all">
-            <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-            <span>Masuk Vault</span>
-        </button>
-    </div>
-</nav>
-
-<!-- HERO SECTION (ENHANCED LUXURY & ANIMATIONS) -->
-<header class="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-16 pb-12 w-full text-center relative overflow-hidden">
-    
-    <!-- Dynamic Ambient Background Glow Orbs -->
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none w-full max-w-4xl h-[420px] flex items-center justify-center">
-        <div class="hero-orb-1 w-72 sm:w-[480px] h-72 sm:h-[480px] bg-gradient-to-tr from-amber-200/40 via-amber-100/30 to-amber-300/20 rounded-full blur-3xl"></div>
-        <div class="hero-orb-2 absolute w-60 sm:w-[380px] h-60 sm:h-[380px] bg-gradient-to-bl from-amber-400/20 via-amber-200/25 to-yellow-100/30 rounded-full blur-2xl"></div>
-    </div>
-
-    <!-- Security Animated Badge -->
-    <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 border border-amber-200/90 shadow-md backdrop-blur-md mb-6 hover:scale-105 transition-transform duration-300 cursor-default">
-        <span class="relative flex h-2.5 w-2.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--gold)] opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--gold-dark)]"></span>
-        </span>
-        <svg class="w-3.5 h-3.5 text-[var(--gold-dark)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        <span class="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-dark)] font-extrabold">Enkripsi Kelas Militer AES 256-Bit</span>
-    </div>
-
-    <!-- Main Opulent Headline -->
-    <h1 class="serif text-3xl sm:text-5xl lg:text-6xl italic font-semibold text-[#1a1a1a] leading-[1.18] tracking-tight max-w-4xl mx-auto drop-shadow-sm">
-        Ruang Arsip Foto Pribadi Anda <br class="hidden sm:inline">
-        <span class="gold-shine-text font-bold block sm:inline mt-1 sm:mt-0">Mewah, Aman, & Privat</span>
-    </h1>
-
-    <!-- Subtitle -->
-    <p class="mt-5 text-xs sm:text-sm text-gray-600 max-w-xl mx-auto font-light leading-relaxed tracking-wide">
-        Simpan setiap kenangan berharga dalam kubah penyimpanan terenkripsi berkecepatan tinggi. Dirancang khusus dengan privasi eksklusif <strong class="text-[#1a1a1a] font-medium">Zero-Knowledge</strong>.
-    </p>
-
-    <!-- Luxury Hero Action Buttons -->
-    <div class="mt-8 flex flex-wrap justify-center items-center gap-3.5">
-        <button type="button" data-open-auth
-            class="btn-luxury-primary px-8 py-4 rounded-full active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-[0.15em] uppercase shadow-xl inline-flex items-center gap-3 group">
-            <svg class="w-4 h-4 text-[var(--gold)] group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            <span>Mulai Simpan Foto</span>
-            <svg class="w-3.5 h-3.5 text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </button>
-
-        <a href="#fitur" 
-            class="btn-luxury-secondary px-8 py-4 rounded-full text-gray-800 font-semibold text-xs tracking-[0.15em] uppercase shadow-sm inline-flex items-center gap-2.5 group">
-            <svg class="w-4 h-4 text-[var(--gold)] group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-            <span>Jelajahi Fitur</span>
-        </a>
-    </div>
-
-    <!-- Trust Features Highlights -->
-    <div class="mt-8 flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-[10px] text-gray-500 uppercase tracking-widest font-medium">
-        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Kualitas 100% Asli</span>
-        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Bebas Kompresi</span>
-        <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Tanpa Pelacakan Iklan</span>
-    </div>
-
-    <!-- Showcase Grid Cards with Animated Floating Badges -->
-    <div class="mt-12 max-w-4xl mx-auto relative">
-        
-        <!-- Floating Security Status Card Overlay Left -->
-        <div class="floating-card-1 hidden sm:flex absolute -top-5 -left-4 z-20 items-center gap-2.5 p-3 rounded-2xl bg-white/95 border border-amber-200/80 shadow-xl backdrop-blur-md">
-            <div class="w-8 h-8 rounded-xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <button type="button" data-open-auth
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-[11px] tracking-wider uppercase shadow-md hover:bg-black transition-all duration-300">
+                    <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                    <span>Masuk Vault</span>
+                </button>
             </div>
-            <div class="text-left">
-                <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Status Keamanan</div>
-                <div class="serif text-xs font-semibold text-[#1a1a1a]">Vault Terenkripsi AES-256</div>
-            </div>
-        </div>
+        </nav>
 
-        <!-- Floating Security Status Card Overlay Right -->
-        <div class="floating-card-2 hidden sm:flex absolute -bottom-5 -right-4 z-20 items-center gap-2.5 p-3 rounded-2xl bg-white/95 border border-amber-200/80 shadow-xl backdrop-blur-md">
-            <div class="w-8 h-8 rounded-xl bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <!-- HERO SECTION -->
+        <header class="max-w-6xl mx-auto px-4 sm:px-8 pt-10 sm:pt-16 pb-12 w-full text-center relative overflow-hidden">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none w-full max-w-4xl h-[420px] flex items-center justify-center">
+                <div class="hero-orb-1 w-72 sm:w-[480px] h-72 sm:h-[480px] bg-gradient-to-tr from-amber-200/40 via-amber-100/30 to-amber-300/20 rounded-full blur-3xl"></div>
+                <div class="hero-orb-2 absolute w-60 sm:w-[380px] h-60 sm:h-[380px] bg-gradient-to-bl from-amber-400/20 via-amber-200/25 to-yellow-100/30 rounded-full blur-2xl"></div>
             </div>
-            <div class="text-left">
-                <div class="text-[9px] uppercase tracking-wider text-gray-400 font-bold">Integritas Foto</div>
-                <div class="serif text-xs font-semibold text-[#1a1a1a]">100% Ultra HD RAW Preserved</div>
-            </div>
-        </div>
 
-        <!-- Main Card Container -->
-        <div class="luxury-card p-3.5 sm:p-5 rounded-3xl border border-amber-200/50 shadow-2xl bg-white/90 backdrop-blur-sm">
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=350&q=70" alt="Liburan" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3 text-white text-[10px] font-medium">Summer Moments</div>
-                </div>
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=350&q=70" alt="Pernikahan" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3 text-white text-[10px] font-medium">Wedding Vault</div>
-                </div>
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=350&q=70" alt="Seni" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3 text-white text-[10px] font-medium">Art & Heritage</div>
-                </div>
-                <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=350&q=70" alt="Pesta" class="w-full h-full object-cover group-hover:scale-110 transition duration-700 ease-out">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3 text-white text-[10px] font-medium">Private Party</div>
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 border border-amber-200/80 shadow-sm backdrop-blur-md mb-6 hover:scale-105 transition-transform duration-300 cursor-default">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--gold)] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--gold-dark)]"></span>
+                </span>
+                <svg class="w-3.5 h-3.5 text-[var(--gold-dark)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                <span class="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-dark)] font-extrabold">Enkripsi Kelas Militer AES 256-Bit</span>
+            </div>
+
+            <h1 class="serif text-4xl sm:text-5xl lg:text-6xl italic font-semibold text-[#121212] leading-[1.18] tracking-tight max-w-4xl mx-auto">
+                Ruang Arsip Foto Pribadi Anda <br class="hidden sm:inline">
+                <span class="gold-shine-text font-bold block sm:inline mt-1 sm:mt-0">Mewah, Aman, & Privat</span>
+            </h1>
+
+            <p class="mt-5 text-xs sm:text-sm text-gray-600 max-w-xl mx-auto font-light leading-relaxed tracking-wide">
+                Simpan setiap kenangan berharga dalam kubah penyimpanan terenkripsi berkecepatan tinggi dengan privasi eksklusif <strong class="text-[#121212] font-medium">Zero-Knowledge</strong>.
+            </p>
+
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-3.5">
+                <button type="button" data-open-auth
+                    class="px-8 py-4 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-[0.15em] uppercase shadow-xl inline-flex items-center gap-3 group hover:bg-black transition-all duration-300">
+                    <svg class="w-4 h-4 text-[var(--gold)] group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span>Mulai Simpan Foto</span>
+                    <svg class="w-3.5 h-3.5 text-[var(--gold)] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+
+                <a href="#fitur" 
+                    class="px-8 py-4 rounded-full bg-white/80 backdrop-blur-md border border-amber-200/60 active:scale-95 text-gray-800 font-semibold text-xs tracking-[0.15em] uppercase shadow-sm inline-flex items-center gap-2.5 hover:bg-white hover:border-[var(--gold)] transition-all duration-300">
+                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    <span>Jelajahi Fitur</span>
+                </a>
+            </div>
+
+            <div class="mt-12 max-w-4xl mx-auto relative">
+                <div class="ios-card p-4 sm:p-5 rounded-[2.5rem]">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=350&q=70" alt="Liburan" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Summer Moments</div>
+                        </div>
+                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=350&q=70" alt="Pernikahan" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Wedding Vault</div>
+                        </div>
+                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=350&q=70" alt="Seni" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Art & Heritage</div>
+                        </div>
+                        <div class="aspect-[4/5] rounded-2xl overflow-hidden relative bg-gray-100 group shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=350&q=70" alt="Pesta" class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3 text-white text-[11px] font-medium">Private Party</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</header>
+        </header>
 
-<!-- FEATURES SECTION -->
+        <!-- FEATURES SECTION -->
         <section id="fitur" class="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full relative">
-            
-            <!-- Subtle Ambient Backdrop Glow -->
-            <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none overflow-hidden">
-                <div class="w-80 sm:w-[500px] h-80 bg-gradient-to-tr from-amber-100/40 via-amber-50/20 to-amber-200/30 rounded-full blur-3xl opacity-70"></div>
-            </div>
-
-            <!-- Section Title & Subtitle -->
             <div class="text-center max-w-2xl mx-auto mb-12">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-100/90 via-amber-50 to-amber-100/90 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold shadow-sm">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
                     <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                     Keunggulan Vault
                 </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#1a1a1a] mt-3">Mengapa Memilih FotoVault?</h2>
+                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Mengapa Memilih FotoVault?</h2>
                 <p class="text-xs sm:text-sm text-gray-500 mt-2 font-light leading-relaxed max-w-xl mx-auto">
                     Standar privasi tertinggi, kecepatan tanpa tanding, dan estetika eksklusif yang dirancang khusus untuk melindungi koleksi memori paling berharga Anda.
                 </p>
             </div>
 
-            <!-- 6 Luxury Feature Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- Feature Card 1 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
+                <div class="ios-card p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
+                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                             </div>
                             <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Privasi Mutlak</span>
                         </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">Zero-Knowledge Privacy</h3>
+                        <h3 class="serif text-lg font-semibold text-[#121212]">Zero-Knowledge Privacy</h3>
                         <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Kunci enkripsi <strong class="text-[#1a1a1a] font-medium">AES 256-Bit</strong> diolah khusus di perangkat Anda. Tidak ada pihak ketiga—bahkan tim FotoVault—yang memiliki akses ke foto Anda.
+                            Kunci enkripsi <strong class="text-[#121212] font-medium">AES 256-Bit</strong> diolah khusus di perangkat Anda. Tidak ada pihak ketiga yang memiliki akses ke foto Anda.
                         </p>
                     </div>
                 </div>
 
-                <!-- Feature Card 2 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
+                <div class="ios-card p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
+                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
                             <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">100% Ultra HD</span>
                         </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">Preservasi Kualitas Asli</h3>
+                        <h3 class="serif text-lg font-semibold text-[#121212]">Preservasi Kualitas Asli</h3>
                         <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Bebas kompresi gambar. Seluruh piksel, kejernihan warna, hingga data <strong class="text-[#1a1a1a] font-medium">EXIF & RAW</strong> foto asli Anda disimpan sempurna 100%.
+                            Bebas kompresi gambar. Seluruh piksel, kejernihan warna, hingga data <strong class="text-[#121212] font-medium">EXIF & RAW</strong> foto asli Anda disimpan sempurna 100%.
                         </p>
                     </div>
                 </div>
 
-                <!-- Feature Card 3 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
+                <div class="ios-card p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
+                            <div class="w-11 h-11 rounded-2xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-md">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                             </div>
                             <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Organisasi Rapi</span>
                         </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">Album & Galeri Kustom</h3>
+                        <h3 class="serif text-lg font-semibold text-[#121212]">Album & Galeri Kustom</h3>
                         <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Kelompokkan momen pernikahan, liburan, hingga arsip karya seni dalam album kustom berdesain minimalis yang responsif di HP maupun PC.
+                            Kelompokkan momen pernikahan, liburan, hingga arsip karya seni dalam album kustom berdesain minimalis khas iOS.
                         </p>
                     </div>
                 </div>
-
-                <!-- Feature Card 4 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">High Performance</span>
-                        </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">Jaringan CDN Super Cepat</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Proses pengunggahan berkecepatan tinggi dengan infrastruktur server cloud berkinerja maksimal. Pratinjau galeri memuat serentak secara instan.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature Card 5 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Multi Perangkat</span>
-                        </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">Akses Lintas Perangkat</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Aplikasi web terintegrasi otomatis. Buka dan kelola brankas penyimpanan Anda kapan saja dengan aman dari smartphone, tablet, maupun komputer.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature Card 6 -->
-                <div class="luxury-card p-6 flex flex-col justify-between hover:border-[var(--gold)]/60 transition-all duration-300 group">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-11 h-11 rounded-2xl bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-md gold-glow group-hover:scale-105 transition duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                            </div>
-                            <span class="text-[9px] uppercase tracking-widest text-[var(--gold-dark)] font-bold bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">Penyimpanan Bersih</span>
-                        </div>
-
-                        <h3 class="serif text-lg font-semibold text-[#1a1a1a]">100% Privat & Bebas Iklan</h3>
-                        <p class="text-xs text-gray-500 mt-2 leading-relaxed font-light">
-                            Nikmati kenyamanan tanpa gangguan iklan, pelacakan data (*no tracking*), atau promosi pihak ketiga. Pengalaman penyimpanan bersih dan berkelas.
-                        </p>
-                    </div>
-                </div>
-
             </div>
         </section>
 
-        <!-- =====================================================
-             LUXURY & ANIMATED PRICING SECTION (ENHANCED)
-        ===================================================== -->
+        <!-- PRICING SECTION -->
         <section id="harga" class="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full relative">
-            
-            <!-- Soft Ambient Glow Background -->
-            <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none overflow-hidden">
-                <div class="w-full max-w-3xl h-80 bg-gradient-to-r from-amber-200/20 via-amber-100/30 to-amber-200/20 rounded-full blur-3xl opacity-70"></div>
-            </div>
-
-            <!-- Header Title -->
             <div class="text-center max-w-xl mx-auto mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-100/90 via-amber-50 to-amber-100/90 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold shadow-sm">
-                    <svg class="w-3.5 h-3.5 text-[var(--gold)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
+                    <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     Kapasitas & Biaya
                 </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#1a1a1a] mt-3">Pilih Paket Storage Eksklusif</h2>
-                <p class="text-xs sm:text-sm text-gray-500 mt-2 font-light leading-relaxed">
-                    Alokasi ruang penyimpanan aman tanpa batas dengan enkripsi kelas tinggi. Tingkatkan kapan saja.
-                </p>
+                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Pilih Paket Storage Eksklusif</h2>
 
-                <!-- Interactive Billing Switcher Button -->
-                <div class="mt-6 inline-flex items-center p-1.5 rounded-full bg-white/90 border border-amber-200/80 shadow-md backdrop-blur-md">
-                    <button id="btnMonthly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold bg-[#1a1a1a] text-[var(--gold)] shadow-sm transition duration-300">
+                <div class="mt-6 inline-flex items-center p-1.5 rounded-full bg-white/80 border border-black/5 shadow-sm backdrop-blur-md">
+                    <button id="btnMonthly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300">
                         Bulanan
                     </button>
-                    <button id="btnYearly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#1a1a1a] flex items-center gap-1.5">
+                    <button id="btnYearly" type="button" class="px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212] flex items-center gap-1.5">
                         <span>Tahunan</span>
                         <span class="px-2 py-0.5 rounded-full bg-amber-100 text-[var(--gold-dark)] text-[9px] font-extrabold uppercase tracking-wider">Hemat 20%</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Pricing Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                
-                <!-- Card 1: Essential Vault (Free Tier) -->
-                <div class="luxury-card p-6 sm:p-7 flex flex-col justify-between hover:border-amber-300 transition duration-300">
+                <!-- Card 1 -->
+                <div class="ios-card p-6 sm:p-7 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-bold">Uji Coba Gratis</span>
-                            <div class="w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            </div>
                         </div>
-
-                        <h3 class="serif text-xl font-semibold text-[#1a1a1a]">Essential Vault</h3>
-                        <p class="text-xs text-gray-400 mt-1 font-light">Sempurna untuk mencoba ruang simpan awal.</p>
-
+                        <h3 class="serif text-xl font-semibold text-[#121212]">Essential Vault</h3>
                         <div class="my-6 pt-4 border-t border-gray-100">
-                            <div class="flex items-baseline gap-1">
-                                <span class="serif text-3xl sm:text-4xl font-bold text-[#1a1a1a]">Rp 0</span>
-                                <span class="text-xs text-gray-400 font-light">/ selamanya</span>
-                            </div>
+                            <span class="serif text-3xl sm:text-4xl font-bold text-[#121212]">Rp 0</span>
+                            <span class="text-xs text-gray-400 font-light">/ selamanya</span>
                         </div>
-
                         <ul class="space-y-3.5 text-xs text-gray-600 mb-8 font-light">
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Kapasitas Storage <strong class="text-[#1a1a1a] font-semibold">1 GB</strong></span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Enkripsi AES 256-Bit</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Manajemen Album Standar</span>
-                            </li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong>1 GB</strong></li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Enkripsi AES 256-Bit</li>
                         </ul>
                     </div>
-
-                    <button type="button" data-open-auth 
-                        class="w-full py-3 rounded-full bg-gray-100 active:scale-95 text-[#1a1a1a] hover:bg-gray-200 text-center text-xs font-bold uppercase tracking-widest transition duration-300">
+                    <button type="button" data-open-auth class="w-full py-3.5 rounded-full bg-gray-100 active:scale-95 text-[#121212] hover:bg-gray-200 text-xs font-bold uppercase tracking-widest transition duration-300">
                         Mulai Gratis
                     </button>
                 </div>
 
-                <!-- Card 2: Gold Privé (Featured VIP Tier) -->
-                <div class="luxury-dark p-6 sm:p-7 flex flex-col justify-between relative gold-glow border-2 border-[var(--gold)]/80 scale-[1.02] transform transition duration-300 my-2 sm:my-0">
-                    
-                    <!-- Top VIP Floating Tag -->
-                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-200 to-[var(--gold)] text-[#1a1a1a] text-[9px] uppercase tracking-widest font-black shadow-lg flex items-center gap-1.5">
-                        <svg class="w-3 h-3 text-[#1a1a1a]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                        <span>Terpopuler &bull; Pilihan VIP</span>
+                <!-- Card 2 VIP -->
+                <div class="luxury-dark p-6 sm:p-7 flex flex-col justify-between relative shadow-2xl border-2 border-[var(--gold)]/80 scale-[1.02]">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-200 to-[var(--gold)] text-[#121212] text-[9px] uppercase tracking-widest font-black shadow-lg">
+                        Terpopuler VIP
                     </div>
-
                     <div>
-                        <div class="flex justify-between items-center mb-2 pt-1">
-                            <span class="text-[9px] uppercase tracking-[0.2em] text-[var(--gold-light)] font-bold">Recommended</span>
-                            <div class="w-7 h-7 rounded-full bg-amber-500/20 text-[var(--gold)] flex items-center justify-center border border-amber-500/30">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                            </div>
-                        </div>
-
-                        <h3 class="serif text-xl font-semibold text-white">Gold Privé</h3>
-                        <p class="text-xs text-gray-300 mt-1 font-light">Untuk koleksi foto resolusi tinggi lengkap.</p>
-
+                        <h3 class="serif text-xl font-semibold text-white mt-2">Gold Privé</h3>
                         <div class="my-6 pt-4 border-t border-amber-500/20">
-                            <div class="flex items-baseline gap-1">
-                                <span id="priceGold" class="serif text-3xl sm:text-4xl font-bold text-[var(--gold)]">Rp 49.000</span>
-                                <span id="periodGold" class="text-xs text-gray-400 font-light">/ bulan</span>
-                            </div>
+                            <span id="priceGold" class="serif text-3xl sm:text-4xl font-bold text-[var(--gold)]">Rp 49.000</span>
+                            <span id="periodGold" class="text-xs text-gray-400 font-light">/ bulan</span>
                         </div>
-
                         <ul class="space-y-3.5 text-xs text-gray-200 mb-8 font-light">
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-[var(--gold)] text-[#1a1a1a] flex items-center justify-center shrink-0 font-bold">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Kapasitas Storage <strong class="text-[var(--gold)] font-bold">100 GB Ultra HD</strong></span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-[var(--gold)] text-[#1a1a1a] flex items-center justify-center shrink-0 font-bold">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Zero-Knowledge Encryption</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-[var(--gold)] text-[#1a1a1a] flex items-center justify-center shrink-0 font-bold">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Unlimited Album & Pencarian Pintar</span>
-                            </li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong class="text-[var(--gold)]">100 GB Ultra HD</strong></li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Zero-Knowledge Encryption</li>
                         </ul>
                     </div>
-
-                    <button type="button" data-open-auth 
-                        class="w-full py-3.5 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-300 to-[var(--gold)] active:scale-95 text-[#1a1a1a] hover:opacity-90 text-center text-xs font-bold uppercase tracking-widest shadow-md transition duration-300">
+                    <button type="button" data-open-auth class="w-full py-3.5 rounded-full bg-gradient-to-r from-[var(--gold)] via-amber-300 to-[var(--gold)] active:scale-95 text-[#121212] hover:opacity-90 text-xs font-bold uppercase tracking-widest shadow-md transition duration-300">
                         Pilih Gold Privé
                     </button>
                 </div>
 
-                <!-- Card 3: Haute Collection (Maximum Storage Tier) -->
-                <div class="luxury-card p-6 sm:p-7 flex flex-col justify-between hover:border-amber-300 transition duration-300">
+                <!-- Card 3 -->
+                <div class="ios-card p-6 sm:p-7 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-bold">Kapasitas Maksimal</span>
-                            <div class="w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                            </div>
                         </div>
-
-                        <h3 class="serif text-xl font-semibold text-[#1a1a1a]">Haute Collection</h3>
-                        <p class="text-xs text-gray-400 mt-1 font-light">Arsip memori profesional tanpa batas.</p>
-
+                        <h3 class="serif text-xl font-semibold text-[#121212]">Haute Collection</h3>
                         <div class="my-6 pt-4 border-t border-gray-100">
-                            <div class="flex items-baseline gap-1">
-                                <span id="priceHaute" class="serif text-3xl sm:text-4xl font-bold text-[#1a1a1a]">Rp 149.000</span>
-                                <span id="periodHaute" class="text-xs text-gray-400 font-light">/ bulan</span>
-                            </div>
+                            <span id="priceHaute" class="serif text-3xl sm:text-4xl font-bold text-[#121212]">Rp 149.000</span>
+                            <span id="periodHaute" class="text-xs text-gray-400 font-light">/ bulan</span>
                         </div>
-
                         <ul class="space-y-3.5 text-xs text-gray-600 mb-8 font-light">
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Kapasitas Storage <strong class="text-[#1a1a1a] font-semibold">1 TB (1.000 GB)</strong></span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Cadangan Multi-Cloud Terenkripsi</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-4 h-4 rounded-full bg-amber-100 text-[var(--gold-dark)] flex items-center justify-center shrink-0">
-                                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <span>Dukungan Prioritas VIP 24/7</span>
-                            </li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Kapasitas Storage <strong>1 TB (1.000 GB)</strong></li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 rounded-full bg-[var(--gold)]"></span> Support Prioritas 24/7</li>
                         </ul>
                     </div>
-
-                    <button type="button" data-open-auth 
-                        class="w-full py-3 rounded-full bg-[#1a1a1a] active:scale-95 text-[var(--gold)] hover:bg-black text-center text-xs font-bold uppercase tracking-widest transition duration-300">
+                    <button type="button" data-open-auth class="w-full py-3.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] hover:bg-black text-xs font-bold uppercase tracking-widest transition duration-300">
                         Pilih Haute Vault
                     </button>
                 </div>
-
             </div>
         </section>
 
-        <!-- =====================================================
-             LUXURY & ANIMATED FAQ SECTION (ENHANCED)
-        ===================================================== -->
+        <!-- FAQ SECTION -->
         <section id="faq" class="py-16 px-4 sm:px-8 max-w-4xl mx-auto w-full relative">
-            
-            <!-- Soft Ambient Glow Background -->
-            <div class="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
-                <div class="w-96 h-96 bg-[var(--gold-light)]/20 rounded-full blur-3xl opacity-60"></div>
-            </div>
-
-            <!-- Header Title -->
             <div class="text-center max-w-xl mx-auto mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-100/90 via-amber-50 to-amber-100/90 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold shadow-sm">
-                    <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Bantuan & FAQ
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/60 border border-amber-200/80 text-[9px] uppercase tracking-[0.25em] text-[var(--gold-dark)] font-bold">
+                    FAQ & Bantuan
                 </div>
-                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#1a1a1a] mt-3">Pertanyaan Sering Diajukan</h2>
-                <p class="text-xs sm:text-sm text-gray-500 mt-2 font-light leading-relaxed">
-                    Jawaban transparan mengenai sistem enkripsi, integritas berkas, serta privasi eksklusif di FotoVault.
-                </p>
+                <h2 class="serif text-3xl sm:text-4xl italic font-semibold text-[#121212] mt-3">Pertanyaan Diajukan</h2>
             </div>
 
-            <!-- Animated FAQ Accordion Container -->
-            <div class="space-y-4">
-
-                <!-- Question 1 -->
+            <div class="space-y-3">
                 <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer group">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-8 h-8 rounded-full bg-amber-50 text-[var(--gold)] flex items-center justify-center shrink-0 border border-amber-200/60 group-hover:bg-[#1a1a1a] group-hover:text-[var(--gold)] transition duration-300">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            </div>
-                            <span class="serif text-sm sm:text-base font-semibold text-[#1a1a1a] tracking-tight">Apakah foto saya aman & tidak dapat dilihat oleh orang lain?</span>
-                        </div>
+                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                        <span class="serif text-sm sm:text-base font-semibold text-[#121212]">Apakah foto saya aman & privat?</span>
                         <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                     </button>
                     <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 pl-16 text-xs sm:text-sm text-gray-600 leading-relaxed font-light">
-                            <p class="border-t border-amber-100/60 pt-3">
-                                Keamanan Anda adalah prioritas tertinggi kami. FotoVault mengusung arsitektur <strong class="text-[#1a1a1a] font-semibold">Zero-Knowledge Encryption</strong> berstandar militer <strong class="text-[var(--gold-dark)] font-semibold">AES 256-Bit</strong>. Kunci enkripsi dibuat langsung di perangkat Anda, sehingga bahkan staf FotoVault maupun penyedia peladen tidak dapat melihat atau membuka isi foto Anda.
-                            </p>
+                        <div class="px-5 pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed font-light border-t border-gray-100 pt-3">
+                            FotoVault menggunakan enkripsi militer AES 256-Bit Zero-Knowledge. Kunci enkripsi diproses secara lokal pada perangkat Anda.
                         </div>
                     </div>
                 </div>
 
-                <!-- Question 2 -->
                 <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer group">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-8 h-8 rounded-full bg-amber-50 text-[var(--gold)] flex items-center justify-center shrink-0 border border-amber-200/60 group-hover:bg-[#1a1a1a] group-hover:text-[var(--gold)] transition duration-300">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            </div>
-                            <span class="serif text-sm sm:text-base font-semibold text-[#1a1a1a] tracking-tight">Apakah ada batasan jenis dan ukuran resolusi foto?</span>
-                        </div>
+                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer">
+                        <span class="serif text-sm sm:text-base font-semibold text-[#121212]">Apakah ada kompresi resolusi foto?</span>
                         <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </div>
                     </button>
                     <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 pl-16 text-xs sm:text-sm text-gray-600 leading-relaxed font-light">
-                            <p class="border-t border-amber-100/60 pt-3">
-                                Sama sekali tidak ada kompresi atau penurunan kualitas. Kami mendukung seluruh format gambar populer seperti <strong class="text-[#1a1a1a] font-semibold">JPG, PNG, WEBP, HEIC, TIFF, hingga berkas RAW kamera profesional</strong>. Semua piksel asli, warna, dan data EXIF disimpan utuh 100%.
-                            </p>
+                        <div class="px-5 pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed font-light border-t border-gray-100 pt-3">
+                            Sama sekali tidak. Kami menyimpan format asli JPG, PNG, HEIC, hingga berkas RAW kamera profesional tanpa kompresi.
                         </div>
                     </div>
                 </div>
-
-                <!-- Question 3 -->
-                <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer group">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-8 h-8 rounded-full bg-amber-50 text-[var(--gold)] flex items-center justify-center shrink-0 border border-amber-200/60 group-hover:bg-[#1a1a1a] group-hover:text-[var(--gold)] transition duration-300">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                            </div>
-                            <span class="serif text-sm sm:text-base font-semibold text-[#1a1a1a] tracking-tight">Bagaimana jika kapasitas penyimpanan saya penuh?</span>
-                        </div>
-                        <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                        </div>
-                    </button>
-                    <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 pl-16 text-xs sm:text-sm text-gray-600 leading-relaxed font-light">
-                            <p class="border-t border-amber-100/60 pt-3">
-                                Sistem akan memberikan peringatan dini ketika ruang penyimpanan Anda mencapai 90%. Anda dapat melakukan <strong class="text-[var(--gold-dark)] font-semibold">Instant Upgrade</strong> ke paket Gold Privé (100 GB) atau Haute Collection (1 TB) kapan saja secara mudah. Seluruh berkas lama Anda dijamin tetap tersimpan aman tanpa gangguan.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 4 -->
-                <div class="faq-card rounded-2xl">
-                    <button type="button" class="accordion-header w-full p-5 text-left flex justify-between items-center gap-4 focus:outline-none cursor-pointer group">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-8 h-8 rounded-full bg-amber-50 text-[var(--gold)] flex items-center justify-center shrink-0 border border-amber-200/60 group-hover:bg-[#1a1a1a] group-hover:text-[var(--gold)] transition duration-300">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                            </div>
-                            <span class="serif text-sm sm:text-base font-semibold text-[#1a1a1a] tracking-tight">Dapatkah saya mengakses vault dari perangkat lain?</span>
-                        </div>
-                        <div class="accordion-icon w-7 h-7 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                        </div>
-                    </button>
-                    <div class="accordion-wrapper">
-                        <div class="px-5 pb-5 pl-16 text-xs sm:text-sm text-gray-600 leading-relaxed font-light">
-                            <p class="border-t border-amber-100/60 pt-3">
-                                Ya, FotoVault merupakan aplikasi berbasis web modern yang terintegrasi secara <strong class="text-[#1a1a1a] font-semibold">real-time</strong>. Anda cukup masuk dengan akun email dan kata sandi Anda melalui smartphone, tablet, maupun komputer browser apa pun dengan keamanan SSL 256-bit.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- FOOTER -->
-        <footer class="mt-8 py-6 border-t border-gray-200/80 text-center text-xs text-gray-400 font-light">
+        <footer class="mt-8 py-6 border-t border-gray-200/60 text-center text-xs text-gray-400 font-light">
             <p>&copy; 2026 FotoVault Inc. All rights reserved.</p>
         </footer>
     </section>
 
     <!-- =====================================================
-         MODAL POP-UP LOG IN (SUPABASE AUTHENTICATION)
+         MODAL POP-UP LOG IN (iOS SHEET STYLE ENHANCED)
     ===================================================== -->
-    <div id="authModal" class="modal-overlay fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-        <div class="modal-content luxury-card max-w-sm w-full p-6 rounded-3xl relative text-center bg-white shadow-2xl border border-amber-200/50">
+    <div id="authModal" class="modal-overlay fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+        <div class="modal-content ios-card max-w-sm w-full p-7 rounded-[2.2rem] relative text-center bg-white/90 backdrop-blur-2xl shadow-2xl border border-white/80">
             
-            <!-- Close Modal Button -->
+            <!-- Close Button -->
             <button id="closeAuthModal" type="button" 
-                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:text-black hover:bg-gray-200 flex items-center justify-center transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100/80 text-gray-400 hover:text-black hover:bg-gray-200 flex items-center justify-center transition active:scale-90">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
 
             <!-- Brand Icon -->
-            <div class="w-12 h-12 rounded-full bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center mx-auto mb-3 shadow-md gold-glow">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <div class="w-14 h-14 rounded-3xl bg-[#121212] text-[var(--gold)] flex items-center justify-center mx-auto mb-4 shadow-xl">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
             </div>
 
-            <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-amber-100/90 text-[9px] uppercase tracking-[0.2em] text-[var(--gold-dark)] font-bold mb-1.5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/70 text-[9px] uppercase tracking-[0.2em] text-[var(--gold-dark)] font-bold mb-2">
                 Akses VIP Vault
             </span>
 
-            <h2 class="serif text-2xl font-semibold text-[#1a1a1a]">Masuk Ke Vault</h2>
-            <p class="mt-1 text-xs text-gray-500 leading-relaxed font-light mb-5">
-                Masukkan kredensial terenkripsi Anda untuk mengakses galeri pribadi.
+            <h2 class="serif text-2xl font-bold text-[#121212]">Masuk Ke Vault</h2>
+            <p class="mt-1 text-xs text-gray-500 leading-relaxed font-light mb-6">
+                Silakan masukkan kredensial terenkripsi Anda.
             </p>
 
-            <!-- SUPABASE AUTH FORM -->
-            <form id="authForm" class="space-y-3.5 text-left">
+            <!-- SUPABASE AUTH FORM (UNTOUCHED LOGIC & IDS) -->
+            <form id="authForm" class="space-y-4 text-left">
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Email Akses</label>
-                    <input id="email" type="email" autocomplete="email" placeholder="nama@email.com" required 
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-[#1a1a1a] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--gold)] transition">
+                    <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5 ml-1">Email Akses</label>
+                    <div class="relative">
+                        <input id="email" type="email" autocomplete="email" placeholder="nama@email.com" required 
+                            class="ios-input w-full px-4 py-3 rounded-2xl text-xs text-[#121212] placeholder-gray-400 focus:outline-none">
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Kata Sandi</label>
-                    <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required 
-                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-[#1a1a1a] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--gold)] transition">
+                    <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-1.5 ml-1">Kata Sandi</label>
+                    <div class="relative">
+                        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required 
+                            class="ios-input w-full px-4 py-3 rounded-2xl text-xs text-[#121212] placeholder-gray-400 focus:outline-none">
+                    </div>
                 </div>
 
                 <button id="authSubmit" type="submit" 
-                    class="w-full mt-2 py-3 rounded-full bg-[#1a1a1a] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-widest uppercase shadow-md hover:bg-black transition flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                    class="w-full mt-3 py-3.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-semibold text-xs tracking-widest uppercase shadow-lg hover:bg-black transition-all duration-300 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                     <span>Buka Vault Saya</span>
                 </button>
             </form>
 
-            <small class="block mt-5 text-[9px] uppercase tracking-widest text-gray-400 font-semibold">FotoVault &bull; Luxury Security v1.1</small>
+            <small class="block mt-6 text-[9px] uppercase tracking-widest text-gray-400 font-medium">FotoVault &bull; iOS Glass Architecture v1.2</small>
         </div>
     </div>
 
-    <!-- =====================================================
-         MAIN APPLICATION VIEW (LOGGED-IN DASHBOARD)
-    ===================================================== -->
+    <!-- MAIN DASHBOARD VIEW -->
     <section id="appView" class="hidden min-h-screen flex flex-col">
-        
-        <!-- HEADER / NAVBAR -->
-        <header class="sticky top-0 z-40 px-3 sm:px-6 py-2.5 luxury-header">
+        <header class="sticky top-0 z-40 px-4 sm:px-6 py-3 ios-header">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
-                
-                <!-- Brand Logo -->
                 <div class="flex items-center space-x-2.5 select-none">
-                    <div class="w-8 h-8 rounded-full bg-[#1a1a1a] text-[var(--gold)] flex items-center justify-center shadow-sm">
+                    <div class="w-8 h-8 rounded-xl bg-[#121212] text-[var(--gold)] flex items-center justify-center shadow-sm">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                     </div>
                     <div class="flex flex-col">
-                        <b class="serif text-base italic font-semibold leading-none text-[#1a1a1a]">FotoVault</b>
+                        <b class="serif text-base italic font-semibold leading-none text-[#121212]">FotoVault</b>
                         <span class="text-[7px] uppercase tracking-[0.2em] text-[var(--gold)] font-bold mt-0.5">Luxury Cloud</span>
                     </div>
                 </div>
 
-                <!-- User Info & Logout Button -->
                 <div class="flex items-center space-x-3">
-                    <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-gray-200">
+                    <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-black/5 shadow-sm backdrop-blur-md">
                         <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        <span id="userEmail" class="serif text-xs font-semibold text-[#1a1a1a] max-w-[150px] truncate">User</span>
+                        <span id="userEmail" class="serif text-xs font-semibold text-[#121212] max-w-[150px] truncate">User</span>
                     </div>
 
                     <button id="logoutBtn" type="button" 
-                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-50 active:bg-rose-100 text-rose-700 text-xs font-medium border border-rose-200/60 transition">
+                        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-rose-50/80 active:scale-95 text-rose-600 text-xs font-medium border border-rose-200/60 transition shadow-sm">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                         <span class="hidden sm:inline">Keluar</span>
                     </button>
@@ -945,145 +567,116 @@
             </div>
         </header>
 
-        <!-- MAIN DASHBOARD CONTENT -->
-        <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 flex flex-col md:flex-row gap-4">
-            
-            <!-- SIDEBAR NAV -->
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 flex flex-col md:flex-row gap-5">
             <nav class="w-full md:w-56 shrink-0 flex flex-col gap-3">
-                <div class="luxury-card p-2 flex flex-row md:flex-col gap-1">
-                    <button class="nav-item active flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 px-3 py-2 rounded-xl text-xs font-medium text-gray-600 transition" data-section="photos" type="button">
+                <div class="ios-card p-2 flex flex-row md:flex-col gap-1.5">
+                    <button class="nav-item active flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-medium text-gray-600 transition" data-section="photos" type="button">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <span>Foto Saya</span>
                     </button>
 
-                    <button class="nav-item flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2 px-3 py-2 rounded-xl text-xs font-medium text-gray-600 transition" data-section="albums" type="button">
+                    <button class="nav-item flex-1 md:flex-none flex items-center justify-center md:justify-start gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-medium text-gray-600 transition" data-section="albums" type="button">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                         <span>Album</span>
                     </button>
                 </div>
 
-                <!-- Storage Info Widget -->
-                <div class="luxury-card p-4 hidden md:block">
-                    <div class="flex items-center justify-between text-xs mb-1.5">
+                <div class="ios-card p-4 hidden md:block">
+                    <div class="flex items-center justify-between text-xs mb-2">
                         <strong class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Kapasitas Storage</strong>
                         <svg class="w-3.5 h-3.5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
                     </div>
                     
-                    <div id="storageText" class="serif text-xs font-semibold text-[#1a1a1a] mb-2">
+                    <div id="storageText" class="serif text-xs font-semibold text-[#121212] mb-2">
                         0 KB / 1 GB
                     </div>
 
-                    <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                        <i id="storageBar" class="block h-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-dark)] rounded-full transition-all duration-300 w-0"></i>
+                    <div class="w-full bg-gray-200/60 rounded-full h-2 overflow-hidden p-0.5 border border-black/5">
+                        <i id="storageBar" class="block h-full bg-gradient-to-r from-[var(--gold)] to-[var(--gold-dark)] rounded-full transition-all duration-500 w-0"></i>
                     </div>
                 </div>
             </nav>
 
-            <!-- MAIN ARTICLE AREA -->
             <article class="flex-1 min-w-0">
-                <div class="luxury-card p-4 sm:p-6 min-h-[400px]">
-                    
-                    <!-- Page Title & CTA Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100 mb-4">
+                <div class="ios-card p-5 sm:p-7 min-h-[420px]">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-100 mb-5">
                         <div>
-                            <h2 id="pageTitle" class="serif text-xl sm:text-2xl italic font-semibold text-[#1a1a1a]">Foto Saya</h2>
-                            <p id="pageSubtitle" class="text-xs text-gray-400 mt-0.5">Semua koleksi memori digital Anda dalam satu lokasi aman.</p>
+                            <h2 id="pageTitle" class="serif text-2xl font-semibold text-[#121212]">Foto Saya</h2>
+                            <p id="pageSubtitle" class="text-xs text-gray-400 mt-0.5">Semua koleksi memori digital Anda dalam lokasi aman.</p>
                         </div>
 
-                        <!-- Upload Trigger -->
-                        <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#1a1a1a] active:bg-black text-[var(--gold)] font-medium text-xs tracking-wider uppercase shadow-sm transition">
+                        <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] font-medium text-xs tracking-wider uppercase shadow-md transition-all duration-300">
                             <svg class="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                             <span>Upload Foto</span>
                             <input id="fileInput" type="file" accept="image/*" multiple hidden>
                         </label>
                     </div>
 
-                    <!-- PHOTOS SECTION -->
                     <div id="photosSection">
-                        
-                        <!-- Drag and Drop Area -->
-                        <div id="dropZone" class="border-2 border-dashed border-[var(--gold)]/40 active:border-[var(--gold)] rounded-xl p-5 text-center bg-amber-50/20 transition cursor-pointer mb-4">
-                            <div class="w-8 h-8 rounded-full bg-amber-100 text-[var(--gold)] flex items-center justify-center mx-auto mb-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <div id="dropZone" class="border-2 border-dashed border-[var(--gold)]/40 rounded-2xl p-6 text-center bg-amber-50/20 transition cursor-pointer mb-5 hover:border-[var(--gold)]">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-100/60 text-[var(--gold)] flex items-center justify-center mx-auto mb-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                             </div>
                             <p class="text-xs text-gray-500 font-medium">Tarik & lepas foto ke sini atau klik untuk mengunggah</p>
                         </div>
 
-                        <!-- Search Input -->
-                        <div class="relative mb-4">
+                        <div class="relative mb-5">
                             <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             <input id="searchInput" type="search" placeholder="Cari foto berdasarkan nama..." 
-                                class="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-xs text-[#1a1a1a] focus:outline-none focus:ring-1 focus:ring-[var(--gold)] shadow-sm">
+                                class="ios-input w-full pl-10 pr-4 py-2.5 rounded-xl text-xs text-[#121212] focus:outline-none">
                         </div>
 
-                        <!-- Upload Progress Bar Container -->
                         <div id="progressArea" class="hidden mb-4 space-y-2"></div>
+                        <div id="photoGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
 
-                        <!-- Photo Grid View -->
-                        <div id="photoGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5"></div>
-
-                        <!-- Empty Placeholder State -->
-                        <div id="emptyState" class="py-10 text-center">
-                            <div class="w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mx-auto mb-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <div id="emptyState" class="py-12 text-center">
+                            <div class="w-12 h-12 rounded-2xl bg-gray-100/80 text-gray-400 flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </div>
-                            <h3 class="serif text-sm font-medium text-gray-700">Belum Ada Foto</h3>
-                            <p class="text-xs text-gray-400 mt-0.5">Mulai unggah foto kenangan Anda melalui tombol di atas.</p>
+                            <h3 class="serif text-base font-semibold text-gray-700">Belum Ada Foto</h3>
+                            <p class="text-xs text-gray-400 mt-1">Mulai unggah foto kenangan Anda melalui tombol di atas.</p>
                         </div>
                     </div>
 
-                    <!-- ALBUMS SECTION -->
                     <div id="albumsSection" class="hidden">
-                        <div class="flex justify-between items-center mb-4">
+                        <div class="flex justify-between items-center mb-5">
                             <button id="newAlbumBtn" type="button" 
-                                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1a1a1a] text-[var(--gold)] text-xs font-semibold uppercase tracking-wider shadow-sm active:bg-black transition">
+                                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] text-xs font-semibold uppercase tracking-wider shadow-sm transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                                 Buat Album Baru
                             </button>
                         </div>
-
-                        <div id="albumGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5"></div>
+                        <div id="albumGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
                     </div>
-
                 </div>
             </article>
-
         </main>
     </section>
 
-    <!-- =====================================================
-         MODAL 1: PHOTO VIEWER
-    ===================================================== -->
-    <div id="viewer" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 hidden">
-        <div class="luxury-card max-w-2xl w-full p-4 rounded-2xl relative text-left bg-white">
-            
-            <!-- Close Button -->
+    <!-- MODAL 1: PHOTO VIEWER -->
+    <div id="viewer" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="ios-card max-w-2xl w-full p-5 rounded-3xl relative text-left bg-white/95">
             <button data-close="viewer" type="button" 
-                class="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition z-10">
+                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition z-10">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
 
-            <!-- Image Container -->
-            <div class="rounded-xl overflow-hidden bg-black max-h-[50vh] flex items-center justify-center mb-3">
+            <div class="rounded-2xl overflow-hidden bg-black max-h-[50vh] flex items-center justify-center mb-4">
                 <img id="viewerImage" alt="Foto" class="max-h-[50vh] w-auto object-contain">
             </div>
 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h3 id="viewerName" class="serif text-base font-semibold text-[#1a1a1a]">Foto</h3>
-                    <p id="viewerMeta" class="text-[11px] text-gray-500 mt-0.5"></p>
+                    <h3 id="viewerName" class="serif text-lg font-semibold text-[#121212]">Foto</h3>
+                    <p id="viewerMeta" class="text-xs text-gray-500 mt-0.5"></p>
                 </div>
 
-                <!-- Viewer Actions -->
                 <div class="flex items-center gap-2">
-                    <button id="downloadBtn" type="button" 
-                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#1a1a1a] text-[var(--gold)] text-xs font-semibold uppercase tracking-wider transition">
+                    <button id="downloadBtn" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#121212] text-[var(--gold)] text-xs font-semibold uppercase tracking-wider active:scale-95 transition">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                         Unduh
                     </button>
-
-                    <button id="deleteBtn" type="button" 
-                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-xs font-semibold uppercase tracking-wider transition">
+                    <button id="deleteBtn" type="button" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-xs font-semibold uppercase tracking-wider active:scale-95 transition">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         Hapus
                     </button>
@@ -1092,44 +685,37 @@
         </div>
     </div>
 
-    <!-- =====================================================
-         MODAL 2: ALBUM CREATION
-    ===================================================== -->
-    <div id="albumModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
-        <div class="luxury-card max-w-xs w-full p-5 rounded-2xl relative text-center bg-white">
-            
-            <button data-close="albumModal" type="button" class="absolute top-3.5 right-3.5 text-gray-400 hover:text-[#1a1a1a]">
+    <!-- MODAL 2: ALBUM CREATION -->
+    <div id="albumModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="ios-card max-w-xs w-full p-6 rounded-3xl relative text-center bg-white/95">
+            <button data-close="albumModal" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-[#121212]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
 
-            <div class="w-9 h-9 bg-amber-50 rounded-full mx-auto mb-2.5 flex items-center justify-center border border-amber-200 text-[var(--gold)]">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            <div class="w-10 h-10 bg-amber-50 rounded-2xl mx-auto mb-3 flex items-center justify-center border border-amber-200 text-[var(--gold)]">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
             </div>
 
-            <h3 class="serif text-lg font-semibold text-[#1a1a1a] mb-3">Buat Album Baru</h3>
+            <h3 class="serif text-lg font-semibold text-[#121212] mb-3">Buat Album Baru</h3>
 
-            <div class="space-y-2.5">
+            <div class="space-y-3">
                 <input id="albumName" type="text" placeholder="Masukkan nama album..." 
-                    class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-[#1a1a1a] text-xs focus:outline-none focus:ring-1 focus:ring-[var(--gold)]">
+                    class="ios-input w-full px-4 py-2.5 rounded-xl text-xs text-[#121212] focus:outline-none">
 
                 <button id="createAlbumBtn" type="button" 
-                    class="w-full py-2.5 rounded-full bg-[#1a1a1a] text-[var(--gold)] text-xs font-bold uppercase tracking-widest active:bg-black transition">
+                    class="w-full py-3 rounded-full bg-[#121212] active:scale-95 text-[var(--gold)] text-xs font-bold uppercase tracking-widest transition">
                     Buat Album
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- =====================================================
-         SUPABASE & APPLICATION SCRIPTS
-    ===================================================== -->
+    <!-- SUPABASE & APP SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js?v=1.0.2"></script>
 
-    <!-- Interactive UI Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Auth Modal Popup Handler
             const authModal = document.getElementById('authModal');
             const openAuthBtns = document.querySelectorAll('[data-open-auth]');
             const closeAuthBtn = document.getElementById('closeAuthModal');
@@ -1151,21 +737,17 @@
                 });
             }
 
-            // Pure CSS Grid Accordion Handler (Ultra Smooth 60fps on Mobile)
+            // iOS Smooth Accordion Handler
             const accordions = document.querySelectorAll('.accordion-header');
             accordions.forEach(header => {
                 header.addEventListener('click', () => {
                     const faqCard = header.closest('.faq-card');
                     const isOpen = faqCard.classList.contains('open');
 
-                    // Close all other open cards smoothly
                     document.querySelectorAll('.faq-card').forEach(card => {
-                        if (card !== faqCard) {
-                            card.classList.remove('open');
-                        }
+                        if (card !== faqCard) card.classList.remove('open');
                     });
 
-                    // Toggle current card
                     if (!isOpen) {
                         faqCard.classList.add('open');
                     } else {
@@ -1174,7 +756,7 @@
                 });
             });
 
-            // Pricing Toggle
+            // Pricing Switcher
             const btnMonthly = document.getElementById('btnMonthly');
             const btnYearly = document.getElementById('btnYearly');
             const priceGold = document.getElementById('priceGold');
@@ -1184,8 +766,8 @@
 
             if (btnMonthly && btnYearly) {
                 btnMonthly.addEventListener('click', () => {
-                    btnMonthly.className = "px-4 py-1.5 rounded-full text-[11px] font-semibold bg-[#1a1a1a] text-[var(--gold)] transition";
-                    btnYearly.className = "px-4 py-1.5 rounded-full text-[11px] font-semibold text-gray-500 transition hover:text-[#1a1a1a]";
+                    btnMonthly.className = "px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300";
+                    btnYearly.className = "px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212]";
                     
                     if (priceGold) priceGold.textContent = "Rp 49.000";
                     if (periodGold) periodGold.textContent = "/ bulan";
@@ -1194,8 +776,8 @@
                 });
 
                 btnYearly.addEventListener('click', () => {
-                    btnYearly.className = "px-4 py-1.5 rounded-full text-[11px] font-semibold bg-[#1a1a1a] text-[var(--gold)] transition";
-                    btnMonthly.className = "px-4 py-1.5 rounded-full text-[11px] font-semibold text-gray-500 transition hover:text-[#1a1a1a]";
+                    btnYearly.className = "px-5 py-2 rounded-full text-xs font-semibold bg-[#121212] text-[var(--gold)] shadow-sm transition duration-300";
+                    btnMonthly.className = "px-5 py-2 rounded-full text-xs font-semibold text-gray-500 transition duration-300 hover:text-[#121212]";
                     
                     if (priceGold) priceGold.textContent = "Rp 39.000";
                     if (periodGold) periodGold.textContent = "/ bln (ditagih tahunan)";
