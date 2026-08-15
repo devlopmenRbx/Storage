@@ -1,201 +1,371 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<meta charset="utf-8">
+<title>Admin Dashboard Premium v3</title>
 
-<meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
->
-
-<title>FotoVault — Admin Center</title>
-
-<link
-    rel="stylesheet"
-    href="style.css"
->
+<meta name="theme-color" content="#f5f5f7">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="app.js"></script>
-
 <style>
-
-/* =========================================================
-   PREMIUM ADMIN UI
-========================================================= */
-
 :root{
-    --admin-gold:#b99350;
-    --admin-gold-light:#d9bb7e;
-    --admin-bg:#f5f1e9;
-    --admin-text:#24211c;
-    --admin-muted:#827b70;
-    --admin-card:rgba(255,255,255,.67);
-    --admin-border:rgba(255,255,255,.85);
-    --admin-shadow:0 20px 60px rgba(54,45,30,.09);
+    --bg:#f5f5f7;
+    --card:rgba(255,255,255,.78);
+    --card-solid:#fff;
+    --text:#111;
+    --muted:#777;
+    --border:rgba(0,0,0,.07);
+    --shadow:0 20px 60px rgba(0,0,0,.08);
+    --blue:#007aff;
+    --green:#34c759;
+    --red:#ff3b30;
+    --orange:#ff9500;
+    --purple:#af52de;
+    --radius:24px;
+    --sidebar:260px;
 }
 
 *{
     box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",
+    "SF Pro Text",Inter,Arial,sans-serif;
     background:
-        radial-gradient(
-            circle at 10% 0%,
-            rgba(218,190,137,.18),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 90% 10%,
-            rgba(255,255,255,.8),
-            transparent 35%
-        ),
-        var(--admin-bg);
-    color:var(--admin-text);
-}
-
-button,
-input,
-select{
-    font:inherit;
-}
-
-.admin-layout{
-    display:flex;
+        radial-gradient(circle at 10% 0%,rgba(0,122,255,.08),transparent 28%),
+        radial-gradient(circle at 90% 10%,rgba(175,82,222,.08),transparent 25%),
+        var(--bg);
+    color:var(--text);
     min-height:100vh;
+    overflow-x:hidden;
 }
+
+/* ================================
+   BACKGROUND EFFECT
+================================ */
+
+.bg-orb{
+    position:fixed;
+    width:320px;
+    height:320px;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.18;
+    pointer-events:none;
+    z-index:-1;
+    animation:floatOrb 12s ease-in-out infinite alternate;
+}
+
+.orb1{
+    background:#007aff;
+    top:-100px;
+    left:-80px;
+}
+
+.orb2{
+    background:#af52de;
+    right:-100px;
+    bottom:10%;
+    animation-delay:2s;
+}
+
+@keyframes floatOrb{
+    from{
+        transform:translate3d(0,0,0) scale(1);
+    }
+    to{
+        transform:translate3d(40px,30px,0) scale(1.12);
+    }
+}
+
+/* ================================
+   SIDEBAR
+================================ */
 
 .sidebar{
     position:fixed;
-    left:0;
-    top:0;
-    bottom:0;
-    z-index:80;
-    width:245px;
-    padding:24px 16px;
-    border-right:1px solid rgba(80,65,40,.08);
-    background:rgba(255,255,255,.63);
-    backdrop-filter:blur(25px);
-    -webkit-backdrop-filter:blur(25px);
-}
-
-.sidebar-brand{
-    padding:5px 10px 25px;
-}
-
-.sidebar-brand .brand{
-    font-size:23px;
-    font-weight:800;
-}
-
-.admin-label{
-    margin-top:5px;
-    color:var(--admin-muted);
-    font-size:11px;
-}
-
-.menu{
+    left:18px;
+    top:18px;
+    bottom:18px;
+    width:var(--sidebar);
+    padding:18px 14px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.7);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    z-index:100;
     display:flex;
     flex-direction:column;
-    gap:5px;
+    animation:sidebarIn .55s ease;
 }
 
-.menu-button{
+@keyframes sidebarIn{
+    from{
+        opacity:0;
+        transform:translateX(-25px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.brand{
     display:flex;
     align-items:center;
     gap:11px;
-    width:100%;
-    min-height:43px;
-    padding:9px 11px;
-    border:0;
-    border-radius:14px;
-    color:#5c564d;
-    background:transparent;
-    cursor:pointer;
-    text-align:left;
-    transition:.22s ease;
+    padding:6px 8px 20px;
 }
 
-.menu-button:hover{
-    color:var(--admin-text);
-    background:rgba(255,255,255,.72);
-    transform:translateX(2px);
-}
-
-.menu-button.active{
-    color:#342b1e;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(218,190,137,.35),
-            rgba(255,255,255,.75)
-        );
-    box-shadow:
-        inset 0 0 0 1px rgba(185,147,80,.12);
-}
-
-.menu-icon{
-    width:28px;
-    height:28px;
+.brand-icon{
+    width:40px;
+    height:40px;
+    border-radius:13px;
     display:grid;
     place-items:center;
-    border-radius:9px;
-    background:rgba(255,255,255,.6);
-    font-size:14px;
+    color:white;
+    font-size:20px;
+    background:linear-gradient(135deg,#007aff,#5856d6);
+    box-shadow:0 10px 24px rgba(0,122,255,.25);
 }
 
-.main-area{
-    width:calc(100% - 245px);
-    margin-left:245px;
-    min-width:0;
+.brand-text strong{
+    display:block;
+    font-size:15px;
+}
+
+.brand-text span{
+    font-size:11px;
+    color:var(--muted);
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    overflow:auto;
+    padding-right:2px;
+}
+
+.nav::-webkit-scrollbar{
+    width:3px;
+}
+
+.nav::-webkit-scrollbar-thumb{
+    background:#ddd;
+    border-radius:10px;
+}
+
+.nav-btn{
+    border:0;
+    background:transparent;
+    color:#555;
+    width:100%;
+    padding:10px 11px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:13px;
+    text-align:left;
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        color .2s ease;
+}
+
+.nav-btn:hover{
+    background:rgba(0,122,255,.07);
+    transform:translateX(3px);
+    color:var(--blue);
+}
+
+.nav-btn.active{
+    background:rgba(0,122,255,.1);
+    color:var(--blue);
+    font-weight:600;
+}
+
+.nav-icon{
+    width:22px;
+    text-align:center;
+    font-size:16px;
+}
+
+.sidebar-bottom{
+    margin-top:auto;
+    padding-top:12px;
+}
+
+.admin-mini{
+    padding:11px;
+    border-radius:16px;
+    background:rgba(0,0,0,.035);
+    margin-bottom:8px;
+}
+
+.admin-mini small{
+    color:var(--muted);
+    display:block;
+    margin-bottom:3px;
+}
+
+.admin-mini strong{
+    font-size:12px;
+    word-break:break-all;
+}
+
+/* ================================
+   MAIN
+================================ */
+
+.main{
+    margin-left:calc(var(--sidebar) + 38px);
+    padding:22px 25px 50px 0;
+    min-height:100vh;
 }
 
 .topbar{
-    position:sticky;
-    top:0;
-    z-index:60;
-    padding:14px 25px;
-    border-bottom:1px solid rgba(80,65,40,.07);
-    background:rgba(245,241,233,.68);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-}
-
-.topbar-inner{
+    height:64px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:15px;
-    max-width:1400px;
-    margin:auto;
+    margin-bottom:22px;
 }
 
-.page{
-    max-width:1400px;
-    margin:auto;
-    padding:28px 25px 70px;
+.top-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .page-title{
-    margin:0;
-    font-size:clamp(32px,5vw,55px);
+    font-size:27px;
+    font-weight:750;
+    letter-spacing:-.7px;
 }
 
 .page-subtitle{
-    margin:8px 0 0;
-    color:var(--admin-muted);
+    color:var(--muted);
+    font-size:12px;
+    margin-top:3px;
 }
 
-.admin-section{
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+.btn{
+    border:0;
+    min-height:36px;
+    padding:0 13px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    transition:
+        transform .16s ease,
+        box-shadow .16s ease,
+        opacity .16s ease,
+        background .16s ease;
+    white-space:nowrap;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn:active{
+    transform:scale(.96);
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.btn-primary{
+    color:white;
+    background:var(--blue);
+    box-shadow:0 7px 18px rgba(0,122,255,.2);
+}
+
+.btn-success{
+    color:white;
+    background:var(--green);
+}
+
+.btn-danger{
+    color:white;
+    background:var(--red);
+}
+
+.btn-orange{
+    color:white;
+    background:var(--orange);
+}
+
+.btn-purple{
+    color:white;
+    background:var(--purple);
+}
+
+.btn-soft{
+    background:rgba(0,0,0,.05);
+    color:#333;
+}
+
+.btn-soft:hover{
+    background:rgba(0,122,255,.09);
+    color:var(--blue);
+}
+
+.icon-btn{
+    width:36px;
+    height:36px;
+    padding:0;
+    border-radius:12px;
+}
+
+.menu-mobile{
     display:none;
-    animation:sectionIn .4s ease;
 }
 
-.admin-section.active{
+/* ================================
+   SECTIONS
+================================ */
+
+.section{
+    display:none;
+    animation:sectionIn .35s ease;
+}
+
+.section.active{
     display:block;
 }
 
@@ -210,408 +380,363 @@ select{
     }
 }
 
-.stat-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(
-            4,
-            minmax(0,1fr)
-        );
-    gap:15px;
-    margin-top:25px;
-}
-
-.stat-card{
-    padding:20px;
-    border:1px solid var(--admin-border);
-    border-radius:22px;
-    background:var(--admin-card);
-    box-shadow:var(--admin-shadow);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    transition:.25s ease;
-}
-
-.stat-card:hover{
-    transform:translateY(-3px);
-}
-
-.stat-top{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    color:var(--admin-muted);
-    font-size:12px;
-}
-
-.stat-icon{
-    display:grid;
-    place-items:center;
-    width:35px;
-    height:35px;
-    border-radius:12px;
-    background:rgba(185,147,80,.12);
-}
-
-.stat-number{
-    margin:12px 0 2px;
-    font-size:31px;
-    font-weight:800;
-}
+/* ================================
+   CARDS
+================================ */
 
 .card{
-    margin-top:20px;
-    padding:22px;
-    border:1px solid var(--admin-border);
-    border-radius:24px;
-    background:var(--admin-card);
-    box-shadow:var(--admin-shadow);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
+    background:var(--card);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:0 15px 50px rgba(0,0,0,.055);
+    padding:19px;
 }
 
 .card-title{
-    margin:0;
-    font-size:20px;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:4px;
 }
 
-.toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:9px;
-    margin-top:18px;
+.card-subtitle{
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:15px;
 }
 
-.admin-input,
-.admin-select{
-    min-height:39px;
-    padding:8px 12px;
-    border:1px solid rgba(70,60,45,.10);
-    border-radius:12px;
-    outline:none;
-    color:var(--admin-text);
-    background:rgba(255,255,255,.72);
+.grid{
+    display:grid;
+    gap:13px;
 }
 
-.admin-input{
-    min-width:230px;
+.stats-grid{
+    grid-template-columns:repeat(4,1fr);
 }
 
-.admin-input:focus,
-.admin-select:focus{
-    border-color:rgba(185,147,80,.55);
-    box-shadow:0 0 0 3px rgba(185,147,80,.08);
+.stat-card{
+    position:relative;
+    overflow:hidden;
+    min-height:125px;
 }
 
-.small-btn{
-    min-height:37px;
-    padding:7px 12px;
-    border:1px solid rgba(70,60,45,.08);
-    border-radius:11px;
-    cursor:pointer;
-    background:rgba(255,255,255,.7);
-    transition:.2s ease;
+.stat-card::after{
+    content:"";
+    position:absolute;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:rgba(0,122,255,.06);
+    right:-25px;
+    top:-25px;
 }
 
-.small-btn:hover{
-    transform:translateY(-1px);
+.stat-icon{
+    width:39px;
+    height:39px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:rgba(0,122,255,.1);
+    margin-bottom:12px;
 }
 
-.small-btn.danger{
-    color:#8d2727;
-    background:rgba(196,65,65,.08);
+.stat-label{
+    color:var(--muted);
+    font-size:11px;
 }
 
-.small-btn.gold{
-    color:#6e5125;
-    background:rgba(185,147,80,.14);
+.stat-value{
+    font-size:25px;
+    font-weight:750;
+    letter-spacing:-.5px;
+    margin-top:3px;
 }
+
+.content-grid{
+    grid-template-columns:1.2fr .8fr;
+    margin-top:14px;
+}
+
+.two-grid{
+    grid-template-columns:1fr 1fr;
+}
+
+.three-grid{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.spacer{
+    height:14px;
+}
+
+/* ================================
+   TABLE
+================================ */
 
 .table-wrap{
-    width:100%;
-    overflow-x:auto;
-    margin-top:15px;
+    overflow:auto;
+    border-radius:15px;
+    border:1px solid var(--border);
 }
 
 table{
     width:100%;
-    min-width:650px;
     border-collapse:collapse;
-}
-
-th,
-td{
-    padding:13px 10px;
-    border-bottom:1px solid rgba(60,50,35,.07);
-    text-align:left;
-    font-size:13px;
+    min-width:650px;
 }
 
 th{
-    color:var(--admin-muted);
-    font-size:11px;
+    text-align:left;
+    padding:11px 12px;
+    background:rgba(0,0,0,.025);
+    color:#777;
+    font-size:10px;
     text-transform:uppercase;
-    letter-spacing:.04em;
+    letter-spacing:.4px;
 }
 
-.status{
+td{
+    padding:12px;
+    border-top:1px solid rgba(0,0,0,.05);
+    font-size:12px;
+}
+
+tr{
+    transition:background .15s ease;
+}
+
+tbody tr:hover{
+    background:rgba(0,122,255,.035);
+}
+
+.badge{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    padding:5px 9px;
-    border-radius:999px;
-    font-size:11px;
-    font-weight:700;
-}
-
-.status.ok{
-    color:#356c43;
-    background:rgba(61,137,80,.10);
-}
-
-.status.warn{
-    color:#806020;
-    background:rgba(185,147,80,.13);
-}
-
-.status.danger{
-    color:#8d2727;
-    background:rgba(196,65,65,.10);
-}
-
-.photo-admin-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(150px,1fr)
-        );
-    gap:13px;
-    margin-top:20px;
-}
-
-.admin-photo{
-    position:relative;
-    overflow:hidden;
-    aspect-ratio:1;
-    border-radius:18px;
-    background:#eee9df;
-}
-
-.admin-photo img{
-    width:100%;
-    height:100%;
-    display:block;
-    object-fit:cover;
-    transition:.45s ease;
-}
-
-.admin-photo:hover img{
-    transform:scale(1.045);
-}
-
-.photo-overlay{
-    position:absolute;
-    left:8px;
-    right:8px;
-    bottom:8px;
-    display:flex;
-    justify-content:space-between;
-    gap:6px;
-}
-
-.overlay-btn{
-    width:35px;
-    height:35px;
-    border:0;
-    border-radius:11px;
-    cursor:pointer;
-    background:rgba(255,255,255,.84);
-    backdrop-filter:blur(10px);
-}
-
-.security-list{
-    display:grid;
-    gap:10px;
-    margin-top:15px;
-}
-
-.security-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    padding:14px;
-    border-radius:15px;
-    background:rgba(255,255,255,.48);
-}
-
-.security-left{
-    display:flex;
-    align-items:center;
-    gap:11px;
-}
-
-.security-icon{
-    display:grid;
-    place-items:center;
-    width:36px;
-    height:36px;
-    border-radius:11px;
-    background:rgba(185,147,80,.11);
-}
-
-.log-list{
-    display:grid;
-    gap:8px;
-    margin-top:15px;
-}
-
-.log-item{
-    padding:13px;
-    border-left:3px solid rgba(185,147,80,.6);
-    border-radius:12px;
-    background:rgba(255,255,255,.48);
-}
-
-.log-time{
-    color:var(--admin-muted);
+    padding:4px 8px;
+    border-radius:20px;
     font-size:10px;
+    font-weight:650;
 }
 
-.health-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(
-            3,
-            minmax(0,1fr)
-        );
-    gap:13px;
-    margin-top:17px;
+.badge-blue{
+    color:#0066d6;
+    background:rgba(0,122,255,.1);
 }
 
-.health-item{
-    padding:17px;
-    border-radius:17px;
-    background:rgba(255,255,255,.5);
+.badge-green{
+    color:#168a35;
+    background:rgba(52,199,89,.12);
 }
 
-.health-name{
+.badge-red{
+    color:#d9271c;
+    background:rgba(255,59,48,.1);
+}
+
+.badge-orange{
+    color:#c56b00;
+    background:rgba(255,149,0,.12);
+}
+
+/* ================================
+   STATUS
+================================ */
+
+.status-row{
     display:flex;
+    align-items:center;
     justify-content:space-between;
-    font-size:13px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(0,0,0,.05);
 }
 
-.health-dot{
+.status-row:last-child{
+    border-bottom:0;
+}
+
+.status-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.status-dot{
     width:9px;
     height:9px;
     border-radius:50%;
-    background:#4c9b5a;
-    box-shadow:0 0 0 5px rgba(76,155,90,.09);
+    background:#bbb;
 }
 
-.maintenance-box{
-    padding:20px;
-    border-radius:18px;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(185,147,80,.13),
-            rgba(255,255,255,.55)
-        );
+.status-dot.online{
+    background:var(--green);
+    box-shadow:0 0 0 5px rgba(52,199,89,.1);
 }
+
+.status-dot.offline{
+    background:var(--red);
+}
+
+/* ================================
+   TOGGLE
+================================ */
 
 .toggle{
     position:relative;
-    width:50px;
-    height:28px;
-    border:0;
-    border-radius:999px;
-    cursor:pointer;
-    background:#d6d0c5;
-    transition:.25s ease;
+    width:42px;
+    height:24px;
+    flex:none;
 }
 
-.toggle::after{
-    content:"";
-    position:absolute;
-    width:22px;
-    height:22px;
-    top:3px;
-    left:3px;
-    border-radius:50%;
-    background:white;
-    box-shadow:0 2px 6px rgba(0,0,0,.15);
-    transition:.25s ease;
-}
-
-.toggle.on{
-    background:var(--admin-gold);
-}
-
-.toggle.on::after{
-    transform:translateX(22px);
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    z-index:200;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(35,30,23,.30);
-    backdrop-filter:blur(12px);
-}
-
-.modal.hidden{
+.toggle input{
     display:none;
 }
 
-.modal-box{
-    width:min(500px,100%);
-    max-height:85vh;
-    overflow:auto;
-    padding:23px;
-    border:1px solid rgba(255,255,255,.85);
-    border-radius:25px;
-    background:rgba(255,255,255,.86);
-    box-shadow:0 30px 90px rgba(0,0,0,.18);
+.slider{
+    position:absolute;
+    inset:0;
+    background:#d1d1d6;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.25s ease;
 }
 
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:25px;
-    z-index:300;
-    max-width:calc(100% - 30px);
-    padding:12px 16px;
-    border-radius:15px;
-    color:#29251e;
-    background:rgba(255,255,255,.9);
-    box-shadow:0 15px 45px rgba(0,0,0,.13);
-    backdrop-filter:blur(18px);
-    transform:translate(-50%,20px);
-    opacity:0;
-    pointer-events:none;
-    transition:.3s ease;
+.slider::after{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:2px;
+    top:2px;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 2px 6px rgba(0,0,0,.18);
+    transition:.25s ease;
 }
 
-.toast.show{
-    opacity:1;
-    transform:translate(-50%,0);
+.toggle input:checked + .slider{
+    background:var(--green);
 }
+
+.toggle input:checked + .slider::after{
+    transform:translateX(18px);
+}
+
+/* ================================
+   INPUT
+================================ */
+
+.input,
+.select,
+.textarea{
+    width:100%;
+    border:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.72);
+    padding:10px 12px;
+    border-radius:12px;
+    outline:none;
+    font-family:inherit;
+    font-size:12px;
+    transition:.2s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus{
+    border-color:rgba(0,122,255,.35);
+    box-shadow:0 0 0 4px rgba(0,122,255,.08);
+}
+
+.textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.form-group{
+    margin-bottom:12px;
+}
+
+.form-label{
+    display:block;
+    font-size:11px;
+    font-weight:650;
+    margin-bottom:6px;
+}
+
+/* ================================
+   SEARCH
+================================ */
+
+.search-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.search-row .input{
+    flex:1;
+}
+
+/* ================================
+   SKELETON
+================================ */
+
+.skeleton{
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.04) 25%,
+            rgba(255,255,255,.65) 50%,
+            rgba(0,0,0,.04) 75%
+        );
+    background-size:200% 100%;
+    animation:shimmer 1.3s infinite;
+    border-radius:8px;
+}
+
+@keyframes shimmer{
+    to{
+        background-position:-200% 0;
+    }
+}
+
+/* ================================
+   LOADING OVERLAY
+================================ */
 
 .loading{
-    display:inline-block;
-    width:16px;
-    height:16px;
-    border:2px solid rgba(185,147,80,.2);
-    border-top-color:var(--admin-gold);
+    position:fixed;
+    inset:0;
+    background:rgba(245,245,247,.58);
+    backdrop-filter:blur(10px);
+    z-index:1000;
+    display:none;
+    place-items:center;
+}
+
+.loading.show{
+    display:grid;
+}
+
+.loader-card{
+    padding:23px;
+    background:rgba(255,255,255,.9);
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    text-align:center;
+    min-width:170px;
+}
+
+.spinner{
+    width:34px;
+    height:34px;
+    border:3px solid rgba(0,122,255,.14);
+    border-top-color:var(--blue);
     border-radius:50%;
     animation:spin .7s linear infinite;
-    vertical-align:middle;
+    margin:auto auto 11px;
 }
 
 @keyframes spin{
@@ -620,1440 +745,3242 @@ th{
     }
 }
 
-.mobile-menu{
+.loader-card strong{
+    display:block;
+    font-size:13px;
+}
+
+.loader-card span{
+    display:block;
+    font-size:10px;
+    color:var(--muted);
+    margin-top:3px;
+}
+
+/* ================================
+   TOAST
+================================ */
+
+.toast-container{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:2000;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.toast{
+    min-width:250px;
+    max-width:350px;
+    padding:13px 15px;
+    border-radius:16px;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    box-shadow:0 15px 45px rgba(0,0,0,.12);
+    animation:toastIn .3s ease;
+    font-size:12px;
+}
+
+.toast.success{
+    border-left:3px solid var(--green);
+}
+
+.toast.error{
+    border-left:3px solid var(--red);
+}
+
+.toast.info{
+    border-left:3px solid var(--blue);
+}
+
+@keyframes toastIn{
+    from{
+        opacity:0;
+        transform:translateY(12px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* ================================
+   MODAL
+================================ */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(9px);
+    z-index:1500;
     display:none;
+    place-items:center;
+    padding:20px;
 }
 
-.empty{
-    padding:35px;
-    color:var(--admin-muted);
-    text-align:center;
+.modal.show{
+    display:grid;
 }
 
+.modal-card{
+    width:min(470px,100%);
+    background:rgba(255,255,255,.94);
+    border-radius:25px;
+    border:1px solid var(--border);
+    box-shadow:0 30px 100px rgba(0,0,0,.2);
+    padding:21px;
+    animation:modalIn .25s ease;
+}
 
-/* =========================================================
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translateY(15px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modal-title{
+    font-size:17px;
+    font-weight:750;
+    margin-bottom:6px;
+}
+
+.modal-text{
+    color:#777;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:7px;
+    margin-top:18px;
+}
+
+/* ================================
+   MAINTENANCE
+================================ */
+
+.maintenance-card{
+    border:1px solid rgba(255,149,0,.18);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,149,0,.08),
+            rgba(255,255,255,.78)
+        );
+}
+
+.maintenance-card.enabled{
+    border-color:rgba(255,59,48,.2);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,59,48,.08),
+            rgba(255,255,255,.78)
+        );
+}
+
+.maintenance-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.big-status{
+    font-size:18px;
+    font-weight:750;
+}
+
+/* ================================
    MOBILE
-========================================================= */
+================================ */
 
-@media(max-width:950px){
+@media(max-width:1000px){
+    :root{
+        --sidebar:225px;
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .content-grid,
+    .two-grid{
+        grid-template-columns:1fr;
+    }
+
+    .three-grid{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:720px){
 
     .sidebar{
-        transform:translateX(-105%);
+        transform:translateX(-115%);
         transition:.3s ease;
-        box-shadow:20px 0 60px rgba(0,0,0,.08);
+        width:245px;
+        top:10px;
+        bottom:10px;
+        left:10px;
     }
 
     .sidebar.open{
         transform:none;
     }
 
-    .main-area{
-        width:100%;
+    .main{
         margin-left:0;
-    }
-
-    .mobile-menu{
-        display:grid;
-        place-items:center;
-        width:38px;
-        height:38px;
-        border:0;
-        border-radius:12px;
-        background:rgba(255,255,255,.7);
-    }
-
-    .stat-grid{
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
-    }
-
-}
-
-@media(max-width:600px){
-
-    .page{
-        padding:22px 15px 60px;
+        padding:12px 12px 40px;
     }
 
     .topbar{
-        padding:10px 15px;
+        height:57px;
     }
 
-    .stat-grid{
+    .menu-mobile{
+        display:inline-flex;
+    }
+
+    .page-title{
+        font-size:21px;
+    }
+
+    .page-subtitle{
+        font-size:10px;
+    }
+
+    .top-actions .refresh-text{
+        display:none;
+    }
+
+    .stats-grid{
         grid-template-columns:1fr 1fr;
-        gap:9px;
     }
 
-    .stat-card{
-        padding:14px;
-        border-radius:18px;
-    }
-
-    .stat-number{
-        font-size:24px;
-    }
-
-    .health-grid{
+    .three-grid{
         grid-template-columns:1fr;
     }
 
-    .admin-input{
-        min-width:100%;
-        width:100%;
+    .card{
+        padding:15px;
+        border-radius:20px;
     }
 
-    .toolbar > *{
-        width:100%;
+    .stat-card{
+        min-height:110px;
     }
 
+    .stat-value{
+        font-size:21px;
+    }
+
+    .btn{
+        min-height:35px;
+        padding:0 10px;
+        font-size:11px;
+    }
+
+    .toast-container{
+        left:12px;
+        right:12px;
+        bottom:12px;
+    }
+
+    .toast{
+        min-width:0;
+        width:100%;
+    }
 }
-
 </style>
-
 </head>
-
 
 <body>
 
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
 
-<div class="admin-layout">
-
-
-<!-- =======================================================
+<!-- ================================
      SIDEBAR
-======================================================= -->
+================================ -->
 
-<aside
-    id="sidebar"
-    class="sidebar"
->
+<aside class="sidebar" id="sidebar">
 
-<div class="sidebar-brand">
+    <div class="brand">
+        <div class="brand-icon"></div>
 
-<div class="brand">
-Foto<span class="gold">Vault</span>
-</div>
+        <div class="brand-text">
+            <strong>Admin Premium</strong>
+            <span>Control Center v3</span>
+        </div>
+    </div>
 
-<div class="admin-label">
-ADMIN CENTER
-</div>
+    <nav class="nav">
 
-</div>
+        <button class="nav-btn active"
+                data-section="overview">
+            <span class="nav-icon">⌂</span>
+            Overview
+        </button>
 
+        <button class="nav-btn"
+                data-section="users">
+            <span class="nav-icon">♙</span>
+            Users
+        </button>
 
-<nav class="menu">
+        <button class="nav-btn"
+                data-section="photos">
+            <span class="nav-icon">▧</span>
+            Photos
+        </button>
 
-<button
-    class="menu-button active"
-    data-section="overview"
->
-    <span class="menu-icon">⌂</span>
-    Overview
-</button>
+        <button class="nav-btn"
+                data-section="storage">
+            <span class="nav-icon">▤</span>
+            Storage
+        </button>
 
+        <button class="nav-btn"
+                data-section="maintenance">
+            <span class="nav-icon">⚙</span>
+            Maintenance
+        </button>
 
-<button
-    class="menu-button"
-    data-section="users"
->
-    <span class="menu-icon">♙</span>
-    Users
-</button>
+        <button class="nav-btn"
+                data-section="security">
+            <span class="nav-icon">◉</span>
+            Security
+        </button>
 
+        <button class="nav-btn"
+                data-section="notifications">
+            <span class="nav-icon">♢</span>
+            Notifications
+        </button>
 
-<button
-    class="menu-button"
-    data-section="photos"
->
-    <span class="menu-icon">▧</span>
-    Photos
-</button>
+        <button class="nav-btn"
+                data-section="audit">
+            <span class="nav-icon">≡</span>
+            Audit Log
+        </button>
 
+        <button class="nav-btn"
+                data-section="settings">
+            <span class="nav-icon">⚙</span>
+            Settings
+        </button>
 
-<button
-    class="menu-button"
-    data-section="storage"
->
-    <span class="menu-icon">◫</span>
-    Storage
-</button>
+    </nav>
 
+    <div class="sidebar-bottom">
 
-<button
-    class="menu-button"
-    data-section="maintenance"
->
-    <span class="menu-icon">⚙</span>
-    Maintenance
-</button>
+        <div class="admin-mini">
+            <small>Signed in as</small>
+            <strong id="adminEmail">Loading...</strong>
+        </div>
 
+        <button class="btn btn-soft"
+                style="width:100%"
+                onclick="logout()">
+            ↪ Keluar
+        </button>
 
-<button
-    class="menu-button"
-    data-section="security"
->
-    <span class="menu-icon">⌾</span>
-    Security
-</button>
-
-
-<button
-    class="menu-button"
-    data-section="audit"
->
-    <span class="menu-icon">≡</span>
-    Audit Log
-</button>
-
-
-<button
-    class="menu-button"
-    data-section="notifications"
->
-    <span class="menu-icon">◉</span>
-    Notifications
-</button>
-
-
-<button
-    class="menu-button"
-    data-section="system"
->
-    <span class="menu-icon">◇</span>
-    System Health
-</button>
-
-</nav>
+    </div>
 
 </aside>
 
-
-
-<!-- =======================================================
+<!-- ================================
      MAIN
-======================================================= -->
+================================ -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="top-left">
+
+            <button class="btn btn-soft icon-btn menu-mobile"
+                    onclick="toggleSidebar()">
+                ☰
+            </button>
+
+            <div>
+                <div class="page-title"
+                     id="pageTitle">
+                    Overview
+                </div>
+
+                <div class="page-subtitle"
+                     id="pageSubtitle">
+                    Admin Control Center
+                </div>
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <button class="btn btn-soft"
+                    onclick="refreshCurrent()">
+                ↻
+                <span class="refresh-text">
+                    Refresh
+                </span>
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- ============================
+         OVERVIEW
+    ============================= -->
+
+    <section class="section active"
+             id="section-overview">
+
+        <div class="grid stats-grid">
+
+            <div class="card stat-card">
+                <div class="stat-icon">♙</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value"
+                     id="statUsers">
+                    —
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-icon">▧</div>
+                <div class="stat-label">Total Photos</div>
+                <div class="stat-value"
+                     id="statPhotos">
+                    —
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-icon">▤</div>
+                <div class="stat-label">Storage Used</div>
+                <div class="stat-value"
+                     id="statStorage">
+                    —
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-icon">●</div>
+                <div class="stat-label">
+                    Active 30 Days
+                </div>
+                <div class="stat-value"
+                     id="statActive">
+                    —
+                </div>
+            </div>
+
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="grid content-grid">
+
+            <div class="card">
+
+                <div class="card-title">
+                    System Status
+                </div>
+
+                <div class="card-subtitle">
+                    Kondisi layanan saat ini
+                </div>
+
+                <div class="status-row">
+                    <div class="status-left">
+                        <span class="status-dot"
+                              id="healthDot"></span>
+                        <span>Admin API</span>
+                    </div>
+
+                    <span class="badge"
+                          id="healthBadge">
+                        Checking
+                    </span>
+                </div>
+
+                <div class="status-row">
+                    <div class="status-left">
+                        <span class="status-dot"
+                              id="dbDot"></span>
+                        <span>Database</span>
+                    </div>
 
-<div class="main-area">
+                    <span class="badge"
+                          id="dbBadge">
+                        Checking
+                    </span>
+                </div>
+
+                <div class="status-row">
+                    <div class="status-left">
+                        <span class="status-dot"
+                              id="storageDot"></span>
+                        <span>Storage</span>
+                    </div>
+
+                    <span class="badge"
+                          id="storageBadge">
+                        Checking
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="card maintenance-card"
+                 id="maintenanceOverviewCard">
 
+                <div class="card-title">
+                    Maintenance
+                </div>
 
-<header class="topbar">
+                <div class="card-subtitle">
+                    Status maintenance website
+                </div>
 
-<div class="topbar-inner">
+                <div class="maintenance-status">
 
-<button
-    id="mobileMenu"
-    class="mobile-menu"
->
-    ☰
-</button>
+                    <span class="status-dot"
+                          id="maintenanceDot"></span>
 
+                    <div>
+                        <div class="big-status"
+                             id="maintenanceText">
+                            Checking...
+                        </div>
 
-<div>
+                        <div class="page-subtitle"
+                             id="maintenanceMessage">
+                            —
+                        </div>
+                    </div>
 
-<strong>
-FotoVault Admin
-</strong>
+                </div>
 
-<div
-    id="adminEmail"
-    class="admin-label"
->
-    Memeriksa sesi...
-</div>
+                <button class="btn btn-soft"
+                        onclick="showSection('maintenance')">
+                    Kelola Maintenance
+                </button>
 
-</div>
+            </div>
 
+        </div>
 
-<div
-    style="
-        display:flex;
-        gap:7px;
-        align-items:center;
-    "
->
+    </section>
 
-<button
-    id="globalRefresh"
-    class="small-btn"
->
-    ↻ Refresh
-</button>
+    <!-- ============================
+         USERS
+    ============================= -->
 
+    <section class="section"
+             id="section-users">
 
-<button
-    id="logout"
-    class="small-btn"
->
-    Keluar
-</button>
+        <div class="card">
 
-</div>
+            <div class="card-title">
+                User Management
+            </div>
+
+            <div class="card-subtitle">
+                Kelola akun dan keamanan pengguna.
+            </div>
 
-</div>
+            <div class="search-row">
 
-</header>
+                <input class="input"
+                       id="userSearch"
+                       placeholder="Cari email atau UID..."
+                       oninput="filterUsers()">
 
+                <button class="btn btn-soft"
+                        onclick="loadUsers()">
+                    ↻
+                </button>
 
+            </div>
 
-<main class="page">
+            <div class="table-wrap">
 
+                <table>
 
-<!-- =====================================================
-     OVERVIEW
-===================================================== -->
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Dibuat</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
 
-<section
-    id="section-overview"
-    class="admin-section active"
->
+                    <tbody id="usersTable">
+                        <tr>
+                            <td colspan="5">
+                                Memuat...
+                            </td>
+                        </tr>
+                    </tbody>
 
-<span class="pill">
-ADMIN DASHBOARD
-</span>
+                </table>
 
-<h1 class="serif page-title">
-Control Center.
-</h1>
+            </div>
 
-<p class="page-subtitle">
-Kelola FotoVault dari satu tempat.
-</p>
+        </div>
 
+    </section>
 
-<div class="stat-grid">
+    <!-- ============================
+         PHOTOS
+    ============================= -->
 
+    <section class="section"
+             id="section-photos">
 
-<div class="stat-card">
+        <div class="card">
 
-<div class="stat-top">
-Users
-<span class="stat-icon">♙</span>
-</div>
+            <div class="card-title">
+                Photos Management
+            </div>
 
-<div
-    id="statUsers"
-    class="stat-number"
->
-—
-</div>
+            <div class="card-subtitle">
+                Kelola file foto yang tersimpan.
+            </div>
 
-<span class="admin-label">
-Pengguna
-</span>
+            <div class="search-row">
 
-</div>
+                <input class="input"
+                       id="photoSearch"
+                       placeholder="Cari nama foto atau UID..."
+                       oninput="filterPhotos()">
 
+                <button class="btn btn-soft"
+                        onclick="loadPhotos()">
+                    ↻
+                </button>
 
-<div class="stat-card">
+            </div>
 
-<div class="stat-top">
-Photos
-<span class="stat-icon">▧</span>
-</div>
+            <div class="table-wrap">
 
-<div
-    id="statPhotos"
-    class="stat-number"
->
-—
-</div>
+                <table>
 
-<span class="admin-label">
-Foto
-</span>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>User ID</th>
+                            <th>Ukuran</th>
+                            <th>Tanggal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
 
-</div>
+                    <tbody id="photosTable">
+                        <tr>
+                            <td colspan="5">
+                                Memuat...
+                            </td>
+                        </tr>
+                    </tbody>
 
+                </table>
 
-<div class="stat-card">
+            </div>
 
-<div class="stat-top">
-Storage
-<span class="stat-icon">◫</span>
-</div>
+        </div>
 
-<div
-    id="statStorage"
-    class="stat-number"
->
-—
-</div>
+    </section>
 
-<span class="admin-label">
-Digunakan
-</span>
+    <!-- ============================
+         STORAGE
+    ============================= -->
 
-</div>
+    <section class="section"
+             id="section-storage">
 
+        <div class="grid two-grid">
 
-<div class="stat-card">
+            <div class="card">
 
-<div class="stat-top">
-Maintenance
-<span class="stat-icon">⚙</span>
-</div>
+                <div class="card-title">
+                    Storage Overview
+                </div>
 
-<div
-    id="statMaintenance"
-    class="stat-number"
-    style="font-size:23px"
->
-—
-</div>
+                <div class="card-subtitle">
+                    Penggunaan penyimpanan sistem.
+                </div>
 
-<span class="admin-label">
-Status sistem
-</span>
+                <div class="status-row">
+                    <span>Total Photos</span>
+                    <strong id="storagePhotos">—</strong>
+                </div>
 
-</div>
+                <div class="status-row">
+                    <span>Used Storage</span>
+                    <strong id="storageUsed">—</strong>
+                </div>
 
-</div>
+                <div class="status-row">
+                    <span>System Status</span>
+                    <span class="badge badge-green">
+                        Online
+                    </span>
+                </div>
 
+            </div>
 
-<div class="card">
+            <div class="card">
 
-<h2 class="card-title">
-Quick Actions
-</h2>
+                <div class="card-title">
+                    User Storage Quota
+                </div>
 
-<div class="toolbar">
+                <div class="card-subtitle">
+                    Tambahkan kapasitas penyimpanan user.
+                </div>
 
-<button
-    class="small-btn gold"
-    data-section="users"
->
-    Kelola Users
-</button>
+                <div class="form-group">
 
-<button
-    class="small-btn gold"
-    data-section="photos"
->
-    Kelola Photos
-</button>
+                    <label class="form-label">
+                        User ID
+                    </label>
 
-<button
-    class="small-btn"
-    data-section="security"
->
-    Security Center
-</button>
+                    <input class="input"
+                           id="quotaUserId"
+                           placeholder="UUID user">
 
-<button
-    class="small-btn"
-    data-section="maintenance"
->
-    Maintenance
-</button>
+                </div>
 
-</div>
+                <div class="form-group">
 
-</div>
+                    <label class="form-label">
+                        Kapasitas
+                    </label>
 
+                    <select class="select"
+                            id="quotaSize">
 
-<div class="card">
+                        <option value="1073741824">
+                            1 GB
+                        </option>
 
-<h2 class="card-title">
-System Health
-</h2>
+                        <option value="5368709120">
+                            5 GB
+                        </option>
 
-<div class="health-grid">
+                        <option value="10737418240">
+                            10 GB
+                        </option>
 
-<div class="health-item">
-<div class="health-name">
-Supabase
-<span class="health-dot"></span>
-</div>
-<p class="admin-label">
-Database connection
-</p>
-</div>
+                        <option value="53687091200">
+                            50 GB
+                        </option>
 
+                        <option value="107374182400">
+                            100 GB
+                        </option>
 
-<div class="health-item">
-<div class="health-name">
-Authentication
-<span class="health-dot"></span>
-</div>
-<p class="admin-label">
-Session system
-</p>
-</div>
+                    </select>
 
+                </div>
 
-<div class="health-item">
-<div class="health-name">
-Frontend
-<span class="health-dot"></span>
-</div>
-<p class="admin-label">
-Dashboard online
-</p>
-</div>
+                <button class="btn btn-primary"
+                        onclick="setQuota()">
+                    Simpan Kapasitas
+                </button>
 
-</div>
+                <button class="btn btn-soft"
+                        onclick="checkQuota()">
+                    Cek Quota
+                </button>
 
-</div>
+            </div>
 
-</section>
+        </div>
 
+    </section>
 
+    <!-- ============================
+         MAINTENANCE
+    ============================= -->
 
-<!-- =====================================================
-     USERS
-===================================================== -->
+    <section class="section"
+             id="section-maintenance">
 
-<section
-    id="section-users"
-    class="admin-section"
->
+        <div class="card maintenance-card"
+             id="maintenanceCard">
 
-<span class="pill">
-USER MANAGEMENT
-</span>
+            <div class="card-title">
+                Maintenance Control
+            </div>
 
-<h1 class="serif page-title">
-Users
-</h1>
+            <div class="card-subtitle">
+                Aktifkan atau nonaktifkan mode maintenance
+                melalui Supabase.
+            </div>
 
-<p class="page-subtitle">
-Pantau akun dan role pengguna.
-</p>
+            <div class="status-row">
 
+                <div class="status-left">
 
-<div class="card">
+                    <span class="status-dot"
+                          id="maintenanceControlDot"></span>
 
-<div class="toolbar">
+                    <div>
+                        <strong id="maintenanceControlText">
+                            Checking...
+                        </strong>
 
-<input
-    id="userSearch"
-    class="admin-input"
-    placeholder="Cari berdasarkan User ID..."
->
+                        <div class="page-subtitle">
+                            Status tersimpan di database
+                        </div>
+                    </div>
 
+                </div>
 
-<select
-    id="roleFilter"
-    class="admin-select"
->
+                <label class="toggle">
 
-<option value="">
-Semua Role
-</option>
+                    <input type="checkbox"
+                           id="maintenanceToggle"
+                           onchange="toggleMaintenance()">
 
-<option value="admin">
-Admin
-</option>
+                    <span class="slider"></span>
 
-<option value="user">
-User
-</option>
+                </label>
 
-</select>
+            </div>
 
+            <div class="spacer"></div>
 
-<button
-    id="loadUsers"
-    class="small-btn gold"
->
-    Muat User
-</button>
+            <div class="form-group">
 
-</div>
+                <label class="form-label">
+                    Pesan Maintenance
+                </label>
 
+                <textarea class="textarea"
+                          id="maintenanceInput"
+                          placeholder="Contoh: Website sedang diperbarui..."></textarea>
 
-<div
-    id="usersTable"
-    class="table-wrap"
->
+            </div>
 
-<div class="empty">
-Tekan "Muat User" untuk menampilkan data.
-</div>
+            <button class="btn btn-primary"
+                    onclick="saveMaintenance()">
+                Simpan Maintenance
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </section>
 
-</section>
+    <!-- ============================
+         SECURITY
+    ============================= -->
 
+    <section class="section"
+             id="section-security">
 
+        <div class="grid two-grid">
 
-<!-- =====================================================
-     PHOTOS
-===================================================== -->
+            <div class="card">
 
-<section
-    id="section-photos"
-    class="admin-section"
->
+                <div class="card-title">
+                    Security Controls
+                </div>
 
-<span class="pill">
-PHOTO MANAGEMENT
-</span>
+                <div class="card-subtitle">
+                    Pengaturan akses sistem.
+                </div>
 
-<h1 class="serif page-title">
-Photos
-</h1>
+                <div class="status-row">
 
-<p class="page-subtitle">
-Pantau foto yang tersimpan di database.
-</p>
+                    <span>Lock Upload</span>
 
+                    <label class="toggle">
+                        <input type="checkbox"
+                               id="uploadLock"
+                               onchange="setLock('upload_locked',this.checked)">
+                        <span class="slider"></span>
+                    </label>
 
-<div class="card">
+                </div>
 
-<div class="toolbar">
+                <div class="status-row">
 
-<input
-    id="photoSearch"
-    class="admin-input"
-    placeholder="Cari nama foto..."
->
+                    <span>Lock Registration</span>
 
+                    <label class="toggle">
+                        <input type="checkbox"
+                               id="registrationLock"
+                               onchange="setLock('registration_locked',this.checked)">
+                        <span class="slider"></span>
+                    </label>
 
-<button
-    id="loadPhotos"
-    class="small-btn gold"
->
-    Muat Photos
-</button>
+                </div>
 
-</div>
+                <div class="status-row">
 
+                    <span>Lock Sharing</span>
 
-<div
-    id="photosGrid"
-    class="photo-admin-grid"
->
+                    <label class="toggle">
+                        <input type="checkbox"
+                               id="sharingLock"
+                               onchange="setLock('sharing_locked',this.checked)">
+                        <span class="slider"></span>
+                    </label>
 
-<div class="empty">
-Tekan "Muat Photos".
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+            <div class="card">
 
-</section>
+                <div class="card-title">
+                    Security Health
+                </div>
 
+                <div class="card-subtitle">
+                    Pemeriksaan layanan.
+                </div>
 
+                <button class="btn btn-primary"
+                        onclick="runSecurityCheck()">
+                    Jalankan Security Check
+                </button>
 
-<!-- =====================================================
-     STORAGE
-===================================================== -->
+                <div class="spacer"></div>
 
-<section
-    id="section-storage"
-    class="admin-section"
->
+                <div id="securityResult">
+                    Belum dilakukan pemeriksaan.
+                </div>
 
-<span class="pill">
-STORAGE
-</span>
+            </div>
 
-<h1 class="serif page-title">
-Storage
-</h1>
+        </div>
 
-<p class="page-subtitle">
-Monitoring kapasitas penyimpanan.
-</p>
+    </section>
 
+    <!-- ============================
+         NOTIFICATIONS
+    ============================= -->
 
-<div class="card">
+    <section class="section"
+             id="section-notifications">
 
-<h2 class="card-title">
-Storage Overview
-</h2>
+        <div class="grid two-grid">
 
-<div class="health-grid">
+            <div class="card">
 
-<div class="health-item">
-<div class="health-name">
-Total Photos
-<strong id="storagePhotos">
-—</strong>
-</div>
-</div>
+                <div class="card-title">
+                    Send Notification
+                </div>
 
+                <div class="card-subtitle">
+                    Kirim notifikasi kepada user.
+                </div>
 
-<div class="health-item">
-<div class="health-name">
-Used
-<strong id="storageUsed">
-—
-</strong>
-</div>
-</div>
+                <div class="form-group">
 
+                    <label class="form-label">
+                        User ID
+                    </label>
 
-<div class="health-item">
-<div class="health-name">
-Quota
-<strong>
-1 GB
-</strong>
-</div>
-</div>
+                    <input class="input"
+                           id="notifyUserId"
+                           placeholder="UUID user">
 
-</div>
+                </div>
 
+                <div class="form-group">
 
-<p
-    class="admin-label"
-    style="margin-top:20px"
->
-Catatan: kapasitas sebenarnya tetap mengikuti quota Storage pada project Supabase kamu.
-</p>
+                    <label class="form-label">
+                        Judul
+                    </label>
 
-</div>
+                    <input class="input"
+                           id="notifyTitle"
+                           placeholder="Judul notifikasi">
 
-</section>
+                </div>
 
+                <div class="form-group">
 
+                    <label class="form-label">
+                        Pesan
+                    </label>
 
-<!-- =====================================================
-     MAINTENANCE
-===================================================== -->
+                    <textarea class="textarea"
+                              id="notifyBody"
+                              placeholder="Isi notifikasi"></textarea>
 
-<section
-    id="section-maintenance"
-    class="admin-section"
->
+                </div>
 
-<span class="pill">
-SYSTEM CONTROL
-</span>
+                <button class="btn btn-primary"
+                        onclick="sendNotification()">
+                    Kirim Notifikasi
+                </button>
 
-<h1 class="serif page-title">
-Maintenance
-</h1>
+            </div>
 
-<p class="page-subtitle">
-Kontrol status maintenance website.
-</p>
+            <div class="card">
 
+                <div class="card-title">
+                    Notification Center
+                </div>
 
-<div class="card">
+                <div class="card-subtitle">
+                    Notifikasi terbaru.
+                </div>
 
-<div class="maintenance-box">
+                <div id="notificationList">
+                    Memuat...
+                </div>
 
-<div class="row">
+            </div>
 
-<div>
+        </div>
 
-<h2
-    class="card-title"
-    style="margin-bottom:6px"
->
-Maintenance Mode
-</h2>
+    </section>
 
-<p class="admin-label">
-Jika aktif, website dapat menampilkan halaman maintenance kepada user.
-</p>
+    <!-- ============================
+         AUDIT
+    ============================= -->
 
-</div>
+    <section class="section"
+             id="section-audit">
 
+        <div class="grid two-grid">
 
-<button
-    id="maintenanceToggle"
-    class="toggle"
-    aria-label="Toggle maintenance"
->
-</button>
+            <div class="card">
 
-</div>
+                <div class="card-title">
+                    Audit Logs
+                </div>
 
-</div>
+                <div class="card-subtitle">
+                    Aktivitas administratif.
+                </div>
 
-</div>
+                <div class="table-wrap">
 
+                    <table>
 
-<div class="card">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>User</th>
+                                <th>Waktu</th>
+                            </tr>
+                        </thead>
 
-<h2 class="card-title">
-Peringatan
-</h2>
+                        <tbody id="auditTable">
+                            <tr>
+                                <td colspan="3">
+                                    Memuat...
+                                </td>
+                            </tr>
+                        </tbody>
 
-<p class="admin-label">
-Perubahan maintenance sebaiknya dilakukan melalui Edge Function atau endpoint admin yang tervalidasi, bukan dengan memberikan service-role key ke browser.
-</p>
+                    </table>
 
-</div>
+                </div>
 
-</section>
+            </div>
 
+            <div class="card">
 
+                <div class="card-title">
+                    Activity Statistics
+                </div>
 
-<!-- =====================================================
-     SECURITY
-===================================================== -->
+                <div class="card-subtitle">
+                    Ringkasan aktivitas admin.
+                </div>
 
-<section
-    id="section-security"
-    class="admin-section"
->
+                <div id="activityStats">
+                    Memuat...
+                </div>
 
-<span class="pill">
-SECURITY CENTER
-</span>
+                <div class="spacer"></div>
 
-<h1 class="serif page-title">
-Security
-</h1>
+                <button class="btn btn-orange"
+                        onclick="cleanAudit()">
+                    Bersihkan Audit Lama
+                </button>
 
-<p class="page-subtitle">
-Pemeriksaan keamanan dashboard.
-</p>
+            </div>
 
+        </div>
 
-<div class="card">
+    </section>
 
-<div class="security-list">
+    <!-- ============================
+         SETTINGS
+    ============================= -->
 
+    <section class="section"
+             id="section-settings">
 
-<div class="security-row">
+        <div class="grid two-grid">
 
-<div class="security-left">
+            <div class="card">
 
-<div class="security-icon">
-✓
-</div>
+                <div class="card-title">
+                    System Settings
+                </div>
 
-<div>
-<strong>
-Admin Role Check
-</strong>
+                <div class="card-subtitle">
+                    Konfigurasi sistem.
+                </div>
 
-<div class="admin-label">
-Role diperiksa melalui user_roles.
-</div>
+                <div id="settingsList">
+                    Memuat...
+                </div>
 
-</div>
+            </div>
 
-</div>
+            <div class="card">
 
-<span class="status ok">
-ACTIVE
-</span>
+                <div class="card-title">
+                    Maintenance Tools
+                </div>
 
-</div>
+                <div class="card-subtitle">
+                    Tools administrasi database.
+                </div>
 
+                <button class="btn btn-soft"
+                        onclick="testDatabase()">
+                    Test Database
+                </button>
 
-<div class="security-row">
+                <button class="btn btn-soft"
+                        onclick="testStorage()">
+                    Test Storage
+                </button>
 
-<div class="security-left">
+                <button class="btn btn-orange"
+                        onclick="cleanNotifications()">
+                    Bersihkan Notifikasi Lama
+                </button>
 
-<div class="security-icon">
-✓
-</div>
+                <div class="spacer"></div>
 
-<div>
-<strong>
-Service Role Protection
-</strong>
+                <div id="settingsResult">
+                    —
+                </div>
 
-<div class="admin-label">
-Tidak diletakkan di HTML.
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
-
-<span class="status ok">
-SAFE
-</span>
-
-</div>
-
-
-<div class="security-row">
-
-<div class="security-left">
-
-<div class="security-icon">
-✓
-</div>
-
-<div>
-<strong>
-RLS
-</strong>
-
-<div class="admin-label">
-Database protection harus tetap aktif.
-</div>
-
-</div>
-
-</div>
-
-<span class="status warn">
-CHECK
-</span>
-
-</div>
-
-
-<div class="security-row">
-
-<div class="security-left">
-
-<div class="security-icon">
-✓
-</div>
-
-<div>
-<strong>
-Edge Function
-</strong>
-
-<div class="admin-label">
-Operasi sensitif dipindahkan ke server.
-</div>
-
-</div>
-
-</div>
-
-<span class="status ok">
-ACTIVE
-</span>
-
-</div>
-
-
-<div class="security-row">
-
-<div class="security-left">
-
-<div class="security-icon">
-✓
-</div>
-
-<div>
-<strong>
-Password Protection
-</strong>
-
-<div class="admin-label">
-Password plaintext tidak ditampilkan.
-</div>
-
-</div>
-
-</div>
-
-<span class="status ok">
-PROTECTED
-</span>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- =====================================================
-     AUDIT LOG
-===================================================== -->
-
-<section
-    id="section-audit"
-    class="admin-section"
->
-
-<span class="pill">
-AUDIT
-</span>
-
-<h1 class="serif page-title">
-Audit Log
-</h1>
-
-<p class="page-subtitle">
-Aktivitas administratif pada dashboard.
-</p>
-
-
-<div class="card">
-
-<div class="toolbar">
-
-<button
-    id="refreshAudit"
-    class="small-btn gold"
->
-    Refresh Log
-</button>
-
-</div>
-
-
-<div
-    id="auditList"
-    class="log-list"
->
-
-<div class="empty">
-Belum ada audit log yang dimuat.
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- =====================================================
-     NOTIFICATIONS
-===================================================== -->
-
-<section
-    id="section-notifications"
-    class="admin-section"
->
-
-<span class="pill">
-NOTIFICATION CENTER
-</span>
-
-<h1 class="serif page-title">
-Notifications
-</h1>
-
-<p class="page-subtitle">
-Pantau notifikasi yang tersimpan.
-</p>
-
-
-<div class="card">
-
-<div
-    id="notificationList"
-    class="log-list"
->
-
-<div class="empty">
-Tekan refresh untuk memuat notifikasi.
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- =====================================================
-     SYSTEM
-===================================================== -->
-
-<section
-    id="section-system"
-    class="admin-section"
->
-
-<span class="pill">
-SYSTEM HEALTH
-</span>
-
-<h1 class="serif page-title">
-System
-</h1>
-
-<p class="page-subtitle">
-Status komponen utama aplikasi.
-</p>
-
-
-<div class="health-grid">
-
-<div class="health-item">
-
-<div class="health-name">
-Supabase Database
-<span class="health-dot"></span>
-</div>
-
-<p class="admin-label">
-Connection checked from browser.
-</p>
-
-</div>
-
-
-<div class="health-item">
-
-<div class="health-name">
-Authentication
-<span class="health-dot"></span>
-</div>
-
-<p class="admin-label">
-Current admin session.
-</p>
-
-</div>
-
-
-<div class="health-item">
-
-<div class="health-name">
-Storage
-<span class="health-dot"></span>
-</div>
-
-<p class="admin-label">
-Photos bucket.
-</p>
-
-</div>
-
-
-<div class="health-item">
-
-<div class="health-name">
-Edge Function
-<span
-    id="edgeStatusDot"
-    class="health-dot"
-></span>
-</div>
-
-<p
-    id="edgeStatusText"
-    class="admin-label"
->
-Belum diuji.
-</p>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2 class="card-title">
-Security Architecture
-</h2>
-
-<p class="admin-label">
-Browser → Supabase Auth → RLS → Edge Function untuk operasi sensitif.
-Service Role Key tidak boleh dimasukkan ke frontend.
-</p>
-
-</div>
-
-</section>
-
+    </section>
 
 </main>
 
-</div>
+<!-- ================================
+     LOADING
+================================ -->
+
+<div class="loading"
+     id="loading">
+
+    <div class="loader-card">
+
+        <div class="spinner"></div>
+
+        <strong id="loadingTitle">
+            Memproses...
+        </strong>
+
+        <span id="loadingSubtitle">
+            Mohon tunggu
+        </span>
+
+    </div>
 
 </div>
 
+<!-- ================================
+     TOAST
+================================ -->
 
+<div class="toast-container"
+     id="toastContainer"></div>
 
-<!-- =======================================================
-     CONFIRM MODAL
-======================================================= -->
+<!-- ================================
+     MODAL
+================================ -->
 
-<div
-    id="confirmModal"
-    class="modal hidden"
->
+<div class="modal"
+     id="confirmModal">
 
-<div class="modal-box">
+    <div class="modal-card">
 
-<h2
-    id="confirmTitle"
-    class="serif"
->
-Konfirmasi
-</h2>
+        <div class="modal-title"
+             id="modalTitle">
+            Konfirmasi
+        </div>
 
-<p
-    id="confirmText"
-    class="page-subtitle"
->
-Apakah kamu yakin?
-</p>
+        <div class="modal-text"
+             id="modalText">
+            Apakah kamu yakin?
+        </div>
 
+        <div class="modal-actions">
 
-<div
-    style="
-        display:flex;
-        justify-content:flex-end;
-        gap:8px;
-        margin-top:22px;
-    "
->
+            <button class="btn btn-soft"
+                    onclick="closeModal()">
+                Batal
+            </button>
 
-<button
-    id="confirmCancel"
-    class="small-btn"
->
-    Batal
-</button>
+            <button class="btn btn-danger"
+                    id="modalConfirm">
+                Lanjutkan
+            </button>
 
+        </div>
 
-<button
-    id="confirmOk"
-    class="small-btn danger"
->
-    Lanjutkan
-</button>
+    </div>
 
 </div>
-
-</div>
-
-</div>
-
-
-
-<!-- =======================================================
-     PHOTO PREVIEW MODAL
-======================================================= -->
-
-<div
-    id="photoModal"
-    class="modal hidden"
->
-
-<div
-    class="modal-box"
-    style="text-align:center"
->
-
-<button
-    id="closePhoto"
-    class="small-btn"
-    style="float:right"
->
-    ×
-</button>
-
-
-<img
-    id="previewImage"
-    src=""
-    alt="Preview"
-    style="
-        max-width:100%;
-        max-height:70vh;
-        border-radius:18px;
-        object-fit:contain;
-    "
->
-
-</div>
-
-</div>
-
-
-
-<div
-    id="toast"
-    class="toast"
-></div>
-
-
 
 <script>
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://dpvlxxqsipksfiagpxzx.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_uaaaNqNY7KLO3XJURnx03w_4luiz76g";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+const ADMIN_API =
+    `${SUPABASE_URL}/functions/v1/admin-api`;
 
 /* =========================================================
    STATE
 ========================================================= */
 
-let session = null;
-
-let adminUser = null;
-
-let allUsers = [];
-
-let allPhotos = [];
-
-let maintenanceEnabled = false;
-
+let currentSection = "overview";
+let usersCache = [];
+let photosCache = [];
+let currentConfirmAction = null;
 
 /* =========================================================
-   HELPERS
+   INIT
 ========================================================= */
 
-function esc(value){
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    if(
-        typeof FV !== "undefined" &&
-        typeof FV.escapeHtml === "function"
-    ){
+        setupNavigation();
 
-        return FV.escapeHtml(
-            value
-        );
+        const {
+            data
+        } =
+            await supabaseClient.auth.getSession();
 
-    }
+        if (!data.session) {
+            window.location.href =
+                "login.html";
+            return;
+        }
 
+        const {
+            data: userData
+        } =
+            await supabaseClient.auth.getUser();
 
-    return String(
-        value ?? ""
-    )
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        if (!userData?.user) {
+            window.location.href =
+                "login.html";
+            return;
+        }
 
-}
-
-
-function showToast(
-    message
-){
-
-    const toast =
         document.getElementById(
-            "toast"
-        );
+            "adminEmail"
+        ).textContent =
+            userData.user.email ||
+            "Admin";
 
+        try {
 
-    toast.textContent =
-        message;
+            await verifyAdmin();
 
+            await loadOverview();
 
-    toast.classList.add(
-        "show"
-    );
+        } catch (error) {
 
+            showToast(
+                error.message,
+                "error"
+            );
 
-    clearTimeout(
-        window.__toastTimer
-    );
+            setTimeout(() => {
+                window.location.href =
+                    "dashboard.html";
+            }, 1200);
 
-
-    window.__toastTimer =
-        setTimeout(
-            ()=>{
-                toast.classList.remove(
-                    "show"
-                );
-            },
-            3000
-        );
-
-}
-
-
-function formatBytes(
-    value
-){
-
-    if(
-        typeof FV !== "undefined" &&
-        typeof FV.bytes === "function"
-    ){
-
-        return FV.bytes(
-            value
-        );
+        }
 
     }
-
-
-    let n =
-        Number(value) || 0;
-
-    const units =
-        ["B","KB","MB","GB"];
-
-    let i = 0;
-
-
-    while(
-        n >= 1024 &&
-        i < 3
-    ){
-
-        n /= 1024;
-
-        i++;
-
-    }
-
-
-    return `${n.toFixed(i ? 1 : 0)} ${units[i]}`;
-
-}
-
+);
 
 /* =========================================================
-   SECTION NAVIGATION
+   API
 ========================================================= */
 
-function openSection(
-    name
-){
+async function api(
+    action,
+    payload = {}
+) {
+
+    showLoading(
+        "Memproses...",
+        action.replaceAll("_"," ")
+    );
+
+    try {
+
+        const {
+            data: {
+                session
+            }
+        } =
+            await supabaseClient.auth.getSession();
+
+        if (!session) {
+            throw new Error(
+                "Session login sudah berakhir."
+            );
+        }
+
+        const response =
+            await fetch(
+                ADMIN_API,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${session.access_token}`,
+
+                        "apikey":
+                            SUPABASE_KEY
+                    },
+
+                    body:JSON.stringify({
+                        action,
+                        ...payload
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok ||
+            result?.ok === false) {
+
+            throw new Error(
+                result?.error ||
+                "Request gagal."
+            );
+        }
+
+        return result;
+
+    } finally {
+
+        hideLoading();
+
+    }
+}
+
+/* =========================================================
+   VERIFY ADMIN
+========================================================= */
+
+async function verifyAdmin(){
+
+    await api("health");
+
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function setupNavigation(){
 
     document
-        .querySelectorAll(
-            ".admin-section"
-        )
-        .forEach(
-            section =>
-                section.classList.remove(
-                    "active"
-                )
-        );
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
 
+            button.addEventListener(
+                "click",
+                () => {
 
-    const target =
-        document.getElementById(
-            `section-${name}`
-        );
+                    showSection(
+                        button.dataset.section
+                    );
 
+                    closeSidebar();
 
-    if(target){
+                }
+            );
 
-        target.classList.add(
-            "active"
+        });
+
+}
+
+function showSection(section){
+
+    currentSection = section;
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.section === section
+            );
+
+        });
+
+    document
+        .querySelectorAll(".section")
+        .forEach(element => {
+
+            element.classList.toggle(
+                "active",
+                element.id ===
+                `section-${section}`
+            );
+
+        });
+
+    const names = {
+
+        overview:[
+            "Overview",
+            "Admin Control Center"
+        ],
+
+        users:[
+            "Users",
+            "User Management"
+        ],
+
+        photos:[
+            "Photos",
+            "Photo Management"
+        ],
+
+        storage:[
+            "Storage",
+            "Storage & Quota"
+        ],
+
+        maintenance:[
+            "Maintenance",
+            "System Maintenance"
+        ],
+
+        security:[
+            "Security",
+            "Security Controls"
+        ],
+
+        notifications:[
+            "Notifications",
+            "Notification Center"
+        ],
+
+        audit:[
+            "Audit Log",
+            "Administrative Activity"
+        ],
+
+        settings:[
+            "Settings",
+            "System Configuration"
+        ]
+
+    };
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
+        names[section]?.[0] ||
+        "Admin";
+
+    document.getElementById(
+        "pageSubtitle"
+    ).textContent =
+        names[section]?.[1] ||
+        "";
+
+    loadSection(section);
+
+}
+
+async function loadSection(section){
+
+    try{
+
+        if(section === "overview")
+            await loadOverview();
+
+        if(section === "users")
+            await loadUsers();
+
+        if(section === "photos")
+            await loadPhotos();
+
+        if(section === "storage")
+            await loadStorage();
+
+        if(section === "maintenance")
+            await loadMaintenance();
+
+        if(section === "security")
+            await loadSecurity();
+
+        if(section === "notifications")
+            await loadNotifications();
+
+        if(section === "audit")
+            await loadAudit();
+
+        if(section === "settings")
+            await loadSettings();
+
+    }catch(error){
+
+        showToast(
+            error.message,
+            "error"
         );
 
     }
 
+}
 
-    document
-        .querySelectorAll(
-            ".menu-button"
-        )
-        .forEach(
-            button => {
+/* =========================================================
+   OVERVIEW
+========================================================= */
 
-                button.classList.toggle(
-                    "active",
-                    button.dataset.section ===
-                    name
+async function loadOverview(){
+
+    const [
+        statsResult,
+        healthResult,
+        dbResult,
+        storageResult,
+        maintenanceResult
+    ] = await Promise.all([
+
+        api("stats"),
+
+        api("health"),
+
+        api("database_test"),
+
+        api("storage_test"),
+
+        api("maintenance_status")
+
+    ]);
+
+    const stats =
+        statsResult;
+
+    document.getElementById(
+        "statUsers"
+    ).textContent =
+        formatNumber(stats.users);
+
+    document.getElementById(
+        "statPhotos"
+    ).textContent =
+        formatNumber(stats.photos);
+
+    document.getElementById(
+        "statStorage"
+    ).textContent =
+        formatBytes(stats.storage_bytes);
+
+    document.getElementById(
+        "statActive"
+    ).textContent =
+        formatNumber(
+            stats.active_users_30d
+        );
+
+    setHealth(
+        "healthDot",
+        "healthBadge",
+        healthResult.ok
+    );
+
+    setHealth(
+        "dbDot",
+        "dbBadge",
+        dbResult.ok
+    );
+
+    setHealth(
+        "storageDot",
+        "storageBadge",
+        storageResult.ok
+    );
+
+    updateMaintenanceUI(
+        maintenanceResult
+    );
+
+}
+
+/* =========================================================
+   USERS
+========================================================= */
+
+async function loadUsers(){
+
+    const result =
+        await api("list_users");
+
+    usersCache =
+        result.users || [];
+
+    renderUsers(
+        usersCache
+    );
+
+}
+
+function renderUsers(users){
+
+    const tbody =
+        document.getElementById(
+            "usersTable"
+        );
+
+    if(!users.length){
+
+        tbody.innerHTML =
+            `<tr>
+                <td colspan="5">
+                    Tidak ada user.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML =
+        users.map(user => {
+
+            const banned =
+                Boolean(
+                    user.banned_until
                 );
 
+            return `
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            user.email ||
+                            "No Email"
+                        )}
+                    </strong>
+
+                    <div class="page-subtitle">
+                        ${escapeHTML(
+                            user.id
+                        )}
+                    </div>
+                </td>
+
+                <td>
+                    <span class="badge ${
+                        user.role === "admin"
+                        ? "badge-purple"
+                        : "badge-blue"
+                    }">
+                        ${escapeHTML(
+                            user.role
+                        )}
+                    </span>
+                </td>
+
+                <td>
+                    ${
+                        banned
+                        ? `
+                        <span class="badge badge-red">
+                            Banned
+                        </span>`
+                        : `
+                        <span class="badge badge-green">
+                            Aktif
+                        </span>`
+                    }
+                </td>
+
+                <td>
+                    ${formatDate(
+                        user.created_at
+                    )}
+                </td>
+
+                <td>
+
+                    <div style="
+                        display:flex;
+                        gap:5px;
+                        flex-wrap:wrap;
+                    ">
+
+                        <button
+                            class="btn btn-soft"
+                            onclick="userDetails('${user.id}')">
+                            Detail
+                        </button>
+
+                        ${
+                            banned
+                            ? `
+                            <button
+                                class="btn btn-success"
+                                onclick="unban('${user.id}')">
+                                Unban
+                            </button>`
+                            : `
+                            <button
+                                class="btn btn-orange"
+                                onclick="ban('${user.id}')">
+                                Ban
+                            </button>`
+                        }
+
+                        <button
+                            class="btn btn-purple"
+                            onclick="resetPassword('${user.id}')">
+                            Reset
+                        </button>
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="deleteUser('${user.id}')">
+                            Hapus
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+            `;
+
+        }).join("");
+
+}
+
+/* =========================================================
+   USER FILTER
+========================================================= */
+
+function filterUsers(){
+
+    const query =
+        document
+        .getElementById(
+            "userSearch"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        usersCache.filter(user =>
+
+            String(
+                user.email || ""
+            )
+            .toLowerCase()
+            .includes(query)
+
+            ||
+
+            String(
+                user.id || ""
+            )
+            .toLowerCase()
+            .includes(query)
+
+        );
+
+    renderUsers(filtered);
+
+}
+
+/* =========================================================
+   USER DETAIL
+========================================================= */
+
+async function userDetails(userId){
+
+    const result =
+        await api(
+            "user_detail",
+            {
+                userId
             }
         );
 
+    openModal(
+        "Detail User",
+        `
+        <div style="line-height:1.8">
+
+            <strong>Email</strong><br>
+            ${escapeHTML(
+                result.email || "-"
+            )}
+
+            <br><br>
+
+            <strong>User ID</strong><br>
+            ${escapeHTML(
+                result.id
+            )}
+
+            <br><br>
+
+            <strong>Role</strong><br>
+            ${escapeHTML(
+                result.role
+            )}
+
+            <br><br>
+
+            <strong>Dibuat</strong><br>
+            ${formatDate(
+                result.created_at
+            )}
+
+            <br><br>
+
+            <strong>Login terakhir</strong><br>
+            ${formatDate(
+                result.last_sign_in_at
+            )}
+
+            <br><br>
+
+            <strong>Email confirmed</strong><br>
+            ${
+                result.email_confirmed
+                ? "Ya"
+                : "Belum"
+            }
+
+            <br><br>
+
+            <strong>Password</strong><br>
+            <span class="badge badge-blue">
+                Tidak dapat dilihat
+            </span>
+
+        </div>
+        `,
+        null,
+        true
+    );
+
+}
+
+/* =========================================================
+   BAN
+========================================================= */
+
+async function ban(userId){
+
+    openModal(
+        "Ban User",
+        "Pilih durasi ban untuk akun ini.",
+
+        async () => {
+
+            const duration =
+                document.getElementById(
+                    "banDuration"
+                ).value;
+
+            await api(
+                "ban_user",
+                {
+                    userId,
+                    duration
+                }
+            );
+
+            showToast(
+                "User berhasil dibanned.",
+                "success"
+            );
+
+            closeModal();
+
+            await loadUsers();
+
+        }
+    );
+
+    document.getElementById(
+        "modalText"
+    ).innerHTML = `
+        <p style="margin-bottom:12px">
+            Pilih durasi ban:
+        </p>
+
+        <select class="select"
+                id="banDuration">
+
+            <option value="1h">
+                1 Jam
+            </option>
+
+            <option value="1d">
+                1 Hari
+            </option>
+
+            <option value="7d">
+                7 Hari
+            </option>
+
+            <option value="30d">
+                30 Hari
+            </option>
+
+            <option value="100y">
+                Permanen
+            </option>
+
+        </select>
+    `;
+
+}
+
+/* =========================================================
+   UNBAN
+========================================================= */
+
+async function unban(userId){
+
+    confirmAction(
+        "Unban User",
+        "Apakah user ini akan diaktifkan kembali?",
+        async () => {
+
+            await api(
+                "unban_user",
+                {
+                    userId
+                }
+            );
+
+            showToast(
+                "User berhasil di-unban.",
+                "success"
+            );
+
+            await loadUsers();
+
+        }
+    );
+
+}
+
+/* =========================================================
+   DELETE USER
+========================================================= */
+
+async function deleteUser(userId){
+
+    confirmAction(
+        "Hapus Akun",
+        "PERINGATAN: akun user dan foto miliknya akan dihapus. Tindakan ini tidak dapat dibatalkan.",
+        async () => {
+
+            await api(
+                "delete_user",
+                {
+                    userId
+                }
+            );
+
+            showToast(
+                "Akun berhasil dihapus.",
+                "success"
+            );
+
+            await loadUsers();
+            await loadOverview();
+
+        }
+    );
+
+}
+
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
+
+async function resetPassword(userId){
+
+    confirmAction(
+        "Reset Password",
+        "Supabase akan memproses email reset password untuk user tersebut.",
+        async () => {
+
+            await api(
+                "reset_password",
+                {
+                    userId
+                }
+            );
+
+            showToast(
+                "Permintaan reset password berhasil diproses.",
+                "success"
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   PHOTOS
+========================================================= */
+
+async function loadPhotos(){
+
+    const result =
+        await api(
+            "list_photos"
+        );
+
+    photosCache =
+        result.photos || [];
+
+    renderPhotos(
+        photosCache
+    );
+
+}
+
+function renderPhotos(photos){
+
+    const tbody =
+        document.getElementById(
+            "photosTable"
+        );
+
+    if(!photos.length){
+
+        tbody.innerHTML =
+            `<tr>
+                <td colspan="5">
+                    Tidak ada foto.
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    tbody.innerHTML =
+        photos.map(photo => `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            photo.name ||
+                            "Foto"
+                        )}
+                    </strong>
+
+                    <div class="page-subtitle">
+                        ${escapeHTML(
+                            photo.path || ""
+                        )}
+                    </div>
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        photo.user_id || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${formatBytes(
+                        photo.size
+                    )}
+                </td>
+
+                <td>
+                    ${formatDate(
+                        photo.created_at
+                    )}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deletePhoto('${photo.id}')">
+                        Hapus
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+}
+
+function filterPhotos(){
+
+    const query =
+        document
+        .getElementById(
+            "photoSearch"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+    const filtered =
+        photosCache.filter(photo =>
+
+            String(
+                photo.name || ""
+            )
+            .toLowerCase()
+            .includes(query)
+
+            ||
+
+            String(
+                photo.user_id || ""
+            )
+            .toLowerCase()
+            .includes(query)
+
+        );
+
+    renderPhotos(
+        filtered
+    );
+
+}
+
+async function deletePhoto(photoId){
+
+    confirmAction(
+        "Hapus Foto",
+        "Foto akan dihapus dari Storage dan database.",
+        async () => {
+
+            await api(
+                "delete_photo",
+                {
+                    photoId
+                }
+            );
+
+            showToast(
+                "Foto berhasil dihapus.",
+                "success"
+            );
+
+            await loadPhotos();
+            await loadOverview();
+
+        }
+    );
+
+}
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+async function loadStorage(){
+
+    const result =
+        await api(
+            "stats"
+        );
+
+    document.getElementById(
+        "storagePhotos"
+    ).textContent =
+        formatNumber(
+            result.photos
+        );
+
+    document.getElementById(
+        "storageUsed"
+    ).textContent =
+        formatBytes(
+            result.storage_bytes
+        );
+
+}
+
+async function setQuota(){
+
+    const userId =
+        document.getElementById(
+            "quotaUserId"
+        ).value.trim();
+
+    const bytes =
+        Number(
+            document.getElementById(
+                "quotaSize"
+            ).value
+        );
+
+    if(!userId){
+
+        showToast(
+            "Masukkan User ID.",
+            "error"
+        );
+
+        return;
+    }
+
+    await api(
+        "set_quota",
+        {
+            userId,
+            bytes
+        }
+    );
+
+    showToast(
+        "Quota berhasil diperbarui.",
+        "success"
+    );
+
+}
+
+async function checkQuota(){
+
+    const userId =
+        document.getElementById(
+            "quotaUserId"
+        ).value.trim();
+
+    if(!userId){
+
+        showToast(
+            "Masukkan User ID.",
+            "error"
+        );
+
+        return;
+    }
+
+    const result =
+        await api(
+            "get_quota",
+            {
+                userId
+            }
+        );
+
+    const quota =
+        result.quota;
+
+    if(!quota){
+
+        showToast(
+            "Quota user belum tersedia.",
+            "info"
+        );
+
+        return;
+    }
+
+    showToast(
+        `Quota: ${formatBytes(
+            quota.quota_bytes
+        )}`,
+        "info"
+    );
+
+}
+
+/* =========================================================
+   MAINTENANCE
+========================================================= */
+
+async function loadMaintenance(){
+
+    const result =
+        await api(
+            "maintenance_status"
+        );
+
+    updateMaintenanceUI(
+        result
+    );
+
+}
+
+function updateMaintenanceUI(result){
+
+    const enabled =
+        Boolean(
+            result.enabled
+        );
+
+    const text =
+        document.getElementById(
+            "maintenanceText"
+        );
+
+    const controlText =
+        document.getElementById(
+            "maintenanceControlText"
+        );
+
+    const message =
+        document.getElementById(
+            "maintenanceMessage"
+        );
+
+    const toggle =
+        document.getElementById(
+            "maintenanceToggle"
+        );
+
+    const dot =
+        document.getElementById(
+            "maintenanceDot"
+        );
+
+    const controlDot =
+        document.getElementById(
+            "maintenanceControlDot"
+        );
+
+    const card =
+        document.getElementById(
+            "maintenanceCard"
+        );
+
+    const overviewCard =
+        document.getElementById(
+            "maintenanceOverviewCard"
+        );
+
+    if(text){
+
+        text.textContent =
+            enabled
+            ? "Maintenance Aktif"
+            : "Sistem Normal";
+
+    }
+
+    if(controlText){
+
+        controlText.textContent =
+            enabled
+            ? "Maintenance Aktif"
+            : "Maintenance Nonaktif";
+
+    }
+
+    if(message){
+
+        message.textContent =
+            result.message ||
+            "Tidak ada pesan.";
+
+    }
+
+    if(toggle){
+
+        toggle.checked =
+            enabled;
+
+    }
+
+    if(dot){
+
+        dot.className =
+            `status-dot ${
+                enabled
+                ? "offline"
+                : "online"
+            }`;
+
+    }
+
+    if(controlDot){
+
+        controlDot.className =
+            `status-dot ${
+                enabled
+                ? "offline"
+                : "online"
+            }`;
+
+    }
+
+    if(card){
+
+        card.classList.toggle(
+            "enabled",
+            enabled
+        );
+
+    }
+
+    if(overviewCard){
+
+        overviewCard.classList.toggle(
+            "enabled",
+            enabled
+        );
+
+    }
+
+    const input =
+        document.getElementById(
+            "maintenanceInput"
+        );
+
+    if(input &&
+       document.activeElement !== input){
+
+        input.value =
+            result.message || "";
+
+    }
+
+}
+
+let pendingMaintenance =
+    false;
+
+function toggleMaintenance(){
+
+    const enabled =
+        document.getElementById(
+            "maintenanceToggle"
+        ).checked;
+
+    if(pendingMaintenance)
+        return;
+
+    saveMaintenance(
+        enabled
+    );
+
+}
+
+async function saveMaintenance(
+    forcedValue = null
+){
+
+    if(pendingMaintenance)
+        return;
+
+    pendingMaintenance = true;
+
+    const toggle =
+        document.getElementById(
+            "maintenanceToggle"
+        );
+
+    const enabled =
+        forcedValue !== null
+        ? Boolean(forcedValue)
+        : Boolean(toggle.checked);
+
+    const message =
+        document.getElementById(
+            "maintenanceInput"
+        ).value.trim();
+
+    try{
+
+        const result =
+            await api(
+                "set_maintenance",
+                {
+                    enabled,
+                    message
+                }
+            );
+
+        updateMaintenanceUI(
+            result
+        );
+
+        showToast(
+            enabled
+            ? "Maintenance berhasil diaktifkan."
+            : "Maintenance berhasil dimatikan.",
+            "success"
+        );
+
+    }catch(error){
+
+        toggle.checked =
+            !enabled;
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+    }finally{
+
+        pendingMaintenance =
+            false;
+
+    }
+
+}
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+async function loadSecurity(){
+
+    const [
+        upload,
+        registration,
+        sharing
+    ] = await Promise.all([
+
+        api(
+            "get_lock",
+            {
+                key:
+                    "upload_locked"
+            }
+        ),
+
+        api(
+            "get_lock",
+            {
+                key:
+                    "registration_locked"
+            }
+        ),
+
+        api(
+            "get_lock",
+            {
+                key:
+                    "sharing_locked"
+            }
+        )
+
+    ]);
+
+    document.getElementById(
+        "uploadLock"
+    ).checked =
+        upload.enabled;
+
+    document.getElementById(
+        "registrationLock"
+    ).checked =
+        registration.enabled;
+
+    document.getElementById(
+        "sharingLock"
+    ).checked =
+        sharing.enabled;
+
+}
+
+async function setLock(
+    key,
+    enabled
+){
+
+    try{
+
+        await api(
+            "set_lock",
+            {
+                key,
+                enabled
+            }
+        );
+
+        showToast(
+            enabled
+            ? "Fitur berhasil dikunci."
+            : "Fitur berhasil dibuka.",
+            "success"
+        );
+
+    }catch(error){
+
+        showToast(
+            error.message,
+            "error"
+        );
+
+        await loadSecurity();
+
+    }
+
+}
+
+async function runSecurityCheck(){
+
+    const resultBox =
+        document.getElementById(
+            "securityResult"
+        );
+
+    resultBox.innerHTML =
+        `<div class="skeleton"
+              style="height:80px">
+        </div>`;
+
+    try{
+
+        const [
+            healthResult,
+            databaseResult,
+            storageResult
+        ] = await Promise.all([
+
+            api("health"),
+
+            api("database_test"),
+
+            api("storage_test")
+
+        ]);
+
+        resultBox.innerHTML = `
+
+            <div class="status-row">
+                <span>Admin API</span>
+                <span class="badge ${
+                    healthResult.ok
+                    ? "badge-green"
+                    : "badge-red"
+                }">
+                    ${
+                        healthResult.ok
+                        ? "AMAN"
+                        : "ERROR"
+                    }
+                </span>
+            </div>
+
+            <div class="status-row">
+                <span>Database</span>
+                <span class="badge ${
+                    databaseResult.ok
+                    ? "badge-green"
+                    : "badge-red"
+                }">
+                    ${
+                        databaseResult.ok
+                        ? "AMAN"
+                        : "ERROR"
+                    }
+                </span>
+            </div>
+
+            <div class="status-row">
+                <span>Storage</span>
+                <span class="badge ${
+                    storageResult.ok
+                    ? "badge-green"
+                    : "badge-red"
+                }">
+                    ${
+                        storageResult.ok
+                        ? "AMAN"
+                        : "ERROR"
+                    }
+                </span>
+            </div>
+        `;
+
+    }catch(error){
+
+        resultBox.innerHTML =
+            `<span class="badge badge-red">
+                ${escapeHTML(
+                    error.message
+                )}
+            </span>`;
+
+    }
+
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+async function loadNotifications(){
+
+    const result =
+        await api(
+            "notifications"
+        );
+
+    const list =
+        result.notifications ||
+        [];
+
+    const box =
+        document.getElementById(
+            "notificationList"
+        );
+
+    if(!list.length){
+
+        box.innerHTML =
+            `<div class="page-subtitle">
+                Belum ada notifikasi.
+            </div>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        list.slice(0,15)
+        .map(item => `
+
+            <div class="status-row">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(
+                            item.title ||
+                            "Notification"
+                        )}
+                    </strong>
+
+                    <div class="page-subtitle">
+                        ${escapeHTML(
+                            item.body ||
+                            ""
+                        )}
+                    </div>
+
+                    <div class="page-subtitle">
+                        ${formatDate(
+                            item.created_at
+                        )}
+                    </div>
+
+                </div>
+
+                <button
+                    class="btn btn-danger icon-btn"
+                    onclick="deleteNotification('${item.id}')">
+                    ×
+                </button>
+
+            </div>
+
+        `).join("");
+
+}
+
+async function sendNotification(){
+
+    const userId =
+        document.getElementById(
+            "notifyUserId"
+        ).value.trim();
+
+    const title =
+        document.getElementById(
+            "notifyTitle"
+        ).value.trim();
+
+    const body =
+        document.getElementById(
+            "notifyBody"
+        ).value.trim();
+
+    if(!userId ||
+       !title){
+
+        showToast(
+            "User ID dan judul wajib diisi.",
+            "error"
+        );
+
+        return;
+    }
+
+    await api(
+        "send_notification",
+        {
+            userId,
+            title,
+            body
+        }
+    );
+
+    showToast(
+        "Notifikasi berhasil dikirim.",
+        "success"
+    );
+
+    document.getElementById(
+        "notifyTitle"
+    ).value = "";
+
+    document.getElementById(
+        "notifyBody"
+    ).value = "";
+
+    await loadNotifications();
+
+}
+
+async function deleteNotification(
+    notificationId
+){
+
+    await api(
+        "delete_notification",
+        {
+            notificationId
+        }
+    );
+
+    showToast(
+        "Notifikasi dihapus.",
+        "success"
+    );
+
+    await loadNotifications();
+
+}
+
+/* =========================================================
+   AUDIT
+========================================================= */
+
+async function loadAudit(){
+
+    const [
+        logsResult,
+        activityResult
+    ] = await Promise.all([
+
+        api(
+            "audit_logs"
+        ),
+
+        api(
+            "activity_stats"
+        )
+
+    ]);
+
+    const logs =
+        logsResult.logs ||
+        [];
+
+    const tbody =
+        document.getElementById(
+            "auditTable"
+        );
+
+    if(!logs.length){
+
+        tbody.innerHTML =
+            `<tr>
+                <td colspan="3">
+                    Belum ada aktivitas.
+                </td>
+            </tr>`;
+
+    }else{
+
+        tbody.innerHTML =
+            logs.map(log => `
+
+                <tr>
+
+                    <td>
+                        <span class="badge badge-blue">
+                            ${escapeHTML(
+                                log.action ||
+                                "-"
+                            )}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            log.user_id ||
+                            "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatDate(
+                            log.created_at
+                        )}
+                    </td>
+
+                </tr>
+
+            `).join("");
+
+    }
+
+    const actions =
+        activityResult.actions ||
+        {};
+
+    const activityBox =
+        document.getElementById(
+            "activityStats"
+        );
+
+    const entries =
+        Object.entries(
+            actions
+        );
+
+    if(!entries.length){
+
+        activityBox.innerHTML =
+            `<span class="page-subtitle">
+                Belum ada aktivitas.
+            </span>`;
+
+    }else{
+
+        activityBox.innerHTML =
+            entries
+            .sort(
+                (a,b) => b[1]-a[1]
+            )
+            .map(
+                ([name,count]) => `
+                    <div class="status-row">
+                        <span>
+                            ${escapeHTML(
+                                name
+                            )}
+                        </span>
+
+                        <strong>
+                            ${count}
+                        </strong>
+                    </div>
+                `
+            ).join("");
+
+    }
+
+}
+
+async function cleanAudit(){
+
+    confirmAction(
+        "Bersihkan Audit Log",
+        "Audit log yang lebih lama dari 30 hari akan dihapus.",
+        async () => {
+
+            const result =
+                await api(
+                    "clean_audit",
+                    {
+                        days:30
+                    }
+                );
+
+            showToast(
+                `${result.deleted} log dihapus.`,
+                "success"
+            );
+
+            await loadAudit();
+
+        }
+    );
+
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+async function loadSettings(){
+
+    const result =
+        await api(
+            "system_settings"
+        );
+
+    const settings =
+        result.settings ||
+        [];
+
+    const box =
+        document.getElementById(
+            "settingsList"
+        );
+
+    if(!settings.length){
+
+        box.innerHTML =
+            `<span class="page-subtitle">
+                Tidak ada konfigurasi.
+            </span>`;
+
+        return;
+    }
+
+    box.innerHTML =
+        settings.map(
+            item => `
+
+            <div class="status-row">
+
+                <div>
+
+                    <strong>
+                        ${escapeHTML(
+                            item.key
+                        )}
+                    </strong>
+
+                    <div class="page-subtitle">
+                        Update:
+                        ${formatDate(
+                            item.updated_at
+                        )}
+                    </div>
+
+                </div>
+
+                <span class="badge ${
+                    item.value?.enabled
+                    ? "badge-red"
+                    : "badge-green"
+                }">
+                    ${
+                        item.value?.enabled
+                        ? "ON"
+                        : "OFF"
+                    }
+                </span>
+
+            </div>
+
+        `
+        ).join("");
+
+}
+
+async function testDatabase(){
+
+    const result =
+        await api(
+            "database_test"
+        );
+
+    document.getElementById(
+        "settingsResult"
+    ).textContent =
+        result.ok
+        ? "✓ Database normal."
+        : "✕ Database bermasalah.";
+
+}
+
+async function testStorage(){
+
+    const result =
+        await api(
+            "storage_test"
+        );
+
+    document.getElementById(
+        "settingsResult"
+    ).textContent =
+        result.ok
+        ? "✓ Storage normal."
+        : "✕ Storage bermasalah.";
+
+}
+
+async function cleanNotifications(){
+
+    confirmAction(
+        "Bersihkan Notifikasi",
+        "Notifikasi yang lebih lama dari 30 hari akan dihapus.",
+        async () => {
+
+            const result =
+                await api(
+                    "clean_notifications",
+                    {
+                        days:30
+                    }
+                );
+
+            showToast(
+                `${result.deleted} notifikasi dihapus.`,
+                "success"
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+async function refreshCurrent(){
+
+    await loadSection(
+        currentSection
+    );
+
+    showToast(
+        "Data berhasil diperbarui.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   HEALTH UI
+========================================================= */
+
+function setHealth(
+    dotId,
+    badgeId,
+    ok
+){
+
+    const dot =
+        document.getElementById(
+            dotId
+        );
+
+    const badge =
+        document.getElementById(
+            badgeId
+        );
+
+    dot.className =
+        `status-dot ${
+            ok
+            ? "online"
+            : "offline"
+        }`;
+
+    badge.className =
+        `badge ${
+            ok
+            ? "badge-green"
+            : "badge-red"
+        }`;
+
+    badge.textContent =
+        ok
+        ? "Online"
+        : "Error";
+
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar(){
+
+    document
+        .getElementById(
+            "sidebar"
+        )
+        .classList.toggle(
+            "open"
+        );
+
+}
+
+function closeSidebar(){
 
     document
         .getElementById(
@@ -2063,1548 +3990,383 @@ function openSection(
             "open"
         );
 
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
 }
 
-
-document
-    .querySelectorAll(
-        "[data-section]"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                ()=>{
-                    openSection(
-                        button.dataset.section
-                    );
-                }
-            );
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "mobileMenu"
-    )
-    .onclick =
-    ()=>{
-        document
-            .getElementById(
-                "sidebar"
-            )
-            .classList.toggle(
-                "open"
-            );
-    };
-
-
 /* =========================================================
-   CONFIRM
+   MODAL
 ========================================================= */
 
-let confirmResolver =
-    null;
-
-
-function confirmAction(
+function openModal(
     title,
-    text
+    text,
+    action = null,
+    hideConfirm = false
 ){
 
-    return new Promise(
-        resolve => {
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        title;
 
-            confirmResolver =
-                resolve;
+    document.getElementById(
+        "modalText"
+    ).innerHTML =
+        text;
 
+    currentConfirmAction =
+        action;
 
-            document
-                .getElementById(
-                    "confirmTitle"
-                )
-                .textContent =
-                title;
-
-
-            document
-                .getElementById(
-                    "confirmText"
-                )
-                .textContent =
-                text;
-
-
-            document
-                .getElementById(
-                    "confirmModal"
-                )
-                .classList
-                .remove(
-                    "hidden"
-                );
-
-        }
-    );
-
-}
-
-
-document
-    .getElementById(
-        "confirmCancel"
-    )
-    .onclick =
-    ()=>{
-        document
-            .getElementById(
-                "confirmModal"
-            )
-            .classList
-            .add(
-                "hidden"
-            );
-
-
-        if(confirmResolver)
-            confirmResolver(
-                false
-            );
-
-
-        confirmResolver =
-            null;
-    };
-
-
-document
-    .getElementById(
-        "confirmOk"
-    )
-    .onclick =
-    ()=>{
-        document
-            .getElementById(
-                "confirmModal"
-            )
-            .classList
-            .add(
-                "hidden"
-            );
-
-
-        if(confirmResolver)
-            confirmResolver(
-                true
-            );
-
-
-        confirmResolver =
-            null;
-    };
-
-
-/* =========================================================
-   LOAD OVERVIEW
-========================================================= */
-
-async function loadOverview(){
-
-    try{
-
-        const [
-            usersResult,
-            photosResult,
-            storageResult,
-            maintenanceResult
-        ] =
-        await Promise.all([
-
-            FV.db
-                .from(
-                    "user_roles"
-                )
-                .select(
-                    "*",
-                    {
-                        count:"exact",
-                        head:true
-                    }
-                ),
-
-            FV.db
-                .from(
-                    "photos"
-                )
-                .select(
-                    "*",
-                    {
-                        count:"exact",
-                        head:true
-                    }
-                ),
-
-            FV.db
-                .from(
-                    "photos"
-                )
-                .select(
-                    "size"
-                ),
-
-            FV.db
-                .from(
-                    "system_settings"
-                )
-                .select(
-                    "value"
-                )
-                .eq(
-                    "key",
-                    "maintenance_mode"
-                )
-                .maybeSingle()
-
-        ]);
-
-
-        document
-            .getElementById(
-                "statUsers"
-            )
-            .textContent =
-            usersResult.count ?? 0;
-
-
-        document
-            .getElementById(
-                "statPhotos"
-            )
-            .textContent =
-            photosResult.count ?? 0;
-
-
-        const total =
-            (
-                storageResult.data ||
-                []
-            )
-                .reduce(
-                    (
-                        sum,
-                        row
-                    ) =>
-                        sum +
-                        Number(
-                            row.size ||
-                            0
-                        ),
-                    0
-                );
-
-
-        document
-            .getElementById(
-                "statStorage"
-            )
-            .textContent =
-            formatBytes(
-                total
-            );
-
-
-        maintenanceEnabled =
-            String(
-                maintenanceResult
-                    .data
-                    ?.value ||
-                ""
-            )
-                .toLowerCase() ===
-            "true";
-
-
-        document
-            .getElementById(
-                "statMaintenance"
-            )
-            .textContent =
-            maintenanceEnabled
-                ? "ON"
-                : "OFF";
-
-
-        document
-            .getElementById(
-                "maintenanceToggle"
-            )
-            .classList
-            .toggle(
-                "on",
-                maintenanceEnabled
-            );
-
-
-        document
-            .getElementById(
-                "storagePhotos"
-            )
-            .textContent =
-            photosResult.count ?? 0;
-
-
-        document
-            .getElementById(
-                "storageUsed"
-            )
-            .textContent =
-            formatBytes(
-                total
-            );
-
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-
-        showToast(
-            "Gagal memuat statistik."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   USERS
-========================================================= */
-
-async function loadUsers(){
-
-    const container =
+    const button =
         document.getElementById(
-            "usersTable"
+            "modalConfirm"
         );
 
+    button.style.display =
+        hideConfirm
+        ? "none"
+        : "inline-flex";
 
-    container.innerHTML =
-        `
-        <div class="empty">
-            <span class="loading"></span>
-            Memuat users...
-        </div>
-        `;
+    button.onclick =
+        async () => {
 
+            if(
+                typeof currentConfirmAction
+                === "function"
+            ){
 
-    try{
+                await currentConfirmAction();
 
-        const {
-            data,
-            error
-        } =
-            await FV.db
-                .from(
-                    "user_roles"
-                )
-                .select(
-                    "user_id,role"
-                )
-                .order(
-                    "role"
-                );
+            }else{
 
-
-        if(error)
-            throw error;
-
-
-        allUsers =
-            data || [];
-
-
-        renderUsers();
-
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-
-        container.innerHTML =
-            `
-            <div class="empty">
-                Gagal memuat users:
-                ${esc(error.message)}
-            </div>
-            `;
-
-    }
-
-}
-
-
-function renderUsers(){
-
-    const search =
-        document
-            .getElementById(
-                "userSearch"
-            )
-            .value
-            .trim()
-            .toLowerCase();
-
-
-    const role =
-        document
-            .getElementById(
-                "roleFilter"
-            )
-            .value;
-
-
-    const rows =
-        allUsers.filter(
-            user => {
-
-                const matchesSearch =
-                    !search ||
-                    String(
-                        user.user_id
-                    )
-                        .toLowerCase()
-                        .includes(
-                            search
-                        );
-
-
-                const matchesRole =
-                    !role ||
-                    user.role ===
-                    role;
-
-
-                return (
-                    matchesSearch &&
-                    matchesRole
-                );
+                closeModal();
 
             }
-        );
 
-
-    if(!rows.length){
-
-        document
-            .getElementById(
-                "usersTable"
-            )
-            .innerHTML =
-            `
-            <div class="empty">
-                Tidak ada user yang cocok.
-            </div>
-            `;
-
-        return;
-
-    }
-
+        };
 
     document
         .getElementById(
-            "usersTable"
+            "confirmModal"
         )
-        .innerHTML =
-        `
-        <table>
+        .classList.add(
+            "show"
+        );
 
-            <thead>
+}
 
-                <tr>
-                    <th>User ID</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                ${rows.map(
-                    user => `
-
-                    <tr>
-
-                        <td>
-                            <code>
-                                ${esc(
-                                    user.user_id
-                                )}
-                            </code>
-                        </td>
-
-                        <td>
-                            ${esc(
-                                user.role
-                            )}
-                        </td>
-
-                        <td>
-
-                            <span
-                                class="status ok"
-                            >
-                                TERDAFTAR
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            <button
-                                class="small-btn"
-                                data-copy-user="${esc(
-                                    user.user_id
-                                )}"
-                            >
-                                Copy ID
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                    `
-                ).join("")}
-
-            </tbody>
-
-        </table>
-        `;
-
+function closeModal(){
 
     document
-        .querySelectorAll(
-            "[data-copy-user]"
+        .getElementById(
+            "confirmModal"
         )
-        .forEach(
-            button => {
+        .classList.remove(
+            "show"
+        );
 
-                button.onclick =
-                    async ()=>{
+    currentConfirmAction =
+        null;
 
-                        try{
+}
 
-                            await navigator.clipboard
-                                .writeText(
-                                    button.dataset.copyUser
-                                );
+function confirmAction(
+    title,
+    text,
+    action
+){
 
+    openModal(
+        title,
+        text,
+        async () => {
 
-                            showToast(
-                                "User ID disalin."
-                            );
+            try{
 
-                        }catch{
+                await action();
 
-                            showToast(
-                                "Clipboard tidak tersedia."
-                            );
+                closeModal();
 
-                        }
+            }catch(error){
 
-                    };
+                showToast(
+                    error.message,
+                    "error"
+                );
 
             }
-        );
+
+        }
+    );
 
 }
 
-
-document
-    .getElementById(
-        "loadUsers"
-    )
-    .onclick =
-    loadUsers;
-
-
-document
-    .getElementById(
-        "userSearch"
-    )
-    .oninput =
-    renderUsers;
-
-
-document
-    .getElementById(
-        "roleFilter"
-    )
-    .onchange =
-    renderUsers;
-
-
 /* =========================================================
-   PHOTOS
+   LOADING
 ========================================================= */
 
-async function loadPhotos(){
+function showLoading(
+    title = "Memproses...",
+    subtitle = "Mohon tunggu"
+){
 
-    const grid =
-        document
-            .getElementById(
-                "photosGrid"
+    document.getElementById(
+        "loadingTitle"
+    ).textContent =
+        title;
+
+    document.getElementById(
+        "loadingSubtitle"
+    ).textContent =
+        subtitle;
+
+    document.getElementById(
+        "loading"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).classList.remove(
+        "show"
+    );
+
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message,
+    type = "info"
+){
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+    toast.className =
+        `toast ${type}`;
+
+    toast.textContent =
+        message;
+
+    container.appendChild(
+        toast
+    );
+
+    setTimeout(
+        () => {
+
+            toast.style.opacity =
+                "0";
+
+            toast.style.transform =
+                "translateY(10px)";
+
+            setTimeout(
+                () => toast.remove(),
+                250
             );
 
+        },
+        3200
+    );
 
-    grid.innerHTML =
-        `
-        <div class="empty">
-            <span class="loading"></span>
-            Memuat photos...
-        </div>
-        `;
+}
 
+/* =========================================================
+   FORMAT
+========================================================= */
+
+function formatNumber(
+    number
+){
+
+    return new Intl.NumberFormat(
+        "id-ID"
+    ).format(
+        Number(number || 0)
+    );
+
+}
+
+function formatBytes(
+    bytes
+){
+
+    bytes =
+        Number(bytes || 0);
+
+    if(bytes <= 0)
+        return "0 B";
+
+    const units =
+        [
+            "B",
+            "KB",
+            "MB",
+            "GB",
+            "TB"
+        ];
+
+    const index =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+    return (
+        bytes /
+        Math.pow(
+            1024,
+            index
+        )
+    ).toFixed(
+        index === 0
+        ? 0
+        : 2
+    )
+    + " "
+    + units[index];
+
+}
+
+function formatDate(
+    value
+){
+
+    if(!value)
+        return "-";
 
     try{
 
-        const {
-            data,
-            error
-        } =
-            await FV.db
-                .from(
-                    "photos"
-                )
-                .select(
-                    "id,user_id,name,path,size,mime_type,created_at"
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending:false
-                    }
-                )
-                .limit(
-                    100
-                );
-
-
-        if(error)
-            throw error;
-
-
-        allPhotos =
-            data || [];
-
-
-        await renderPhotos();
-
-
-    }catch(error){
-
-        console.error(
-            error
+        return new Intl.DateTimeFormat(
+            "id-ID",
+            {
+                dateStyle:"medium",
+                timeStyle:"short"
+            }
+        ).format(
+            new Date(value)
         );
 
+    }catch{
 
-        grid.innerHTML =
-            `
-            <div class="empty">
-                Gagal memuat photos:
-                ${esc(error.message)}
-            </div>
-            `;
+        return "-";
 
     }
 
 }
 
+/* =========================================================
+   ESCAPE
+========================================================= */
 
-async function renderPhotos(){
+function escapeHTML(
+    value
+){
 
-    const grid =
-        document
-            .getElementById(
-                "photosGrid"
-            );
-
-
-    const search =
-        document
-            .getElementById(
-                "photoSearch"
-            )
-            .value
-            .trim()
-            .toLowerCase();
-
-
-    const rows =
-        allPhotos.filter(
-            photo =>
-                !search ||
-                String(
-                    photo.name
-                )
-                    .toLowerCase()
-                    .includes(
-                        search
-                    )
-        );
-
-
-    if(!rows.length){
-
-        grid.innerHTML =
-            `
-            <div class="empty">
-                Tidak ada foto.
-            </div>
-            `;
-
-        return;
-
-    }
-
-
-    grid.innerHTML =
-        "";
-
-
-    for(
-        const photo of rows
-    ){
-
-        const card =
-            document.createElement(
-                "div"
-            );
-
-
-        card.className =
-            "admin-photo";
-
-
-        card.innerHTML =
-            `
-            <div
-                style="
-                    width:100%;
-                    height:100%;
-                    display:grid;
-                    place-items:center;
-                "
-            >
-                <span class="loading"></span>
-            </div>
-            `;
-
-
-        grid.appendChild(
-            card
-        );
-
-
-        try{
-
-            const {
-                data,
-                error
-            } =
-                await FV.db
-                    .storage
-                    .from(
-                        "photos"
-                    )
-                    .createSignedUrl(
-                        photo.path,
-                        300
-                    );
-
-
-            if(error)
-                throw error;
-
-
-            card.innerHTML =
-                `
-                <img
-                    src="${esc(
-                        data.signedUrl
-                    )}"
-                    alt="${esc(
-                        photo.name
-                    )}"
-                    loading="lazy"
-                >
-
-                <div class="photo-overlay">
-
-                    <button
-                        class="overlay-btn preview-photo"
-                        title="Preview"
-                    >
-                        ◉
-                    </button>
-
-                    <button
-                        class="overlay-btn delete-photo"
-                        title="Hapus"
-                    >
-                        ×
-                    </button>
-
-                </div>
-                `;
-
-
-            card
-                .querySelector(
-                    ".preview-photo"
-                )
-                .onclick =
-                ()=>{
-                    document
-                        .getElementById(
-                            "previewImage"
-                        )
-                        .src =
-                        data.signedUrl;
-
-
-                    document
-                        .getElementById(
-                            "photoModal"
-                        )
-                        .classList
-                        .remove(
-                            "hidden"
-                        );
-                };
-
-
-            card
-                .querySelector(
-                    ".delete-photo"
-                )
-                .onclick =
-                async ()=>{
-
-                    const ok =
-                        await confirmAction(
-                            "Hapus foto?",
-                            `Foto "${photo.name}" akan dihapus.`
-                        );
-
-
-                    if(!ok)
-                        return;
-
-
-                    /*
-                     * Untuk penghapusan production,
-                     * gunakan Edge Function admin.
-                     *
-                     * Tidak menggunakan service-role
-                     * dari browser.
-                     */
-
-                    showToast(
-                        "Penghapusan foto harus dilakukan melalui Admin API."
-                    );
-
-                };
-
-
-        }catch(error){
-
-            card.innerHTML =
-                `
-                <div
-                    style="
-                        padding:15px;
-                        display:grid;
-                        place-items:center;
-                        height:100%;
-                        text-align:center;
-                    "
-                >
-                    <small>
-                        Preview tidak tersedia.
-                    </small>
-                </div>
-                `;
-
-        }
-
-    }
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
-
-
-document
-    .getElementById(
-        "loadPhotos"
-    )
-    .onclick =
-    loadPhotos;
-
-
-document
-    .getElementById(
-        "photoSearch"
-    )
-    .oninput =
-    renderPhotos;
-
-
-document
-    .getElementById(
-        "closePhoto"
-    )
-    .onclick =
-    ()=>{
-        document
-            .getElementById(
-                "photoModal"
-            )
-            .classList
-            .add(
-                "hidden"
-            );
-    };
-
-
-/* =========================================================
-   MAINTENANCE
-========================================================= */
-
-document
-    .getElementById(
-        "maintenanceToggle"
-    )
-    .onclick =
-    async ()=>{
-
-        const next =
-            !maintenanceEnabled;
-
-
-        const ok =
-            await confirmAction(
-                next
-                    ? "Aktifkan maintenance?"
-                    : "Nonaktifkan maintenance?",
-                next
-                    ? "User akan melihat sistem dalam mode maintenance."
-                    : "Website akan kembali normal."
-            );
-
-
-        if(!ok)
-            return;
-
-
-        /*
-         * Jangan mengubah system_settings
-         * dengan service-role dari browser.
-         *
-         * Sistem production seharusnya memanggil
-         * Edge Function admin-api.
-         */
-
-        showToast(
-            "Maintenance membutuhkan action Edge Function."
-        );
-
-    };
-
-
-/* =========================================================
-   AUDIT LOG
-========================================================= */
-
-async function loadAudit(){
-
-    const list =
-        document
-            .getElementById(
-                "auditList"
-            );
-
-
-    list.innerHTML =
-        `
-        <div class="empty">
-            <span class="loading"></span>
-            Memuat audit log...
-        </div>
-        `;
-
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-            await FV.db
-                .from(
-                    "audit_logs"
-                )
-                .select("*")
-                .order(
-                    "created_at",
-                    {
-                        ascending:false
-                    }
-                )
-                .limit(
-                    50
-                );
-
-
-        if(error)
-            throw error;
-
-
-        if(
-            !data ||
-            !data.length
-        ){
-
-            list.innerHTML =
-                `
-                <div class="empty">
-                    Belum ada audit log.
-                </div>
-                `;
-
-            return;
-
-        }
-
-
-        list.innerHTML =
-            data
-                .map(
-                    log => `
-
-                    <div class="log-item">
-
-                        <strong>
-                            ${esc(
-                                log.action ||
-                                "Activity"
-                            )}
-                        </strong>
-
-                        <div class="admin-label">
-                            ${esc(
-                                log.user_id ||
-                                ""
-                            )}
-                        </div>
-
-                        <div class="log-time">
-                            ${log.created_at
-                                ? new Date(
-                                    log.created_at
-                                ).toLocaleString(
-                                    "id-ID"
-                                )
-                                : ""
-                            }
-                        </div>
-
-                    </div>
-
-                    `
-                )
-                .join("");
-
-
-    }catch(error){
-
-        list.innerHTML =
-            `
-            <div class="empty">
-                Audit log belum tersedia:
-                ${esc(
-                    error.message
-                )}
-            </div>
-            `;
-
-    }
-
-}
-
-
-document
-    .getElementById(
-        "refreshAudit"
-    )
-    .onclick =
-    loadAudit;
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-async function loadNotifications(){
-
-    const list =
-        document
-            .getElementById(
-                "notificationList"
-            );
-
-
-    try{
-
-        const {
-            data,
-            error
-        } =
-            await FV.db
-                .from(
-                    "notifications"
-                )
-                .select("*")
-                .order(
-                    "created_at",
-                    {
-                        ascending:false
-                    }
-                )
-                .limit(
-                    50
-                );
-
-
-        if(error)
-            throw error;
-
-
-        if(
-            !data ||
-            !data.length
-        ){
-
-            list.innerHTML =
-                `
-                <div class="empty">
-                    Tidak ada notifikasi.
-                </div>
-                `;
-
-            return;
-
-        }
-
-
-        list.innerHTML =
-            data
-                .map(
-                    notification => `
-
-                    <div class="log-item">
-
-                        <strong>
-                            ${esc(
-                                notification.title ||
-                                "Notification"
-                            )}
-                        </strong>
-
-                        <p class="admin-label">
-                            ${esc(
-                                notification.body ||
-                                ""
-                            )}
-                        </p>
-
-                        <div class="log-time">
-                            ${notification.created_at
-                                ? new Date(
-                                    notification.created_at
-                                ).toLocaleString(
-                                    "id-ID"
-                                )
-                                : ""
-                            }
-                        </div>
-
-                    </div>
-
-                    `
-                )
-                .join("");
-
-
-    }catch(error){
-
-        list.innerHTML =
-            `
-            <div class="empty">
-                Notifikasi belum dapat dimuat:
-                ${esc(
-                    error.message
-                )}
-            </div>
-            `;
-
-    }
-
-}
-
-
-/* =========================================================
-   EDGE FUNCTION HEALTH
-========================================================= */
-
-async function checkEdgeFunction(){
-
-    const dot =
-        document
-            .getElementById(
-                "edgeStatusDot"
-            );
-
-
-    const text =
-        document
-            .getElementById(
-                "edgeStatusText"
-            );
-
-
-    try{
-
-        /*
-         * Hanya menguji endpoint.
-         *
-         * Jangan pernah menaruh service role
-         * key di sini.
-         */
-
-        const {
-            data,
-            error
-        } =
-            await FV.db.functions.invoke(
-                "admin-api",
-                {
-                    body:{
-                        action:
-                            "health"
-                    }
-                }
-            );
-
-
-        if(error)
-            throw error;
-
-
-        dot.style.background =
-            "#4c9b5a";
-
-
-        text.textContent =
-            data?.message ||
-            "Edge Function merespons.";
-
-    }catch(error){
-
-        console.warn(
-            "Edge health:",
-            error
-        );
-
-
-        dot.style.background =
-            "#b99350";
-
-
-        text.textContent =
-            "Health endpoint belum tersedia atau action health belum dibuat.";
-
-    }
-
-}
-
-
-/* =========================================================
-   GLOBAL REFRESH
-========================================================= */
-
-document
-    .getElementById(
-        "globalRefresh"
-    )
-    .onclick =
-    async ()=>{
-
-        const button =
-            document.getElementById(
-                "globalRefresh"
-            );
-
-
-        button.disabled =
-            true;
-
-
-        const old =
-            button.textContent;
-
-
-        button.innerHTML =
-            `
-            <span class="loading"></span>
-            `;
-
-
-        try{
-
-            await loadOverview();
-
-            showToast(
-                "Dashboard diperbarui."
-            );
-
-        }finally{
-
-            button.disabled =
-                false;
-
-            button.textContent =
-                old;
-
-        }
-
-    };
-
 
 /* =========================================================
    LOGOUT
 ========================================================= */
 
-document
-    .getElementById(
-        "logout"
-    )
-    .onclick =
-    async ()=>{
+async function logout(){
 
-        try{
+    confirmAction(
+        "Keluar",
+        "Apakah kamu yakin ingin keluar dari dashboard admin?",
+        async () => {
 
-            await FV.signOut();
+            await supabaseClient.auth.signOut();
 
-        }catch(error){
-
-            console.error(
-                error
-            );
-
-            location.replace(
-                "login.html"
-            );
+            window.location.href =
+                "login.html";
 
         }
+    );
 
-    };
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-(async()=>{
-
-    try{
-
-        /*
-         * Pastikan user login.
-         */
-
-        session =
-            await FV.getSession();
-
-
-        if(
-            !session ||
-            !session.user
-        ){
-
-            location.replace(
-                "login.html"
-            );
-
-            return;
-
-        }
-
-
-        adminUser =
-            session.user;
-
-
-        document
-            .getElementById(
-                "adminEmail"
-            )
-            .textContent =
-            adminUser.email ||
-            "Admin";
-
-
-        /*
-         * Role check.
-         *
-         * Tetap dilakukan di database dengan RLS.
-         */
-
-        const {
-            data,
-            error
-        } =
-            await FV.db
-                .from(
-                    "user_roles"
-                )
-                .select(
-                    "role"
-                )
-                .eq(
-                    "user_id",
-                    adminUser.id
-                )
-                .maybeSingle();
-
-
-        if(error)
-            throw error;
-
-
-        if(
-            String(
-                data?.role ||
-                ""
-            )
-                .toLowerCase() !==
-            "admin"
-        ){
-
-            location.replace(
-                "dashboard.html"
-            );
-
-            return;
-
-        }
-
-
-        await loadOverview();
-
-
-        await checkEdgeFunction();
-
-
-    }catch(error){
-
-        console.error(
-            "ADMIN INIT:",
-            error
-        );
-
-
-        document.body.innerHTML =
-            `
-            <main
-                style="
-                    min-height:100vh;
-                    display:grid;
-                    place-items:center;
-                    padding:25px;
-                    text-align:center;
-                "
-            >
-
-                <div>
-
-                    <h1>
-                        Akses Admin Gagal
-                    </h1>
-
-                    <p>
-                        ${esc(
-                            error.message ||
-                            "Terjadi kesalahan."
-                        )}
-                    </p>
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            location.replace('login.html')
-                        "
-                    >
-                        Kembali Login
-                    </button>
-
-                </div>
-
-            </main>
-            `;
-
-    }
-
-})();
-
+}
 
 /* =========================================================
    AUTO REFRESH
 ========================================================= */
 
 setInterval(
-    ()=>{
+    async () => {
+
         if(
-            document.visibilityState ===
+            document.visibilityState !==
             "visible"
         ){
+            return;
+        }
 
-            loadOverview();
+        if(
+            currentSection ===
+            "overview"
+        ){
+
+            try{
+
+                await loadOverview();
+
+            }catch{
+
+                // silent refresh
+
+            }
 
         }
+
     },
-    30000
+    60000
 );
 
+/* =========================================================
+   CLOSE MODAL BY BACKDROP
+========================================================= */
+
+document.getElementById(
+    "confirmModal"
+).addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target.id ===
+            "confirmModal"
+        ){
+
+            closeModal();
+
+        }
+
+    }
+);
 </script>
 
 </body>
-
 </html>
