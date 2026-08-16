@@ -1,0 +1,1 @@
+Ganti USERNAME dan REPOSITORY di index.html, robots.txt, sitemap.xml dengan URL GitHub Pages kamu. Deploy ke GitHub. Daftarkan URL di Google Search Console, verifikasi, submit sitemap.xml, lalu Request Indexing untuk homepage. Desain tidak diubah.
