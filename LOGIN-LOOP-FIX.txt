@@ -1,6 +1,0 @@
-Login loop fix:
-- app.js is now the single session/role router for protected pages.
-- login.html waits for a real Supabase session before redirecting.
-- dashboard/admin redirects happen only after session exists.
-- Temporary role/database failures no longer force an immediate redirect.
-- UI/design files are otherwise left unchanged.
