@@ -1,0 +1,5 @@
+Perbaikan:
+- index.html TIDAK lagi menerima tombol ☰/titik tiga dari premium.js.
+- Menu ☰ hanya dibuat pada dashboard.html, admin.html, dan profile.html.
+- login.html mencoba membaca session OAuth dan mengarahkan admin ke admin.html, user ke dashboard.html.
+- Google callback Supabase tetap sama; tidak diubah.
