@@ -1,738 +1,1997 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FotoVault — Dashboard Galeri</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            vault: {
-              bg: '#f8f6f0',
-              card: 'rgba(255, 255, 255, 0.72)',
-              dark: '#24211c',
-              muted: '#736d64',
-              gold: '#b99350',
-              goldLight: '#e4c77a',
-              border: 'rgba(255, 255, 255, 0.85)',
-            }
-          },
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Segoe UI', 'Roboto', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background: linear-gradient(135deg, #f5efe6 0%, #eae3d2 100%);
-      color: #24211c;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>The Vault | Luxury Archive</title>
     
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.68);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.85);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.04);
-    }
+    <!-- Preconnect untuk kecepatan loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.354.0/dist/umd/lucide.min.js"></script>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- YouTube API -->
+    <script async src="https://www.youtube.com/iframe_api"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=200;300;400;500&family=Playfair+Display:ital,wght=0,400;0,500;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D5B5;
+            --bg-warm: #faf9f6;
+        }
 
-    .glass-card {
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.75);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-warm); 
+            color: #1a1a1a; 
+            overflow-x: hidden; 
+            touch-action: manipulation;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none;
+            transition: filter 0.3s ease;
+        }
+        
+        .serif { font-family: 'Playfair Display', serif; }
+        
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
 
-    .glass-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-      border-color: rgba(185, 147, 80, 0.3);
-    }
+        /* Custom Elegant Scrollbar */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.02);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(185, 147, 80, 0.3);
-      border-radius: 99px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(185, 147, 80, 0.6);
-    }
+        /* Hardware Acceleration untuk elemen berat */
+        .glass { 
+            background: rgba(255, 255, 255, 0.65); 
+            backdrop-filter: blur(30px) saturate(200%); 
+            -webkit-backdrop-filter: blur(30px) saturate(200%); 
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            transform: translateZ(0);
+        }
+        
+        .h-screen-dvh { height: 100dvh; }
+        
+        /* PIN Dots Optimized & Luxury */
+        .pin-dot { 
+            width: 12px; height: 12px; 
+            border-radius: 50%; 
+            border: 1px solid #a0a0a0; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            will-change: transform, background-color;
+        }
+        .pin-dot.active { background: var(--gold); border-color: var(--gold); transform: scale(1.2); box-shadow: 0 0 10px rgba(197, 160, 89, 0.3); }
+        
+        /* Keypad Boutique Style */
+        .keypad-btn { 
+            width: 76px; height: 76px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.5); 
+            border: 1px solid rgba(255,255,255,0.8);
+            font-size: 2rem; font-weight: 200; 
+            color: #2a2a2a;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02), inset 0 0 0 rgba(255,255,255,0.5);
+            transition: all 0.15s ease-out; 
+            -webkit-tap-highlight-color: transparent; 
+            will-change: transform;
+        }
+        .keypad-btn:active { 
+            background: rgba(232, 213, 181, 0.3); 
+            transform: scale(0.9); 
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+            border-color: var(--gold-light);
+        }
+        
+        /* Cinematic Photo Card with Cascading Entry Animation & Shimmer */
+        .photo-card { 
+            aspect-ratio: 4/5; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            position: relative; 
+            background: #f0ebe1;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04); 
+            cursor: pointer; 
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s, border-color 0.3s;
+            transform: translateZ(0);
+            will-change: transform, opacity;
+            opacity: 0;
+            animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            border: 2px solid transparent;
+        }
+        .photo-card:active { transform: scale(0.94); }
+        .photo-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 5;
+        }
+        .photo-card.loaded::after { opacity: 1; }
+        
+        .photo-card img {
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+            transform: scale(1.03);
+        }
+        .photo-card img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-    /* Image zoom on hover */
-    .img-hover-zoom {
-      overflow: hidden;
-    }
-    .img-hover-zoom img {
-      transition: transform 0.5s ease;
-    }
-    .img-hover-zoom:hover img {
-      transform: scale(1.06);
-    }
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-    .active-nav {
-      background-color: #24211c;
-      color: #ffffff !important;
-      box-shadow: 0 8px 20px rgba(36, 33, 28, 0.15);
-    }
-  </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
-    <meta name="robots" content="noindex, nofollow">
+        /* Premium Shimmer Skeleton Loading */
+        .shimmer-bg {
+            background: linear-gradient(90deg, #f0ebe1 25%, #faf9f6 50%, #f0ebe1 75%);
+            background-size: 200% 100%;
+            animation: shimmerEffect 1.5s infinite linear;
+        }
+        @keyframes shimmerEffect {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Luxury Heart Animation */
+        .heart-burst { animation: heartBurst 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes heartBurst { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+
+        /* Tabs */
+        .tab-content { display: none; opacity: 0; transition: opacity 0.4s ease-out; }
+        .tab-content.active { display: block; opacity: 1; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; transform: translate3d(0, 0, 0); }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
+        
+        /* FITUR 4: iOS Premium Spring Bounce Tab Bar Navigation */
+        .ios-tab-bar { 
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateZ(0); 
+            width: 85%; max-width: 380px; height: 4.5rem; 
+            border-radius: 2.25rem; z-index: 50; 
+            display: flex; align-items: center; justify-content: space-around; 
+            padding: 0 1.5rem; 
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(255,255,255,1) inset;
+        }
+        .nav-item { transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0.4; }
+        .nav-item.active { opacity: 1; color: var(--gold); transform: translateY(-5px) scale(1.18); filter: drop-shadow(0 4px 6px rgba(197,160,89,0.15)); }
+        
+        /* Deep Blur Lightbox */
+        #lightbox { 
+            display: none; position: fixed; inset: 0; z-index: 100; 
+            background: rgba(10, 10, 10, 0.85); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 20px; flex-direction: column; align-items: center; justify-content: center; 
+            opacity: 0; transition: opacity 0.4s ease-out; 
+        }
+        #lightbox.visible { display: flex; opacity: 1; }
+        #lightbox img { 
+            max-width: 100%; max-height: 80vh; 
+            border-radius: 20px; object-fit: contain; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4); 
+            transform: scale(0.95) translateY(10px); 
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        #lightbox.visible img { transform: scale(1) translateY(0); }
+
+        .luxury-loader { width: 24px; height: 24px; border: 2px solid rgba(197, 160, 89, 0.3); border-top: 2px solid var(--gold); border-radius: 50%; animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #yt-player { position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+        /* FITUR 7: Signature Creator Line */
+        .creator-signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            color: #1a1a1a;
+            opacity: 0.35;
+            letter-spacing: 0.05em;
+            text-align: center;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        /* FITUR 27: Ambient Music Equalizer Animations */
+        @keyframes eqPulse1 { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+        @keyframes eqPulse2 { 0%, 100% { height: 14px; } 50% { height: 6px; } }
+        @keyframes eqPulse3 { 0%, 100% { height: 8px; } 50% { height: 18px; } }
+        .eq-bar { width: 2px; background-color: var(--gold); border-radius: 1px; }
+        .eq-active-1 { animation: eqPulse1 0.7s ease-in-out infinite; }
+        .eq-active-2 { animation: eqPulse2 0.5s ease-in-out infinite; }
+        .eq-active-3 { animation: eqPulse3 0.6s ease-in-out infinite; }
+
+        /* Dynamic Equalizer Frame Pulse */
+        @keyframes frameGlow {
+            0%, 100% { box-shadow: inset 0 0 20px rgba(197, 160, 89, 0.1); }
+            50% { box-shadow: inset 0 0 45px rgba(197, 160, 89, 0.25); }
+        }
+        .music-frame-glow { animation: frameGlow 3s ease-in-out infinite; pointer-events: none; }
+
+        /* Micro Multi-Selection Style */
+        .photo-card.selected {
+            transform: scale(0.92) translateY(5px);
+            border-color: var(--gold);
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.45);
+        }
+        .select-badge {
+            position: absolute; top: 12px; left: 12px; z-index: 15;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: white; border: 2px solid var(--gold);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .photo-card.selected .select-badge { opacity: 1; transform: scale(1); }
+    </style>
 </head>
-<body class="font-sans antialiased flex flex-col min-h-screen">
+<body class="fixed inset-0 overflow-hidden">
 
-  <!-- TOP NAVIGATION HEADER -->
-  <header class="sticky top-0 z-40 px-4 py-3 sm:px-8">
-    <nav class="max-w-7xl mx-auto glass-panel rounded-2xl px-5 py-3 flex items-center justify-between shadow-sm">
-      <!-- Brand Logo -->
-      <div class="flex items-center space-x-6">
-        <a href="index.html" class="text-xl font-extrabold tracking-tight text-vault-dark flex items-center space-x-2">
-          <svg class="w-7 h-7 text-vault-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-          <span>Foto<span class="text-vault-gold">Vault</span></span>
-        </a>
+    <!-- FITUR 27: Frame Glow Efek -->
+    <div id="ambientFrame" class="fixed inset-0 z-[60] transition-all duration-700 pointer-events-none"></div>
 
-        <!-- Search Bar (Desktop) -->
-        <div class="hidden md:flex items-center bg-white/70 border border-black/5 rounded-xl px-3 py-1.5 w-72 focus-within:ring-2 focus-within:ring-vault-gold/50 transition">
-          <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Cari foto, tanggal, atau tag..." class="bg-transparent text-xs w-full focus:outline-none text-gray-800 placeholder-gray-400" onkeyup="filterPhotos()">
-        </div>
-      </div>
+    <!-- Hidden YouTube Player -->
+    <div id="yt-player"></div>
 
-      <!-- Action & Profile Buttons -->
-      <div class="flex items-center space-x-3">
-        <!-- Quick Upload Button -->
-        <button onclick="openUploadModal()" class="bg-vault-dark hover:bg-black text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md transition flex items-center space-x-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-          </svg>
-          <span class="hidden sm:inline">Upload Foto</span>
-        </button>
-
-        <!-- Share / QR Button -->
-        <button onclick="openShareModal()" class="bg-white/80 hover:bg-white text-gray-700 p-2 rounded-xl border border-black/5 transition" title="Bagikan / QR Vault">
-          <svg class="w-5 h-5 text-vault-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
-          </svg>
-        </button>
-
-        <!-- Profile Avatar & Dropdown -->
-        <div class="relative">
-          <button onclick="toggleProfileDropdown()" class="flex items-center space-x-2 focus:outline-none">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120" alt="Avatar User" class="w-9 h-9 rounded-full object-cover border-2 border-vault-gold shadow-sm">
-          </button>
-          
-          <!-- Dropdown Menu -->
-          <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-52 glass-panel rounded-2xl shadow-xl py-2 border border-white/80 z-50 text-xs">
-            <div class="px-4 py-2 border-b border-black/5">
-              <p class="font-bold text-gray-800">Siti Rahmawati</p>
-              <p class="text-gray-500 text-[10px]">siti.rahma@example.com</p>
+    <!-- Lightbox Modal -->
+    <div id="lightbox" onclick="closeLightbox()" class="transition-all duration-300">
+        <button class="absolute top-12 right-8 text-white opacity-50 hover:opacity-100 transition-opacity z-[110]"><i data-lucide="x" class="w-8 h-8"></i></button>
+        
+        <div id="lightboxMediaContainer" class="relative max-w-full max-h-[85vh] flex items-center justify-center select-none" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="Enlarged" class="pointer-events-none select-none transition-all duration-300">
+            
+            <div id="privateNoteDisplay" class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl glass text-center border border-white/20 transform translate-y-2 opacity-0 transition-all duration-500 pointer-events-auto cursor-pointer active:scale-95 transition-transform duration-200">
+                <p class="text-[9px] uppercase tracking-[0.2em] text-gold font-bold mb-1 flex items-center justify-center gap-1">
+                    <i data-lucide="lock" class="w-3 h-3 pb-0.5"></i> Private Journal <i data-lucide="edit-3" class="w-2.5 h-2.5 opacity-60"></i>
+                </p>
+                <p id="privateNoteText" class="serif italic text-sm text-[#1a1a1a] min-h-[1.5rem]"></p>
             </div>
-            <a href="profile.html" class="flex items-center px-4 py-2.5 text-gray-700 hover:bg-black/5 transition">
-              <svg class="w-4 h-4 mr-2 text-vault-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              Pengaturan Profil
-            </a>
-            <a href="admin.html" class="flex items-center px-4 py-2.5 text-gray-700 hover:bg-black/5 transition">
-              <svg class="w-4 h-4 mr-2 text-vault-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              Admin Center
-            </a>
-            <div class="border-t border-black/5 my-1"></div>
-            <a href="login.html" class="flex items-center px-4 py-2.5 text-red-600 hover:bg-red-50 transition">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-              Keluar
-            </a>
-          </div>
         </div>
-      </div>
-    </nav>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-8 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 w-full">
-
-    <!-- LEFT SIDEBAR / NAVIGATION -->
-    <aside class="lg:col-span-3 space-y-6">
-      <!-- Navigation Menu -->
-      <div class="glass-panel rounded-3xl p-4 shadow-sm space-y-1 text-sm font-medium">
-        <button onclick="setActiveTab('all')" id="tab-all" class="active-nav w-full flex items-center justify-between px-4 py-3 rounded-2xl transition">
-          <div class="flex items-center space-x-3">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <span>Semua Foto</span>
-          </div>
-          <span class="text-xs opacity-75 bg-white/20 px-2 py-0.5 rounded-full" id="count-all">18</span>
-        </button>
-
-        <button onclick="setActiveTab('fav')" id="tab-fav" class="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-gray-700 hover:bg-black/5 transition">
-          <div class="flex items-center space-x-3">
-            <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            <span>Favorit Saya</span>
-          </div>
-          <span class="text-xs opacity-75 bg-black/5 px-2 py-0.5 rounded-full" id="count-fav">5</span>
-        </button>
-
-        <button onclick="setActiveTab('albums')" id="tab-albums" class="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-gray-700 hover:bg-black/5 transition">
-          <div class="flex items-center space-x-3">
-            <svg class="w-5 h-5 text-vault-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            <span>Album Privat</span>
-          </div>
-          <span class="text-xs opacity-75 bg-black/5 px-2 py-0.5 rounded-full">3</span>
-        </button>
-
-        <button onclick="setActiveTab('trash')" id="tab-trash" class="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-gray-700 hover:bg-black/5 transition">
-          <div class="flex items-center space-x-3">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            <span>Sampah</span>
-          </div>
-          <span class="text-xs opacity-75 bg-black/5 px-2 py-0.5 rounded-full">2</span>
-        </button>
-      </div>
-
-      <!-- STORAGE USAGE WIDGET -->
-      <div class="glass-panel rounded-3xl p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-vault-muted">Kapasitas Vault</h3>
-          <span class="text-[10px] font-bold text-vault-gold bg-vault-gold/15 px-2 py-0.5 rounded-full border border-vault-gold/30">PLUS 25 GB</span>
+        
+        <div class="mt-8 flex space-x-6 transform translate-y-8 opacity-0 transition-all duration-500 delay-100 z-[110]" id="lightboxControls">
+            <button id="lightboxDownload" title="Download Image" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="download" class="w-5 h-5"></i></button>
+            <button id="lightboxLike" title="Favorite" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="heart" id="lightboxLikeIcon" class="w-5 h-5"></i></button>
+            <button id="lightboxLock" title="Classify/Sembunyikan" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="lock" id="lightboxLockIcon" class="w-5 h-5"></i></button>
+            <button id="lightboxDelete" title="Delete Image" class="p-4 bg-white/10 hover:bg-white/20 transition-colors rounded-full text-white backdrop-blur-xl border border-white/10" onclick="event.stopPropagation()"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
         </div>
-
-        <div>
-          <div class="flex justify-between text-xs font-bold text-gray-800 mb-1.5">
-            <span>4.2 GB terpakai</span>
-            <span class="text-gray-500">25 GB</span>
-          </div>
-          <!-- Progress Bar -->
-          <div class="w-full bg-black/10 rounded-full h-2.5 overflow-hidden">
-            <div class="bg-gradient-to-r from-vault-goldLight to-vault-gold h-2.5 rounded-full" style="width: 16.8%"></div>
-          </div>
-        </div>
-
-        <p class="text-[11px] text-vault-muted leading-relaxed">
-          Tersedia ruang aman sebesar <strong class="text-gray-800">20.8 GB</strong> untuk foto resolusi tinggi Anda.
-        </p>
-
-        <a href="index.html#pricing" class="block text-center text-xs font-semibold py-2 px-3 rounded-xl bg-white/80 hover:bg-white text-vault-dark border border-black/5 shadow-xs transition">
-          ⚡ Upgrade Penyimpanan
-        </a>
-      </div>
-    </aside>
-
-    <!-- RIGHT CONTENT AREA -->
-    <section class="lg:col-span-9 space-y-6">
-
-      <!-- TOP FILTER & TOOLBAR -->
-      <div class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-vault-dark tracking-tight" id="galleryTitle">Koleksi Foto</h1>
-          <p class="text-xs text-vault-muted">Menampilkan foto yang tersimpan dalam vault terenkripsi.</p>
-        </div>
-
-        <!-- Filter Controls -->
-        <div class="flex items-center space-x-2">
-          <!-- Multi Select Toggle -->
-          <button id="btnMultiSelect" onclick="toggleMultiSelect()" class="px-3.5 py-2 rounded-xl text-xs font-semibold border border-black/10 bg-white/70 hover:bg-white transition flex items-center space-x-1.5">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            <span>Pilih Banyak</span>
-          </button>
-
-          <!-- Grid Density Switch -->
-          <div class="hidden sm:flex bg-black/5 p-1 rounded-xl space-x-1">
-            <button onclick="setGridCols('3')" class="p-1.5 rounded-lg text-gray-700 hover:bg-white transition" title="Tampilan Sedang">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V40M4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zm-12 6h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/></svg>
-            </button>
-            <button onclick="setGridCols('4')" class="p-1.5 rounded-lg text-gray-700 hover:bg-white transition" title="Tampilan Padat">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h3v3H3V3zm5 0h3v3H8V3zm5 0h3v3h-3V3zm5 0h3v3h-3V3zM3 8h3v3H3V8zm5 0h3v3H8V8zm5 0h3v3h-3V8zm5 0h3v3h-3V8zm-15 5h3v3H3v-3zm5 0h3v3H8v-3zm5 0h3v3h-3v-3zm5 0h3v3h-3v-3z"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- BULK ACTION BAR (Hidden by default) -->
-      <div id="bulkActionBar" class="hidden glass-panel rounded-2xl p-3 bg-vault-dark text-white flex items-center justify-between animate-fade-in shadow-xl">
-        <div class="flex items-center space-x-3 px-2">
-          <span class="text-xs font-bold" id="selectedCountText">0 foto dipilih</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <button onclick="downloadSelected()" class="px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-xs font-medium transition flex items-center space-x-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            <span>Unduh</span>
-          </button>
-          <button onclick="deleteSelected()" class="px-3 py-1.5 rounded-lg bg-red-500/80 hover:bg-red-600 text-xs font-medium transition flex items-center space-x-1">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            <span>Hapus</span>
-          </button>
-          <button onclick="toggleMultiSelect()" class="p-1.5 rounded-lg hover:bg-white/10 text-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- PHOTO GRID CONTAINER -->
-      <div id="photoGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <!-- Photo Item 1 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="1" data-category="fav" data-title="Liburan Pantai Bali" data-date="14 Ags 2026" data-size="3.2 MB" data-src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=500" alt="Pantai Bali" class="w-full h-full object-cover">
-            <!-- Select Checkbox -->
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <!-- Heart Favorite Indicator -->
-            <button onclick="event.stopPropagation(); toggleFavorite(1);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-amber-400 hover:bg-black/70 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <!-- Overlay Info on Hover -->
-            <div onclick="openLightbox(1)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Liburan Pantai Bali</p>
-              <p class="text-[10px] text-gray-300">14 Ags 2026 • 3.2 MB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Photo Item 2 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="2" data-category="fav" data-title="Pemandangan Gunung Bromo" data-date="10 Ags 2026" data-size="4.1 MB" data-src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&q=80&w=500" alt="Gunung Bromo" class="w-full h-full object-cover">
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <button onclick="event.stopPropagation(); toggleFavorite(2);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-amber-400 hover:bg-black/70 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <div onclick="openLightbox(2)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Pemandangan Gunung Bromo</p>
-              <p class="text-[10px] text-gray-300">10 Ags 2026 • 4.1 MB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Photo Item 3 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="3" data-category="all" data-title="Kopi Pagi & Laptop" data-date="08 Ags 2026" data-size="2.4 MB" data-src="https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&q=80&w=500" alt="Kopi" class="w-full h-full object-cover">
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <button onclick="event.stopPropagation(); toggleFavorite(3);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-gray-300 hover:text-amber-400 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <div onclick="openLightbox(3)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Kopi Pagi & Laptop</p>
-              <p class="text-[10px] text-gray-300">08 Ags 2026 • 2.4 MB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Photo Item 4 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="4" data-category="fav" data-title="Arsitektur Modern Tokyo" data-date="02 Ags 2026" data-size="5.0 MB" data-src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&q=80&w=500" alt="Tokyo" class="w-full h-full object-cover">
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <button onclick="event.stopPropagation(); toggleFavorite(4);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-amber-400 hover:bg-black/70 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <div onclick="openLightbox(4)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Arsitektur Modern Tokyo</p>
-              <p class="text-[10px] text-gray-300">02 Ags 2026 • 5.0 MB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Photo Item 5 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="5" data-category="all" data-title="Senja di Danau Toba" data-date="28 Jul 2026" data-size="3.8 MB" data-src="https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&q=80&w=500" alt="Hutan Senja" class="w-full h-full object-cover">
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <button onclick="event.stopPropagation(); toggleFavorite(5);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-gray-300 hover:text-amber-400 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <div onclick="openLightbox(5)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Senja di Danau Toba</p>
-              <p class="text-[10px] text-gray-300">28 Jul 2026 • 3.8 MB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Photo Item 6 -->
-        <div class="photo-card glass-card rounded-2xl overflow-hidden relative group cursor-pointer" data-id="6" data-category="fav" data-title="Kucing Kesayangan" data-date="20 Jul 2026" data-size="1.9 MB" data-src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800">
-          <div class="img-hover-zoom aspect-square w-full bg-gray-200 relative">
-            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=500" alt="Kucing" class="w-full h-full object-cover">
-            <input type="checkbox" onclick="event.stopPropagation(); updateSelectedCount();" class="photo-checkbox hidden absolute top-3 left-3 w-5 h-5 accent-vault-gold rounded border-white/80 shadow cursor-pointer z-10">
-            <button onclick="event.stopPropagation(); toggleFavorite(6);" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-amber-400 hover:bg-black/70 backdrop-blur-md transition z-10">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <div onclick="openLightbox(6)" class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-white">
-              <p class="text-xs font-bold truncate">Kucing Kesayangan</p>
-              <p class="text-[10px] text-gray-300">20 Jul 2026 • 1.9 MB</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-
-  <!-- 1. LIGHTBOX PREVIEW MODAL -->
-  <div id="lightboxModal" class="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 hidden flex items-center justify-center p-4">
-    <div class="relative w-full max-w-5xl bg-neutral-900 text-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
-      <!-- Close Button -->
-      <button onclick="closeLightbox()" class="absolute top-4 right-4 z-20 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full backdrop-blur transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-
-      <!-- Main Image Display -->
-      <div class="flex-grow bg-black flex items-center justify-center p-4 relative min-h-[300px]">
-        <img id="lbImage" src="" alt="Preview Foto" class="max-h-[75vh] w-auto max-w-full object-contain rounded-xl">
-      </div>
-
-      <!-- Sidebar Metadata -->
-      <div class="w-full md:w-80 p-6 flex flex-col justify-between bg-neutral-800/80 border-t md:border-t-0 md:border-l border-white/10">
-        <div class="space-y-4">
-          <div class="border-b border-white/10 pb-3">
-            <h3 id="lbTitle" class="text-lg font-bold">Judul Foto</h3>
-            <p id="lbDate" class="text-xs text-gray-400">Tanggal Upload</p>
-          </div>
-
-          <div class="space-y-2 text-xs">
-            <div class="flex justify-between py-1 border-b border-white/5">
-              <span class="text-gray-400">Ukuran Berkas</span>
-              <span id="lbSize" class="font-medium">0 MB</span>
-            </div>
-            <div class="flex justify-between py-1 border-b border-white/5">
-              <span class="text-gray-400">Enkripsi</span>
-              <span class="text-emerald-400 font-medium">AES-256 GCM</span>
-            </div>
-            <div class="flex justify-between py-1 border-b border-white/5">
-              <span class="text-gray-400">Akses Storage</span>
-              <span class="text-vault-gold font-medium">Private Bucket</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons inside Lightbox -->
-        <div class="space-y-2 pt-6">
-          <button onclick="showToast('Foto berhasil diunduh secara aman')" class="w-full bg-vault-gold hover:bg-amber-600 text-neutral-900 font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            <span>Unduh Asli</span>
-          </button>
-          <button onclick="showToast('Tautan berbagi aman telah disalin')" class="w-full bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-            <span>Salin Link Privat</span>
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- 2. UPLOAD MODAL WITH PROGRESS BAR -->
-  <div id="uploadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-panel w-full max-w-md rounded-3xl p-6 shadow-2xl relative">
-      <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-
-      <h3 class="text-lg font-bold text-vault-dark mb-1">Unggah Foto Baru</h3>
-      <p class="text-xs text-vault-muted mb-4">Foto akan terenkripsi otomatis sebelum disimpan ke storage.</p>
-
-      <!-- Drag and Drop Box -->
-      <div id="dropZone" onclick="triggerFileInput()" class="border-2 border-dashed border-vault-gold/50 rounded-2xl p-8 text-center bg-white/40 hover:bg-white/70 transition cursor-pointer space-y-3">
-        <div class="w-12 h-12 bg-vault-gold/15 text-vault-gold rounded-full flex items-center justify-center mx-auto">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+    <!-- FITUR EDIT NOTE DIALOG -->
+    <div id="noteEditorDialog" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 bg-black/60 backdrop-blur-md transition-opacity duration-300 select-none" onclick="closeNoteEditor()">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border border-white/30 shadow-2xl text-center transform scale-95 transition-transform duration-300" id="noteEditorBox" onclick="event.stopPropagation()">
+            <div class="w-12 h-12 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-gray-100 shadow-sm">
+                <i data-lucide="edit-3" class="w-5 h-5 text-gold"></i>
+            </div>
+            <p class="text-[9px] uppercase tracking-[0.25em] text-gold font-bold mb-1">Configure Memory</p>
+            <h4 class="serif text-2xl font-semibold mb-6 text-[#1a1a1a]">Private Journal</h4>
+            <textarea id="noteEditorInput" rows="3" class="w-full p-4 rounded-2xl bg-white/50 border border-white/70 text-sm serif italic focus:outline-none focus:ring-1 focus:ring-gold text-[#1a1a1a] placeholder-gray-400 resize-none mb-6" placeholder="Tuliskan cerita, memori, atau rahasia kecil Anda di sini..."></textarea>
+            <div class="flex gap-4">
+                <button id="noteEditorBtnCancel" class="flex-1 py-4 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold">Batal</button>
+                <button id="noteEditorBtnSave" class="flex-1 py-4 bg-[#1a1a1a] text-white hover:bg-black transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold text-gold">Simpan</button>
+            </div>
         </div>
-        <div>
-          <p class="text-xs font-bold text-gray-800">Klik atau tarik foto ke sini</p>
-          <p class="text-[10px] text-gray-500 mt-1">Mendukung JPG, PNG, WEBP (Maks 25 MB per file)</p>
-        </div>
-        <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="startSimulatedUpload()">
-      </div>
-
-      <!-- Upload Progress Section (Hidden initially) -->
-      <div id="uploadProgressSection" class="hidden mt-4 space-y-2">
-        <div class="flex justify-between text-xs font-semibold">
-          <span id="uploadFileName" class="text-gray-700 truncate max-w-[200px]">Mengunggah foto...</span>
-          <span id="uploadPercent" class="text-vault-gold">0%</span>
-        </div>
-        <div class="w-full bg-black/10 rounded-full h-2 overflow-hidden">
-          <div id="uploadProgressBar" class="bg-vault-gold h-2 rounded-full transition-all duration-200" style="width: 0%"></div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- 3. SHARE / QR MODAL -->
-  <div id="shareModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 shadow-2xl relative text-center">
-      <button onclick="closeShareModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-
-      <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold bg-vault-gold/15 text-vault-gold border border-vault-gold/30 mb-2">AKSES PRIVAT</span>
-      <h3 class="text-lg font-bold text-vault-dark">Bagikan Vault Saya</h3>
-      <p class="text-xs text-vault-muted mb-4">Scan kode QR di bawah untuk mengakses galeri terenkripsi ini.</p>
-
-      <!-- SVG Dummy QR Code -->
-      <div class="bg-white p-4 rounded-2xl shadow-inner border border-black/5 inline-block mb-4">
-        <svg class="w-36 h-36 mx-auto text-vault-dark" viewBox="0 0 100 100" fill="currentColor">
-          <rect x="0" y="0" width="30" height="30" rx="4" />
-          <rect x="5" y="5" width="20" height="20" fill="white" />
-          <rect x="10" y="10" width="10" height="10" />
-          <rect x="70" y="0" width="30" height="30" rx="4" />
-          <rect x="75" y="5" width="20" height="20" fill="white" />
-          <rect x="80" y="10" width="10" height="10" />
-          <rect x="0" y="70" width="30" height="30" rx="4" />
-          <rect x="5" y="75" width="20" height="20" fill="white" />
-          <rect x="10" y="80" width="10" height="10" />
-          <rect x="40" y="10" width="15" height="15" />
-          <rect x="40" y="40" width="20" height="20" />
-          <rect x="70" y="40" width="15" height="15" />
-          <rect x="40" y="70" width="15" height="15" />
-          <rect x="70" y="70" width="20" height="20" />
-        </svg>
-      </div>
-
-      <button onclick="copyVaultLink()" class="w-full bg-vault-dark text-white font-semibold py-2.5 rounded-xl text-xs hover:bg-black transition flex items-center justify-center space-x-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-        <span>Salin Tautan Akses</span>
-      </button>
+    <!-- Custom Elegant Alert/Confirm Modal -->
+    <div id="customDialog" class="fixed inset-0 z-[200] hidden items-center justify-center p-6 bg-black/60 backdrop-blur-md transition-opacity duration-300 select-none">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border border-white/30 shadow-2xl text-center transform scale-95 transition-transform duration-300" id="dialogBox">
+            <div class="w-14 h-14 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-md">
+                <i id="dialogIcon" data-lucide="shield-alert" class="w-7 h-7 text-gold animate-pulse"></i>
+            </div>
+            <h4 id="dialogTitle" class="serif text-2xl font-semibold mb-2 text-[#1a1a1a]">Secure Prompt</h4>
+            <p id="dialogMessage" class="text-xs text-gray-500 mb-8 leading-relaxed"></p>
+            <div class="flex gap-4">
+                <button id="dialogBtnCancel" class="flex-1 py-4 bg-gray-100 hover:bg-gray-200 transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold">Batal</button>
+                <button id="dialogBtnConfirm" class="flex-1 py-4 bg-[#1a1a1a] text-white hover:bg-black transition-colors rounded-full text-[10px] tracking-widest uppercase font-semibold">Ya</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-6 right-6 bg-vault-dark text-white text-xs font-medium px-4 py-3 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center space-x-2">
-    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-    <span id="toastMsg">Pesan Notifikasi</span>
-  </div>
+    <!-- FITUR 19: Privacy Glass Blur Shield Overlay -->
+    <div id="privacyShield" class="fixed inset-0 z-[300] hidden bg-white/20 backdrop-blur-[45px] flex-col items-center justify-center text-center select-none">
+        <div class="p-10 glass rounded-[3rem] border border-white/40 shadow-2xl max-w-xs">
+            <div class="w-16 h-16 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-md">
+                <i data-lucide="eye-off" class="w-8 h-8 text-gold animate-pulse"></i>
+            </div>
+            <h4 class="serif text-2xl font-semibold mb-2 text-[#1a1a1a]">Secure Overlay</h4>
+            <p class="text-[10px] uppercase tracking-widest text-gold font-bold mb-4">Privasi Dilindungi</p>
+            <p class="text-xs text-gray-400 leading-relaxed">Sesi Vault dikunci demi menjaga rahasia visual Anda.</p>
+        </div>
+    </div>
 
-  <script>
-    let isMultiSelect = false;
+    <!-- FITUR 23: Aesthetic Daily Quote Greeting Banner -->
+    <div id="quoteGreeting" class="fixed top-8 left-1/2 -translate-x-1/2 z-[70] pointer-events-none transform -translate-y-4 opacity-0 transition-all duration-700 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/80 shadow-lg max-w-xs w-[90%] text-center">
+        <p class="text-[8px] uppercase tracking-[0.25em] text-gold mb-1.5 font-bold">Daily Insight</p>
+        <p id="quoteText" class="serif italic text-xs text-[#1a1a1a] leading-relaxed"></p>
+    </div>
 
-    // Filter Navigation Tabs
-    function setActiveTab(tab) {
-      document.querySelectorAll('aside nav button').forEach(btn => {
-        btn.classList.remove('active-nav');
-        btn.classList.add('text-gray-700');
-      });
+    <!-- FITUR 24: Smooth Context Menu -->
+    <div id="3dContextMenu" class="fixed z-[120] hidden bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl shadow-xl w-44 p-2 transform scale-95 opacity-0 transition-all duration-200 select-none">
+        <button onclick="executeContextAction('like')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-700">
+            <i data-lucide="heart" class="w-4 h-4 text-gold"></i> Favorite
+        </button>
+        <button onclick="executeContextAction('download')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-gray-50 rounded-xl transition-colors text-gray-700">
+            <i data-lucide="download" class="w-4 h-4"></i> Download
+        </button>
+        <button onclick="executeContextAction('delete')" class="w-full text-left px-4 py-3 text-xs tracking-wider uppercase font-semibold flex items-center gap-3 hover:bg-red-50 rounded-xl transition-colors text-red-500">
+            <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i> Delete
+        </button>
+    </div>
 
-      const activeBtn = document.getElementById(`tab-${tab}`);
-      if (activeBtn) {
-        activeBtn.classList.add('active-nav');
-        activeBtn.classList.remove('text-gray-700');
-      }
+    <!-- FITUR 30: Multi-Photo Micro Selection Action Bar -->
+    <div id="selectionBar" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-[45] hidden bg-[#1a1a1a]/95 text-white backdrop-blur-xl rounded-full px-6 py-3 items-center gap-6 shadow-xl w-[85%] max-w-sm transition-all duration-300 select-none">
+        <span id="selectionCount" class="text-[10px] uppercase tracking-[0.15em] text-gold font-bold">0 Selected</span>
+        <div class="flex gap-4 ml-auto items-center">
+            <button onclick="batchAction('like')" class="p-2 hover:text-gold transition-colors" title="Favorite All"><i data-lucide="heart" class="w-4 h-4"></i></button>
+            <button onclick="batchAction('delete')" class="p-2 hover:text-red-400 transition-colors" title="Delete All"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            <button onclick="cancelMultiSelect()" class="p-2 hover:text-gray-400 transition-colors" title="Cancel"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+    </div>
 
-      const titleEl = document.getElementById('galleryTitle');
-      const cards = document.querySelectorAll('.photo-card');
+    <!-- LOCK SCREEN -->
+    <div id="lockScreen" class="fixed inset-0 z-[80] bg-warm flex flex-col items-center justify-between py-16 h-screen-dvh transition-all duration-700 ease-in-out relative">
+        <div class="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-white to-transparent opacity-60"></div>
+        
+        <div class="text-center mt-8 relative z-10">
+            <p id="dateDisplay" class="text-xs font-medium tracking-[0.2em] text-gold mb-3 uppercase"></p>
+            <h2 id="timeDisplay" class="text-7xl font-light tracking-tighter text-[#1a1a1a]">00:00</h2>
+            <div class="mt-10 flex justify-center">
+                <i data-lucide="lock" class="w-5 h-5 text-gold opacity-50"></i>
+            </div>
+        </div>
 
-      cards.forEach(card => {
-        if (tab === 'all') {
-          card.style.display = 'block';
-          titleEl.innerText = 'Koleksi Foto';
-        } else if (tab === 'fav') {
-          if (card.dataset.category === 'fav') {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-          titleEl.innerText = 'Favorit Saya';
-        } else if (tab === 'albums') {
-          card.style.display = 'block';
-          titleEl.innerText = 'Album Privat';
-        } else if (tab === 'trash') {
-          card.style.display = 'none';
-          titleEl.innerText = 'Sampah (Kosong)';
+        <div class="w-full max-w-xs flex flex-col items-center relative z-10">
+            <div id="pinDisplay" class="flex space-x-6 mb-12">
+                <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-y-6 gap-x-8">
+                <button onclick="handleInput(1)" class="keypad-btn">1</button>
+                <button onclick="handleInput(2)" class="keypad-btn">2</button>
+                <button onclick="handleInput(3)" class="keypad-btn">3</button>
+                <button onclick="handleInput(4)" class="keypad-btn">4</button>
+                <button onclick="handleInput(5)" class="keypad-btn">5</button>
+                <button onclick="handleInput(6)" class="keypad-btn">6</button>
+                <button onclick="handleInput(7)" class="keypad-btn">7</button>
+                <button onclick="handleInput(8)" class="keypad-btn">8</button>
+                <button onclick="handleInput(9)" class="keypad-btn">9</button>
+                <div class="w-[76px]"></div>
+                <button onclick="handleInput(0)" class="keypad-btn">0</button>
+                <button onclick="handleInput('⌫')" class="keypad-btn bg-transparent shadow-none border-transparent"><i data-lucide="delete" class="w-6 h-6 opacity-40"></i></button>
+            </div>
+        </div>
+        <div class="opacity-30 text-[9px] tracking-[0.4em] font-medium uppercase relative z-10 text-gray-500">Secured Archive</div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="appContent" class="hidden opacity-0 transition-all duration-700 h-screen-dvh overflow-y-auto pb-36">
+        <header class="sticky top-0 z-40 glass px-6 py-4 flex items-center justify-between mx-4 mt-4 rounded-3xl">
+            <div class="flex items-center space-x-3 select-none">
+                <div onclick="triggerSecretShortcut()" class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#1a1a1a] to-[#3a3a3a] text-gold flex items-center justify-center shadow-md active:scale-90 transition-transform cursor-pointer">
+                    <i data-lucide="diamond" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h1 onclick="triggerSecretShortcut()" class="serif text-xl italic font-semibold leading-none text-[#1a1a1a] cursor-pointer">Bas Vault</h1>
+                    <div class="flex items-center space-x-1.5 mt-1.5">
+                        <div id="cloudIndicator" class="w-1.5 h-1.5 rounded-full bg-red-400 transition-colors duration-500 shadow-[0_0_5px_rgba(248,113,113,0.5)]"></div>
+                        <p id="cloudStatus" class="text-[8px] uppercase tracking-[0.2em] opacity-50 font-medium">Connecting</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleMusic()" id="musicBtn" class="h-10 px-4 rounded-full bg-white border border-gray-100 shadow-sm flex items-center gap-2 text-gray-400 transition-all duration-300 hover:text-gold">
+                    <i data-lucide="music" class="w-4 h-4"></i>
+                    <div id="eqContainer" class="hidden items-end gap-[2px] h-3">
+                        <div class="eq-bar h-1"></div>
+                        <div class="eq-bar h-2"></div>
+                        <div class="eq-bar h-1"></div>
+                    </div>
+                </button>
+                <button onclick="document.getElementById('fileInput').click()" class="w-10 h-10 rounded-full bg-[#1a1a1a] text-white flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                </button>
+                <input type="file" id="fileInput" class="hidden" accept="image/*, image/heic" multiple>
+            </div>
+        </header>
+
+        <div id="uploadLoader" class="hidden mx-6 mt-4 px-6 py-4 rounded-2xl glass flex items-center space-x-4 sticky top-[90px] z-30 transform transition-all duration-300">
+            <div class="luxury-loader"></div>
+            <p class="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold">Encrypting & Syncing...</p>
+        </div>
+
+        <div id="tab-gallery" class="tab-content active px-6 mt-10">
+            <div class="flex justify-between items-end mb-4 select-none">
+                <div>
+                    <h2 class="serif text-4xl italic mb-2 text-[#1a1a1a] font-medium">Memories</h2>
+                    <p class="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium">The Archive</p>
+                </div>
+                <button onclick="playAestheticSlideshow()" class="px-4 py-2 bg-white hover:bg-gray-50 border border-gray-100 rounded-full shadow-sm text-[10px] tracking-widest uppercase font-bold text-gold flex items-center gap-2 active:scale-95 transition-transform">
+                    <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Slideshow
+                </button>
+            </div>
+            <div id="secretHeader" class="hidden mb-6 p-4 glass rounded-2xl border border-amber-200/50 text-center animate-pulse">
+                <span class="text-[9px] font-bold uppercase tracking-[0.3em] text-gold"><i data-lucide="eye" class="w-3 h-3 inline pb-0.5 mr-1"></i> Classified Mode Active</span>
+            </div>
+            <div id="galleryGrid" class="grid grid-cols-2 gap-4 md:grid-cols-3"></div>
+        </div>
+
+        <div id="tab-love" class="tab-content px-6 mt-10">
+            <h2 class="serif text-4xl italic mb-2 text-[#1a1a1a] font-medium">Favorites</h2>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-gold mb-8 font-medium">Curated Moments</p>
+            <div id="favoritesGrid" class="grid grid-cols-2 gap-4 md:grid-cols-3"></div>
+        </div>
+
+        <div id="tab-profile" class="tab-content px-6 mt-12">
+            <div class="glass rounded-[2.5rem] p-10 text-center relative overflow-hidden group border border-white/60 shadow-[0_20px_40px_rgba(0,0,0,0.03)]">
+                <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-40 group-hover:left-[200%] transition-all duration-1000 ease-in-out"></div>
+                
+                <div class="w-24 h-24 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border border-gray-100 shadow-xl relative z-10">
+                    <i data-lucide="shield" class="w-10 h-10 text-gold"></i>
+                </div>
+                <h3 class="serif text-3xl font-medium mb-1 text-[#1a1a1a]">Bas Vault</h3>
+                <p class="text-[9px] tracking-[0.4em] uppercase text-gold mb-8 font-medium">Premium Access</p>
+                
+                <div class="grid grid-cols-2 gap-4 relative z-10 mb-6">
+                    <div class="bg-white/60 backdrop-blur-md p-6 rounded-[2rem] border border-white/80 shadow-sm">
+                        <p class="text-[9px] uppercase text-gray-400 mb-2 font-bold tracking-widest">Assets</p>
+                        <p id="stats-total" class="serif text-3xl italic text-[#1a1a1a]">0</p>
+                    </div>
+                    <div class="bg-white/60 backdrop-blur-md p-6 rounded-[2rem] border border-white/80 shadow-sm">
+                        <p class="text-[9px] uppercase text-gold mb-2 font-bold tracking-widest">Loved</p>
+                        <p id="stats-liked" class="serif text-3xl italic text-[#1a1a1a]">0</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/60 backdrop-blur-md p-5 rounded-[2rem] border border-white/80 shadow-sm flex items-center justify-between relative z-10 mb-8">
+                    <div class="text-left">
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-600">Storage Mode</p>
+                        <p id="compressionStatus" class="text-[9px] text-gold uppercase tracking-wider font-semibold mt-0.5">Luxury Save Active</p>
+                    </div>
+                    <button onclick="toggleCompressionMode()" class="px-4 py-2 bg-gold hover:bg-[#b08e4d] text-white text-[9px] tracking-widest font-bold uppercase rounded-full transition-colors active:scale-95">
+                        Change Mode
+                    </button>
+                </div>
+
+                <button onclick="location.reload()" class="w-full py-5 bg-[#1a1a1a] text-white rounded-full text-xs tracking-widest uppercase font-medium flex items-center justify-center space-x-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] relative z-10">
+                    <i data-lucide="lock" class="w-4 h-4 text-gold"></i>
+                    <span>Secure Exit</span>
+                </button>
+
+                <div class="creator-signature relative z-10">
+                    The Vault Premium &bull; Crafted by BAS Development
+                </div>
+            </div>
+        </div>
+
+        <nav class="ios-tab-bar glass">
+            <button onclick="switchTab('gallery')" id="nav-gallery" class="nav-item active"><i data-lucide="layout-grid" class="w-6 h-6"></i></button>
+            <button onclick="switchTab('love')" id="nav-love" class="nav-item"><i data-lucide="heart" class="w-6 h-6"></i></button>
+            <button onclick="switchTab('profile')" id="nav-profile" class="nav-item"><i data-lucide="user" class="w-6 h-6"></i></button>
+        </nav>
+    </main>
+
+    <!-- SlideShow Modal Overlay -->
+    <div id="slideshowModal" onclick="stopAestheticSlideshow()" class="fixed inset-0 bg-black/95 z-[150] hidden flex-col justify-between items-center py-12 transition-opacity duration-1000">
+        <div class="w-full max-w-sm flex justify-between px-6 text-white/50 text-[10px] tracking-widest uppercase z-10">
+            <span>Aesthetic Loop</span>
+            <span id="slideshowCounter">1 / 1</span>
+        </div>
+        <div class="w-full h-[60vh] flex items-center justify-center relative px-6">
+            <img id="slideshowImg" src="" alt="Slideshow" class="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-[2000ms] opacity-0 scale-95 transform">
+        </div>
+        <div class="text-white/40 text-[9px] tracking-widest uppercase text-center select-none z-10">
+            <p class="animate-pulse">Tap anywhere to close slideshow</p>
+        </div>
+    </div>
+
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            return true; 
+        };
+
+        let activeDialogCallback = null;
+
+        function showCustomConfirm(message, callback) {
+            activeDialogCallback = callback;
+            document.getElementById('dialogTitle').innerText = "Security Confirm";
+            document.getElementById('dialogMessage').innerText = message;
+            document.getElementById('dialogIcon').className = "w-7 h-7 text-gold animate-bounce";
+            document.getElementById('dialogBtnCancel').classList.remove('hidden');
+            
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 50);
         }
-      });
-    }
 
-    // Toggle Favorite Heart
-    function toggleFavorite(id) {
-      const card = document.querySelector(`.photo-card[data-id="${id}"]`);
-      if (!card) return;
-
-      if (card.dataset.category === 'fav') {
-        card.dataset.category = 'all';
-        showToast('Dihapus dari favorit');
-      } else {
-        card.dataset.category = 'fav';
-        showToast('Ditambahkan ke favorit');
-      }
-    }
-
-    // Multi Select Mode
-    function toggleMultiSelect() {
-      isMultiSelect = !isMultiSelect;
-      const checkboxes = document.querySelectorAll('.photo-checkbox');
-      const bulkBar = document.getElementById('bulkActionBar');
-
-      checkboxes.forEach(cb => {
-        if (isMultiSelect) {
-          cb.classList.remove('hidden');
-        } else {
-          cb.classList.add('hidden');
-          cb.checked = false;
+        function showCustomAlert(message) {
+            activeDialogCallback = null;
+            document.getElementById('dialogTitle').innerText = "Vault Notice";
+            document.getElementById('dialogMessage').innerText = message;
+            document.getElementById('dialogIcon').className = "w-7 h-7 text-gold animate-pulse";
+            document.getElementById('dialogBtnCancel').classList.add('hidden');
+            
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+            setTimeout(() => { box.classList.remove('scale-95'); box.classList.add('scale-100'); }, 50);
         }
-      });
 
-      if (isMultiSelect) {
-        bulkBar.classList.remove('hidden');
-      } else {
-        bulkBar.classList.add('hidden');
-      }
-      updateSelectedCount();
-    }
+        document.getElementById('dialogBtnConfirm').onclick = () => {
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                dialog.classList.remove('flex');
+                if (activeDialogCallback) {
+                    activeDialogCallback();
+                    activeDialogCallback = null;
+                }
+            }, 150);
+        };
 
-    function updateSelectedCount() {
-      const selected = document.querySelectorAll('.photo-checkbox:checked').length;
-      document.getElementById('selectedCountText').innerText = `${selected} foto dipilih`;
-    }
+        document.getElementById('dialogBtnCancel').onclick = () => {
+            const dialog = document.getElementById('customDialog');
+            const box = document.getElementById('dialogBox');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                dialog.classList.remove('flex');
+                activeDialogCallback = null;
+            }, 150);
+        };
 
-    function downloadSelected() {
-      const count = document.querySelectorAll('.photo-checkbox:checked').length;
-      showToast(`${count || 'Beberapa'} foto berhasil diunduh`);
-    }
-
-    function deleteSelected() {
-      const selected = document.querySelectorAll('.photo-checkbox:checked');
-      selected.forEach(cb => {
-        const card = cb.closest('.photo-card');
-        if (card) card.remove();
-      });
-      showToast('Foto terpilih berhasil dipindahkan ke sampah');
-      toggleMultiSelect();
-    }
-
-    // Grid Column Change
-    function setGridCols(cols) {
-      const grid = document.getElementById('photoGrid');
-      if (cols === '4') {
-        grid.className = 'grid grid-cols-2 sm:grid-cols-4 gap-3';
-      } else {
-        grid.className = 'grid grid-cols-2 sm:grid-cols-3 gap-4';
-      }
-    }
-
-    // Filter by Search Input
-    function filterPhotos() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.photo-card');
-      cards.forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        if (title.includes(query)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
+        let audioCtx = null;
+        function playClickSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch(e) {}
         }
-      });
-    }
 
-    // Lightbox Modal Functions
-    function openLightbox(id) {
-      if (isMultiSelect) return;
-      const card = document.querySelector(`.photo-card[data-id="${id}"]`);
-      if (!card) return;
-
-      document.getElementById('lbImage').src = card.dataset.src;
-      document.getElementById('lbTitle').innerText = card.dataset.title;
-      document.getElementById('lbDate').innerText = card.dataset.date;
-      document.getElementById('lbSize').innerText = card.dataset.size;
-
-      document.getElementById('lightboxModal').classList.remove('hidden');
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightboxModal').classList.add('hidden');
-    }
-
-    // Upload Modal Functions
-    function openUploadModal() {
-      document.getElementById('uploadModal').classList.remove('hidden');
-    }
-
-    function closeUploadModal() {
-      document.getElementById('uploadModal').classList.add('hidden');
-      document.getElementById('uploadProgressSection').classList.add('hidden');
-      document.getElementById('uploadProgressBar').style.width = '0%';
-    }
-
-    function triggerFileInput() {
-      document.getElementById('fileInput').click();
-    }
-
-    function startSimulatedUpload() {
-      const file = document.getElementById('fileInput').files[0];
-      if (!file) return;
-
-      document.getElementById('uploadFileName').innerText = file.name;
-      document.getElementById('uploadProgressSection').classList.remove('hidden');
-
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 15;
-        document.getElementById('uploadProgressBar').style.width = `${progress}%`;
-        document.getElementById('uploadPercent').innerText = `${progress}%`;
-
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            closeUploadModal();
-            showToast('Foto berhasil diunggah ke Vault!');
-          }, 400);
+        function playSuccessSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    gain.gain.setValueAtTime(0, now);
+                    gain.gain.linearRampToValueAtTime(0.06, now + i * 0.08 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.5);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.08);
+                    osc.stop(now + i * 0.08 + 0.5);
+                });
+            } catch(e) {}
         }
-      }, 150);
-    }
 
-    // Share Modal
-    function openShareModal() {
-      document.getElementById('shareModal').classList.remove('hidden');
-    }
+        window.addEventListener('blur', () => {
+            const lockState = document.getElementById('lockScreen').style.display;
+            if (lockState === 'none') {
+                document.getElementById('privacyShield').classList.remove('hidden');
+                document.getElementById('privacyShield').classList.add('flex');
+            }
+        });
 
-    function closeShareModal() {
-      document.getElementById('shareModal').classList.add('hidden');
-    }
+        window.addEventListener('focus', () => {
+            document.getElementById('privacyShield').classList.add('hidden');
+            document.getElementById('privacyShield').classList.remove('flex');
+        });
 
-    function copyVaultLink() {
-      document.execCommand('copy');
-      closeShareModal();
-      showToast('Tautan Vault telah disalin!');
-    }
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 3) {
+                location.reload();
+            }
+        });
 
-    // Profile Dropdown Toggle
-    function toggleProfileDropdown() {
-      const dd = document.getElementById('profileDropdown');
-      dd.classList.toggle('hidden');
-    }
+        // Supabase Client Config (Ganti URL dan ANON_KEY dengan kredensial Supabase Anda)
+        const SUPABASE_URL = "https://YOUR_SUPABASE_URL.supabase.co";
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Toast Function
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').innerText = msg;
-      toast.classList.remove('translate-y-20', 'opacity-0');
+        const CORRECT_PIN = "1212";
+        const YT_ID = "wbz5pGyWOP4"; 
+        
+        let currentPin = "";
+        let photos = [];
+        let isMusicPlaying = false;
+        let ytPlayer;
+        let isProcessingInput = false;
 
-      setTimeout(() => {
-        toast.classList.add('translate-y-20', 'opacity-0');
-      }, 2500);
-    }
-  </script>
-<script>
-let FV_REAL_USER=null,FV_REAL_PHOTOS=[];
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,function(ch){return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#039;"})[ch]||ch})}
-function fvSize(n){n=Number(n||0);const u=["B","KB","MB","GB"];let i=0;while(n>=1024&&i<3){n/=1024;i++}return n.toFixed(i?1:0)+" "+u[i]}
-function fvCard(p,url){const date=new Date(p.created_at).toLocaleDateString("id-ID");return `<div class="photo-card glass-card rounded-2xl overflow-hidden relative reveal" data-id="${p.id}" data-src="${url}" data-title="${escapeHtml(p.name)}" data-date="${date}" data-size="${fvSize(p.size)}" data-category="all" onclick="openLightbox('${p.id}')"><div class="img-hover-zoom aspect-square bg-black/5"><img src="${url}" loading="lazy" decoding="async" class="w-full h-full object-cover" alt="${escapeHtml(p.name)}"></div><div class="p-3"><div class="text-xs font-semibold truncate">${escapeHtml(p.name)}</div><div class="text-[10px] text-gray-500 mt-1">${date} · ${fvSize(p.size)}</div></div><input type="checkbox" class="photo-checkbox hidden absolute top-3 left-3 w-4 h-4 z-10" onclick="event.stopPropagation()"></div>`}
-async function fvLoad(){const {data:{session}}=await FV.db.auth.getSession();if(!session){location.replace("login.html");return}FV_REAL_USER=session.user;const role=await FV.db.from("user_roles").select("role").eq("user_id",session.user.id).maybeSingle();if(String(role.data?.role||"user").toLowerCase()==="admin"){location.replace("admin.html");return}const {data,error}=await FV.db.from("photos").select("id,name,path,size,mime_type,created_at").eq("user_id",session.user.id).order("created_at",{ascending:false});if(error)throw error;FV_REAL_PHOTOS=data||[];const cards=[];for(const p of FV_REAL_PHOTOS){const r=await FV.db.storage.from("photos").createSignedUrl(p.path,3600);if(!r.error)cards.push(fvCard(p,r.data.signedUrl))}const grid=document.getElementById("photoGrid");if(grid)grid.innerHTML=cards.join("")||'<div class="col-span-full text-center py-20 text-sm text-gray-500">Belum ada foto. Upload foto pertama kamu.</div>';const count=document.getElementById("count-all");if(count)count.textContent=FV_REAL_PHOTOS.length}
-window.startSimulatedUpload=async function(){const input=document.getElementById("fileInput"),file=input?.files?.[0];if(!file||!FV_REAL_USER)return;document.getElementById("uploadProgressSection")?.classList.remove("hidden");document.getElementById("uploadFileName").textContent=file.name;try{const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=`${FV_REAL_USER.id}/${crypto.randomUUID()}-${safe}`;const up=await FV.db.storage.from("photos").upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;const ins=await FV.db.from("photos").insert({user_id:FV_REAL_USER.id,name:file.name,path,size:file.size,mime_type:file.type});if(ins.error){await FV.db.storage.from("photos").remove([path]);throw ins.error}document.getElementById("uploadPercent").textContent="100%";document.getElementById("uploadProgressBar").style.width="100%";showToast("Foto berhasil diunggah ke Vault!");await fvLoad();setTimeout(closeUploadModal,500)}catch(e){showToast(e.message||"Upload gagal")}finally{input.value=""}};
-window.openLightbox=function(id){const p=FV_REAL_PHOTOS.find(x=>x.id===id);const url=document.querySelector(`.photo-card[data-id="${id}"]`)?.dataset.src;if(!p||!url)return;document.getElementById("lbImage").src=url;document.getElementById("lbTitle").textContent=p.name;document.getElementById("lbDate").textContent=new Date(p.created_at).toLocaleString("id-ID");document.getElementById("lbSize").textContent=fvSize(p.size);document.getElementById("lightboxModal").classList.remove("hidden")};
-window.deleteSelected=async function(){const ids=[...document.querySelectorAll(".photo-checkbox:checked")].map(x=>x.closest(".photo-card")?.dataset.id).filter(Boolean);if(!ids.length){showToast("Pilih foto terlebih dahulu");return}if(!confirm(`Hapus ${ids.length} foto?`))return;try{for(const id of ids){const p=FV_REAL_PHOTOS.find(x=>x.id===id);if(p){await FV.db.storage.from("photos").remove([p.path]);await FV.db.from("photos").delete().eq("id",id)}}showToast("Foto berhasil dihapus");await fvLoad();toggleMultiSelect()}catch(e){showToast(e.message||"Gagal menghapus")}};
-(async()=>{try{await FV.requireSession();await fvLoad()}catch(e){console.error("Dashboard error:",e);if(!FV_REAL_USER) location.replace("login.html");else showToast(e.message||"Gagal memuat foto")}})();
-</script>
-<script src="premium.js"></script>
+        let isUsingCloud = false;
+        let cloudSubscription = null;
+
+        const DB_NAME = 'TheVaultTurboDB';
+        const DB_VERSION = 1;
+        let turboDB = null;
+
+        function initIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('photos')) {
+                        db.createObjectStore('photos', { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = (e) => {
+                    turboDB = e.target.result;
+                    resolve(turboDB);
+                };
+                request.onerror = (e) => {
+                    reject(e);
+                };
+            });
+        }
+
+        function savePhotoToIDB(photo) {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve(); return; }
+                const tx = turboDB.transaction(['photos'], 'readwrite');
+                const store = tx.objectStore('photos');
+                store.put(photo);
+                tx.oncomplete = () => resolve();
+                tx.onerror = (err) => reject(err);
+            });
+        }
+
+        function getPhotosFromIDB() {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve([]); return; }
+                const tx = turboDB.transaction(['photos'], 'readonly');
+                const store = tx.objectStore('photos');
+                const request = store.getAll();
+                request.onsuccess = () => {
+                    const list = request.result || [];
+                    list.sort((a,b) => {
+                        const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+                        const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+                        return timeB - timeA;
+                    });
+                    resolve(list);
+                };
+                request.onerror = (err) => reject(err);
+            });
+        }
+
+        function deletePhotoFromIDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!turboDB) { resolve(); return; }
+                const tx = turboDB.transaction(['photos'], 'readwrite');
+                const store = tx.objectStore('photos');
+                store.delete(id);
+                tx.oncomplete = () => resolve();
+                tx.onerror = (err) => reject(err);
+            });
+        }
+
+        function encryptNoteText(text) {
+            if (!text) return "";
+            return btoa(unescape(encodeURIComponent(text))).split('').reverse().join('');
+        }
+
+        function decryptNoteText(encrypted) {
+            if (!encrypted) return "";
+            try {
+                const reversed = encrypted.split('').reverse().join('');
+                return decodeURIComponent(escape(atob(reversed)));
+            } catch(e) {
+                return encrypted;
+            }
+        }
+
+        let storageCompressionMode = localStorage.getItem('vault_compression_mode') || 'luxury';
+
+        function toggleCompressionMode() {
+            playClickSound();
+            if (storageCompressionMode === 'luxury') {
+                storageCompressionMode = 'ultra';
+                showCustomAlert("Mode penyimpanan beralih ke: Ultra HD (Menjaga foto beresolusi super tajam)");
+            } else {
+                storageCompressionMode = 'luxury';
+                showCustomAlert("Mode penyimpanan beralih ke: Luxury Save (Mengompresi secara cerdas agar hemat ruang)");
+            }
+            localStorage.setItem('vault_compression_mode', storageCompressionMode);
+            updateCompressionUI();
+        }
+
+        function updateCompressionUI() {
+            const statusText = document.getElementById('compressionStatus');
+            if (statusText) {
+                if (storageCompressionMode === 'luxury') {
+                    statusText.innerText = "Luxury Save Active";
+                } else {
+                    statusText.innerText = "Ultra HD Active";
+                }
+            }
+        }
+
+        const aestheticQuotes = [
+            "Kemewahan sejati adalah kebebasan untuk menyimpan momen indah secara intim.",
+            "Waktu memudar, namun memori yang tersimpan abadi di dalam brankas ini.",
+            "Setiap gambar menceritakan rahasia kecil yang tak lekang oleh waktu.",
+            "Sebuah seni menyimpan perjalanan hidup dalam balutan ivory yang hangat.",
+            "Selamat datang kembali di pelukan memori terindah Anda."
+        ];
+
+        function showDailyQuoteGreeting() {
+            const randIndex = Math.floor(Math.random() * aestheticQuotes.length);
+            const quoteTextEl = document.getElementById('quoteText');
+            const quoteGreetingEl = document.getElementById('quoteGreeting');
+            
+            if (quoteTextEl && quoteGreetingEl) {
+                quoteTextEl.innerText = aestheticQuotes[randIndex];
+                quoteGreetingEl.classList.remove('opacity-0', '-translate-y-4');
+                quoteGreetingEl.classList.add('opacity-100', 'translate-y-0');
+                
+                setTimeout(() => {
+                    quoteGreetingEl.classList.add('opacity-0', '-translate-y-4');
+                    quoteGreetingEl.classList.remove('opacity-100', 'translate-y-0');
+                }, 5000);
+            }
+        }
+
+        let secretClicks = 0;
+        let lastClickTime = 0;
+        let isSecretModeActive = false;
+
+        function triggerSecretShortcut() {
+            const currentTime = Date.now();
+            playClickSound();
+            
+            if (currentTime - lastClickTime > 600) {
+                secretClicks = 0;
+            }
+            
+            lastClickTime = currentTime;
+            secretClicks++;
+            
+            if (secretClicks >= 3) {
+                secretClicks = 0;
+                isSecretModeActive = !isSecretModeActive;
+                const header = document.getElementById('secretHeader');
+                
+                if (isSecretModeActive) {
+                    if (header) header.classList.remove('hidden');
+                    playSuccessSound();
+                    showCustomAlert("Classified Mode Aktif! Foto-foto tersembunyi (Classified) kini diperlihatkan di galeri.");
+                } else {
+                    if (header) header.classList.add('hidden');
+                    playSuccessSound();
+                    showCustomAlert("Classified Mode Nonaktif! Semua foto rahasia disembunyikan kembali dari galeri utama.");
+                }
+                renderGalleryFast();
+            }
+        }
+
+        const lazyLoadObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const img = card.querySelector('img');
+                    if (img) {
+                        const dataSrc = img.getAttribute('data-src');
+                        if (dataSrc) {
+                            img.src = dataSrc;
+                            img.removeAttribute('data-src');
+                        }
+                    }
+                    observer.unobserve(card);
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '120px 0px',
+            threshold: 0.01
+        });
+
+        function safeCreateIcons() {
+            try {
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons();
+                }
+            } catch (e) {
+                console.warn("Lucide icons failed to load gracefully:", e);
+            }
+        }
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('yt-player', {
+                height: '1', width: '1', videoId: YT_ID,
+                playerVars: { 'autoplay': 0, 'controls': 0, 'loop': 1, 'playlist': YT_ID }
+            });
+        }
+
+        function toggleMusic() {
+            if (!ytPlayer || typeof ytPlayer.playVideo !== 'function') return;
+            isMusicPlaying = !isMusicPlaying;
+            
+            playClickSound(); 
+            
+            const btn = document.getElementById('musicBtn');
+            const icon = btn ? btn.querySelector('svg, i') : null;
+            const eqContainer = document.getElementById('eqContainer');
+            const ambientFrame = document.getElementById('ambientFrame');
+
+            if (isMusicPlaying) {
+                ytPlayer.playVideo();
+                if (btn) {
+                    btn.classList.add('bg-white', 'text-gold', 'shadow-md');
+                    btn.classList.remove('text-gray-400');
+                }
+                if (icon) {
+                    icon.classList.add('fill-current', 'heart-burst');
+                }
+                if (eqContainer) {
+                    eqContainer.classList.remove('hidden');
+                    eqContainer.classList.add('flex');
+                    const bars = eqContainer.querySelectorAll('.eq-bar');
+                    bars[0].classList.add('eq-active-1');
+                    bars[1].classList.add('eq-active-2');
+                    bars[2].classList.add('eq-active-3');
+                }
+                if (ambientFrame) {
+                    ambientFrame.classList.add('music-frame-glow');
+                }
+            } else {
+                ytPlayer.pauseVideo();
+                if (btn) {
+                    btn.classList.remove('bg-white', 'text-gold', 'shadow-md');
+                    btn.classList.add('text-gray-400');
+                }
+                if (icon) {
+                    icon.classList.remove('fill-current', 'heart-burst');
+                }
+                if (eqContainer) {
+                    eqContainer.classList.add('hidden');
+                    eqContainer.classList.remove('flex');
+                    const bars = eqContainer.querySelectorAll('.eq-bar');
+                    bars[0].classList.remove('eq-active-1');
+                    bars[1].classList.remove('eq-active-2');
+                    bars[2].classList.remove('eq-active-3');
+                }
+                if (ambientFrame) {
+                    ambientFrame.classList.remove('music-frame-glow');
+                }
+            }
+        }
+
+        function handleInput(key) {
+            if (isProcessingInput) return; 
+            
+            playClickSound(); 
+            
+            if (key === '⌫') {
+                currentPin = currentPin.slice(0, -1);
+            } else if (currentPin.length < 4) {
+                currentPin += key;
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+            }
+            
+            updateDots();
+            
+            if (currentPin.length === 4) {
+                isProcessingInput = true;
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        if (currentPin === CORRECT_PIN) unlock();
+                        else shakeKeypad();
+                    }, 200);
+                });
+            }
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, i) => {
+                if (i < currentPin.length) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function shakeKeypad() {
+            const display = document.getElementById('pinDisplay');
+            display.classList.add('shake');
+            if (window.navigator.vibrate) window.navigator.vibrate([30, 30, 30]);
+            
+            setTimeout(() => {
+                display.classList.remove('shake');
+                currentPin = ""; 
+                updateDots();
+                isProcessingInput = false;
+            }, 400);
+        }
+
+        function unlock() {
+            playSuccessSound(); 
+            const lock = document.getElementById('lockScreen');
+            lock.style.opacity = '0';
+            lock.style.transform = 'translateY(-10%) scale(1.05)';
+            
+            setTimeout(() => {
+                lock.style.display = 'none';
+                const app = document.getElementById('appContent');
+                app.classList.remove('hidden');
+                
+                requestAnimationFrame(() => {
+                    app.classList.add('opacity-100');
+                    initGallery();
+                    showDailyQuoteGreeting();
+                });
+            }, 600); 
+        }
+
+        let fallbackTimer = setTimeout(() => {
+            console.warn("Supabase connection timed out or missing credentials. Falling back to Local Storage mode.");
+            useLocalFallback();
+        }, 3000); 
+
+        window.addEventListener('load', () => {
+            initIndexedDB().catch(err => console.error("Could not bootstrap Turbo IDB Engine:", err));
+            updateCompressionUI();
+        });
+
+        async function initGallery() {
+            if (SUPABASE_URL.includes("YOUR_SUPABASE_URL")) {
+                clearTimeout(fallbackTimer);
+                useLocalFallback();
+                return;
+            }
+
+            try {
+                // Initial Fetch Supabase Photos
+                const { data, error } = await supabase
+                    .from('vault_photos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                clearTimeout(fallbackTimer);
+                isUsingCloud = true;
+                photos = data.map(item => ({
+                    id: String(item.id),
+                    image: item.image,
+                    liked: item.liked,
+                    note: item.note,
+                    created_at: item.created_at
+                }));
+                renderGalleryFast();
+
+                const indicator = document.getElementById('cloudIndicator');
+                const statusText = document.getElementById('cloudStatus');
+                
+                if (statusText && indicator) {
+                    statusText.innerText = "Secured Cloud";
+                    statusText.classList.remove('text-amber-600');
+                    statusText.classList.add('text-gold');
+                    indicator.className = "w-1.5 h-1.5 rounded-full bg-green-400 transition-colors duration-500 shadow-[0_0_5px_rgba(74,222,128,0.5)]";
+                }
+
+                // Setup Realtime Syncing via Supabase Channel
+                cloudSubscription = supabase
+                    .channel('public:vault_photos')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_photos' }, () => {
+                        fetchSupabasePhotos();
+                    })
+                    .subscribe();
+
+            } catch (err) {
+                console.warn("Supabase unreachable or misconfigured:", err);
+                clearTimeout(fallbackTimer);
+                useLocalFallback();
+            }
+        }
+
+        async function fetchSupabasePhotos() {
+            const { data, error } = await supabase
+                .from('vault_photos')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!error && data) {
+                photos = data.map(item => ({
+                    id: String(item.id),
+                    image: item.image,
+                    liked: item.liked,
+                    note: item.note,
+                    created_at: item.created_at
+                }));
+                renderGalleryFast();
+            }
+        }
+
+        function useLocalFallback() {
+            if (isUsingCloud) return; 
+            
+            const indicator = document.getElementById('cloudIndicator');
+            const statusText = document.getElementById('cloudStatus');
+            
+            if (statusText && indicator) {
+                statusText.innerText = "Local Vault";
+                statusText.classList.remove('text-gold');
+                statusText.classList.add('text-amber-600');
+                indicator.className = "w-1.5 h-1.5 rounded-full bg-amber-500 transition-colors duration-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]";
+            }
+
+            loadLocalPhotos();
+        }
+
+        async function loadLocalPhotos() {
+            try {
+                const oldLocalData = localStorage.getItem('vault_photos_v2');
+                if (oldLocalData) {
+                    const parsed = JSON.parse(oldLocalData);
+                    for (const item of parsed) {
+                        await savePhotoToIDB(item);
+                    }
+                    localStorage.removeItem('vault_photos_v2'); 
+                }
+            } catch(e) {
+                console.warn("Storage migration failed or already processed:", e);
+            }
+
+            try {
+                photos = await getPhotosFromIDB();
+            } catch (err) {
+                console.error("IndexedDB fetch failed, sliding to memory fallback:", err);
+                photos = [];
+            }
+            renderGalleryFast();
+        }
+
+        let isMultiSelectMode = false;
+        let selectedPhotoIds = new Set();
+
+        function enterMultiSelectMode(photoId) {
+            isMultiSelectMode = true;
+            selectedPhotoIds.clear();
+            selectedPhotoIds.add(photoId);
+            
+            const bar = document.getElementById('selectionBar');
+            if (bar) {
+                bar.classList.remove('hidden');
+                bar.classList.add('flex');
+            }
+            
+            renderGalleryFast();
+        }
+
+        function toggleSelectPhoto(photoId) {
+            playClickSound();
+            if (selectedPhotoIds.has(photoId)) {
+                selectedPhotoIds.delete(photoId);
+            } else {
+                selectedPhotoIds.add(photoId);
+            }
+            
+            if (selectedPhotoIds.size === 0) {
+                cancelMultiSelect();
+            } else {
+                updateSelectionBarUI();
+                renderGalleryFast();
+            }
+        }
+
+        function updateSelectionBarUI() {
+            const countText = document.getElementById('selectionCount');
+            if (countText) {
+                countText.innerText = `${selectedPhotoIds.size} Selected`;
+            }
+        }
+
+        function cancelMultiSelect() {
+            isMultiSelectMode = false;
+            selectedPhotoIds.clear();
+            const bar = document.getElementById('selectionBar');
+            if (bar) {
+                bar.classList.add('hidden');
+                bar.classList.remove('flex');
+            }
+            renderGalleryFast();
+        }
+
+        async function batchAction(action) {
+            playClickSound();
+            if (selectedPhotoIds.size === 0) return;
+            
+            if (action === 'delete') {
+                showCustomConfirm(`Hapus ${selectedPhotoIds.size} aset terpilih dari Vault permanen?`, async () => {
+                    for (let id of selectedPhotoIds) {
+                        if (isUsingCloud && !id.startsWith('local_')) {
+                            try {
+                                await supabase.from('vault_photos').delete().eq('id', id);
+                            } catch (error) { console.error("Batch Delete sync failed", error); }
+                        } else {
+                            photos = photos.filter(p => p.id !== id);
+                            await deletePhotoFromIDB(id);
+                        }
+                    }
+                    cancelMultiSelect();
+                    renderGalleryFast();
+                });
+            } else if (action === 'like') {
+                for (let id of selectedPhotoIds) {
+                    const photo = photos.find(p => p.id === id);
+                    if (photo) {
+                        const newStatus = !photo.liked;
+                        if (isUsingCloud && !id.startsWith('local_')) {
+                            try {
+                                await supabase.from('vault_photos').update({ liked: newStatus }).eq('id', id);
+                            } catch (error) { console.error("Batch Like sync failed", error); }
+                        } else {
+                            photos = photos.map(p => p.id === id ? { ...p, liked: newStatus } : p);
+                            const targetedPhoto = photos.find(p => p.id === id);
+                            if (targetedPhoto) {
+                                await savePhotoToIDB(targetedPhoto);
+                            }
+                        }
+                    }
+                }
+                cancelMultiSelect();
+                renderGalleryFast();
+            }
+        }
+
+        let pressTimer;
+        let activeContextPhoto = null;
+
+        function startPress(e, photo) {
+            if (isMultiSelectMode) return;
+            
+            const cardEl = e.currentTarget;
+            pressTimer = setTimeout(() => {
+                const touchEvent = e.touches ? e.touches[0] : e;
+                const pos = {
+                    clientX: touchEvent.clientX,
+                    clientY: touchEvent.clientY
+                };
+                
+                enterMultiSelectMode(photo.id);
+                if (window.navigator.vibrate) window.navigator.vibrate([25, 15, 25]);
+            }, 700);
+        }
+
+        function endPress() {
+            clearTimeout(pressTimer);
+        }
+
+        function triggerContextMenu(e, photo, cardEl) {
+            playClickSound();
+            if (window.navigator.vibrate) window.navigator.vibrate([15, 10, 15]);
+            activeContextPhoto = photo;
+            
+            const menu = document.getElementById('3dContextMenu');
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            if (menu) {
+                menu.style.left = `${Math.min(x, window.innerWidth - 180)}px`;
+                menu.style.top = `${Math.min(y, window.innerHeight - 180)}px`;
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.classList.remove('scale-95', 'opacity-0');
+                    menu.classList.add('scale-100', 'opacity-100');
+                }, 50);
+            }
+        }
+
+        function executeContextAction(action) {
+            playClickSound();
+            const menu = document.getElementById('3dContextMenu');
+            if (menu) {
+                menu.classList.add('scale-95', 'opacity-0');
+                menu.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => menu.classList.add('hidden'), 200);
+            }
+            
+            if (!activeContextPhoto) return;
+            const photo = activeContextPhoto;
+            
+            if (action === 'like') {
+                toggleLike(photo.id, photo.liked);
+            } else if (action === 'download') {
+                downloadImage(photo.image);
+            } else if (action === 'delete') {
+                deletePhoto(photo.id);
+            }
+            
+            activeContextPhoto = null;
+        }
+
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('3dContextMenu');
+            if (menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('scale-95', 'opacity-0');
+                menu.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => menu.classList.add('hidden'), 200);
+            }
+        });
+
+        let currentlyVisiblePhotos = [];
+
+        function renderGalleryFast() {
+            const grid = document.getElementById('galleryGrid');
+            const favGrid = document.getElementById('favoritesGrid');
+            if (!grid || !favGrid) return;
+
+            const fragAll = document.createDocumentFragment();
+            const fragFav = document.createDocumentFragment();
+            let likedCount = 0;
+
+            currentlyVisiblePhotos = photos.filter(p => {
+                const decryptedNote = decryptNoteText(p.note || "").toLowerCase();
+                const isClassified = decryptedNote.includes('classified');
+                
+                if (isSecretModeActive) {
+                    return true; 
+                } else {
+                    return !isClassified; 
+                }
+            });
+
+            currentlyVisiblePhotos.forEach((photo, idx) => {
+                const div = document.createElement('div');
+                
+                const isSelected = selectedPhotoIds.has(photo.id);
+                div.className = `photo-card group shimmer-bg ${isSelected ? 'selected' : ''}`;
+                div.style.animationDelay = `${(idx % 15) * 0.05}s`;
+                
+                div.addEventListener('mousedown', (e) => startPress(e, photo));
+                div.addEventListener('touchstart', (e) => startPress(e, photo), { passive: true });
+                div.addEventListener('mouseup', endPress);
+                div.addEventListener('mouseleave', endPress);
+                div.addEventListener('touchend', endPress);
+                
+                div.onclick = () => {
+                    if (isMultiSelectMode) {
+                        toggleSelectPhoto(photo.id);
+                    } else {
+                        openLightbox(photo);
+                    }
+                };
+                
+                const heartClass = photo.liked ? 'text-red-500 fill-current' : 'text-gray-400';
+                const btnBg = photo.liked ? 'bg-white/90' : 'bg-white/50';
+                
+                const decryptedNote = decryptNoteText(photo.note || "").toLowerCase();
+                const isClassified = decryptedNote.includes('classified');
+                const lockIndicatorHTML = isClassified ? `
+                    <div class="absolute top-3 left-3 z-10 bg-black/40 backdrop-blur-md p-1.5 rounded-full text-gold-light border border-white/20">
+                        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                    </div>
+                ` : '';
+                
+                div.innerHTML = `
+                    <div class="select-badge"><i data-lucide="check" class="w-3.5 h-3.5 text-gold"></i></div>
+                    ${lockIndicatorHTML}
+                    <div class="absolute top-3 right-3 z-10 transition-transform duration-300 opacity-90 group-hover:opacity-100">
+                        <button onclick="toggleLike('${photo.id}', ${photo.liked}, event, this)" class="${btnBg} backdrop-blur-md p-2.5 rounded-full shadow-sm active:scale-90 transition-all border border-white/50">
+                            <i data-lucide="heart" class="w-4 h-4 ${heartClass} transition-colors"></i>
+                        </button>
+                    </div>
+                    <img data-src="${photo.image}" class="w-full h-full object-cover" loading="lazy" onload="this.parentElement.classList.remove('shimmer-bg'); this.parentElement.classList.add('loaded'); this.classList.add('loaded')">
+                `;
+                
+                fragAll.appendChild(div);
+                lazyLoadObserver.observe(div); 
+                
+                if(photo.liked) {
+                    const favDiv = div.cloneNode(true);
+                    favDiv.style.animationDelay = `${(likedCount % 15) * 0.05}s`;
+                    favDiv.onclick = () => {
+                        if (isMultiSelectMode) {
+                            toggleSelectPhoto(photo.id);
+                        } else {
+                            openLightbox(photo);
+                        }
+                    };
+                    favDiv.querySelector('button').onclick = (e) => toggleLike(photo.id, photo.liked, e, favDiv.querySelector('button'));
+                    fragFav.appendChild(favDiv);
+                    lazyLoadObserver.observe(favDiv);
+                    likedCount++;
+                }
+            });
+            
+            grid.innerHTML = ''; grid.appendChild(fragAll);
+            favGrid.innerHTML = ''; favGrid.appendChild(fragFav);
+
+            document.getElementById('stats-total').innerText = photos.length;
+            document.getElementById('stats-liked').innerText = likedCount;
+            safeCreateIcons();
+        }
+
+        async function toggleLike(id, currentStatus, event, btnElement) {
+            if(event) event.stopPropagation();
+            
+            playClickSound(); 
+            
+            if (btnElement) {
+                const icon = btnElement.querySelector('svg, i');
+                if (icon) {
+                    icon.classList.add('heart-burst');
+                    setTimeout(() => icon.classList.remove('heart-burst'), 400);
+
+                    if (!currentStatus) {
+                        btnElement.classList.replace('bg-white/50', 'bg-white/90');
+                        icon.classList.replace('text-gray-400', 'text-red-500');
+                        icon.classList.add('fill-current');
+                    } else {
+                        btnElement.classList.replace('bg-white/90', 'bg-white/50');
+                        icon.classList.replace('text-red-500', 'text-gray-400');
+                        icon.classList.remove('fill-current');
+                    }
+                }
+            }
+            
+            if (isUsingCloud && !id.startsWith('local_')) {
+                try {
+                    await supabase.from('vault_photos').update({ liked: !currentStatus }).eq('id', id);
+                } catch (error) { console.error("Like sync failed", error); }
+            } else {
+                photos = photos.map(p => p.id === id ? { ...p, liked: !currentStatus } : p);
+                const targetedPhoto = photos.find(p => p.id === id);
+                if (targetedPhoto) {
+                    await savePhotoToIDB(targetedPhoto);
+                }
+                renderGalleryFast();
+            }
+        }
+
+        async function deletePhoto(id) {
+            showCustomConfirm("Hapus aset ini dari Vault permanen?", async () => {
+                closeLightbox();
+                if (isUsingCloud && !id.startsWith('local_')) {
+                    try {
+                        await supabase.from('vault_photos').delete().eq('id', id);
+                    } catch (error) { console.error("Delete sync failed", error); }
+                } else {
+                    photos = photos.filter(p => p.id !== id);
+                    await deletePhotoFromIDB(id);
+                    renderGalleryFast();
+                }
+            });
+        }
+
+        function downloadImage(photoData) {
+            const a = document.createElement('a');
+            a.href = photoData;
+            a.download = `TheVault_Image_${new Date().getTime()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            const dlBtn = document.getElementById('lightboxDownload');
+            if (dlBtn) {
+                dlBtn.classList.add('scale-110', 'bg-white/35');
+                setTimeout(() => dlBtn.classList.remove('scale-110', 'bg-white/35'), 300);
+            }
+        }
+
+        let privateNoteInterval;
+        function runNoteTypewriter(text) {
+            const privateNoteText = document.getElementById('privateNoteText');
+            if (!privateNoteText) return;
+            
+            privateNoteText.innerText = "";
+            let charIndex = 0;
+            clearInterval(privateNoteInterval);
+            
+            privateNoteInterval = setInterval(() => {
+                if (charIndex < text.length) {
+                    privateNoteText.innerText += text.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(privateNoteInterval);
+                }
+            }, 35);
+        }
+
+        let startTouchY = 0;
+        let startTouchX = 0;
+        let activeDragDismiss = false;
+        let activeHorizontalSwipe = false;
+        const dragMediaContainer = document.getElementById('lightboxMediaContainer');
+
+        if (dragMediaContainer) {
+            dragMediaContainer.addEventListener('mousedown', dragStartGesture);
+            dragMediaContainer.addEventListener('mousemove', dragMoveGesture);
+            dragMediaContainer.addEventListener('mouseup', dragEndGesture);
+            dragMediaContainer.addEventListener('mouseleave', dragEndGesture);
+
+            dragMediaContainer.addEventListener('touchstart', (e) => dragStartGesture(e.touches[0]), { passive: true });
+            dragMediaContainer.addEventListener('touchmove', (e) => dragMoveGesture(e.touches[0]), { passive: true });
+            dragMediaContainer.addEventListener('touchend', dragEndGesture, { passive: true });
+        }
+
+        function dragStartGesture(e) {
+            startTouchY = e.clientY;
+            startTouchX = e.clientX;
+            activeDragDismiss = false;
+            activeHorizontalSwipe = false;
+            dragMediaContainer.style.transition = 'none';
+            document.getElementById('lightboxImg').style.transition = 'none';
+        }
+
+        function dragMoveGesture(e) {
+            const deltaY = e.clientY - startTouchY;
+            const deltaX = e.clientX - startTouchX;
+
+            if (!activeDragDismiss && !activeHorizontalSwipe) {
+                if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 8) {
+                    activeDragDismiss = true;
+                } else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+                    activeHorizontalSwipe = true;
+                }
+            }
+
+            if (activeDragDismiss) {
+                const scale = Math.max(0.72, 1 - Math.abs(deltaY) / 1200);
+                dragMediaContainer.style.transform = `translateY(${deltaY}px) scale(${scale})`;
+                
+                const opacityIntensity = Math.max(0.2, 1 - Math.abs(deltaY) / 500);
+                document.getElementById('lightbox').style.opacity = opacityIntensity;
+            } else if (activeHorizontalSwipe) {
+                const opacitySwipe = Math.max(0.6, 1 - Math.abs(deltaX) / window.innerWidth);
+                document.getElementById('lightboxImg').style.transform = `translateX(${deltaX}px) scale(0.96)`;
+                document.getElementById('lightboxImg').style.opacity = opacitySwipe;
+            }
+        }
+
+        function dragEndGesture(e) {
+            const currentY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
+            const currentX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
+            
+            const deltaY = currentY - startTouchY;
+            const deltaX = currentX - startTouchX;
+
+            dragMediaContainer.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            document.getElementById('lightboxImg').style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+
+            if (activeDragDismiss) {
+                activeDragDismiss = false;
+                if (Math.abs(deltaY) > 160) {
+                    closeLightbox();
+                } else {
+                    dragMediaContainer.style.transform = 'translateY(0px) scale(1)';
+                    document.getElementById('lightbox').style.opacity = '1';
+                }
+            } else if (activeHorizontalSwipe) {
+                activeHorizontalSwipe = false;
+                
+                if (Math.abs(deltaX) > 80) {
+                    navigateLightboxPhoto(deltaX > 0 ? 'prev' : 'next');
+                } else {
+                    document.getElementById('lightboxImg').style.transform = 'translateX(0px) scale(1)';
+                    document.getElementById('lightboxImg').style.opacity = '1';
+                }
+            }
+        }
+
+        function navigateLightboxPhoto(direction) {
+            if (!currentOpenPhoto || currentlyVisiblePhotos.length <= 1) {
+                document.getElementById('lightboxImg').style.transform = 'translateX(0px) scale(1)';
+                document.getElementById('lightboxImg').style.opacity = '1';
+                return;
+            }
+
+            const currentIndex = currentlyVisiblePhotos.findIndex(p => p.id === currentOpenPhoto.id);
+            if (currentIndex === -1) return;
+
+            let nextIndex = currentIndex;
+            if (direction === 'next') {
+                nextIndex = (currentIndex + 1) % currentlyVisiblePhotos.length;
+            } else {
+                nextIndex = (currentIndex - 1 + currentlyVisiblePhotos.length) % currentlyVisiblePhotos.length;
+            }
+
+            const nextPhoto = currentlyVisiblePhotos[nextIndex];
+
+            const imgEl = document.getElementById('lightboxImg');
+            imgEl.style.transform = direction === 'next' ? 'translateX(-120px)' : 'translateX(120px)';
+            imgEl.style.opacity = '0';
+
+            setTimeout(() => {
+                openLightbox(nextPhoto);
+                
+                imgEl.style.transition = 'none';
+                imgEl.style.transform = direction === 'next' ? 'translateX(120px)' : 'translateX(-120px)';
+                
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        imgEl.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                        imgEl.style.transform = 'translateX(0px) scale(1)';
+                        imgEl.style.opacity = '1';
+                    }, 20);
+                });
+            }, 180);
+        }
+
+        function applyDynamicAmbientGlow(imageSrc) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            const ctx = canvas.getContext('2d');
+            
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = imageSrc;
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 1, 1);
+                try {
+                    const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                    const lightbox = document.getElementById('lightbox');
+                    lightbox.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.38) 0%, rgba(10, 10, 10, 0.96) 80%)`;
+                } catch(e) {
+                    document.getElementById('lightbox').style.background = 'rgba(10, 10, 10, 0.85)';
+                }
+            };
+        }
+
+        let currentOpenPhoto = null;
+
+        function openLightbox(photo) {
+            currentOpenPhoto = photo;
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            const controls = document.getElementById('lightboxControls');
+            const noteDisplay = document.getElementById('privateNoteDisplay');
+            const privateNoteText = document.getElementById('privateNoteText');
+            
+            playClickSound();
+            
+            lbImg.src = photo.image;
+            lb.classList.add('visible');
+            lb.style.opacity = '1';
+            
+            applyDynamicAmbientGlow(photo.image);
+            
+            if (dragMediaContainer) dragMediaContainer.style.transform = 'translateY(0px) scale(1)';
+
+            const rawNote = photo.note ? decryptNoteText(photo.note) : "";
+            const hasClassifiedKeyword = rawNote.toLowerCase().includes('classified');
+            
+            let displayNoteText = rawNote;
+            if (hasClassifiedKeyword) {
+                displayNoteText = rawNote.replace(/classified/gi, '').replace(/^\s*-\s*/, '').trim();
+            }
+
+            noteDisplay.classList.remove('opacity-0', 'translate-y-2');
+            noteDisplay.classList.add('opacity-100', 'translate-y-0');
+
+            if (displayNoteText) {
+                runNoteTypewriter(displayNoteText);
+            } else {
+                clearInterval(privateNoteInterval);
+                privateNoteText.innerHTML = `<span class="opacity-40 text-xs tracking-wide block py-1 font-sans">+ Tambah Catatan Privat</span>`;
+            }
+            
+            noteDisplay.onclick = (e) => {
+                e.stopPropagation();
+                openNoteEditor(photo, displayNoteText);
+            };
+
+            let lastTap = 0;
+            lbImg.ondblclick = () => {
+                downloadImage(photo.image);
+            };
+            lbImg.ontouchend = (e) => {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                if (tapLength < 300 && tapLength > 0) {
+                    downloadImage(photo.image);
+                    e.preventDefault();
+                }
+                lastTap = currentTime;
+            };
+            
+            setTimeout(() => {
+                controls.classList.remove('translate-y-8', 'opacity-0');
+                controls.classList.add('translate-y-0', 'opacity-100');
+            }, 50);
+
+            document.getElementById('lightboxDelete').onclick = (e) => {
+                e.stopPropagation();
+                deletePhoto(photo.id);
+            };
+
+            document.getElementById('lightboxDownload').onclick = (e) => {
+                e.stopPropagation();
+                downloadImage(photo.image);
+            };
+
+            const likeBtn = document.getElementById('lightboxLike');
+            const likeIcon = document.getElementById('lightboxLikeIcon');
+            
+            likeBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleLike(photo.id, photo.liked, null, likeBtn);
+                photo.liked = !photo.liked; 
+                updateLightboxLikeUI(photo.liked);
+            };
+            
+            function updateLightboxLikeUI(isLiked) {
+                if (!likeIcon) return;
+                if (isLiked) {
+                    likeIcon.classList.replace('text-white', 'text-red-400');
+                    likeIcon.classList.add('fill-current');
+                } else {
+                    likeIcon.classList.replace('text-red-400', 'text-white');
+                    likeIcon.classList.remove('fill-current');
+                }
+            }
+            updateLightboxLikeUI(photo.liked);
+
+            const lockBtn = document.getElementById('lightboxLock');
+            const lockIcon = document.getElementById('lightboxLockIcon');
+
+            function updateLightboxLockUI(isClassified) {
+                if (!lockIcon) return;
+                if (isClassified) {
+                    lockIcon.className = "w-5 h-5 text-amber-400 fill-current";
+                    lockBtn.title = "Tampilkan Foto di Galeri Utama";
+                } else {
+                    lockIcon.className = "w-5 h-5 text-white";
+                    lockBtn.title = "Sembunyikan / Kunci Foto";
+                }
+            }
+
+            let photoIsClassified = hasClassifiedKeyword;
+            updateLightboxLockUI(photoIsClassified);
+
+            lockBtn.onclick = async (e) => {
+                e.stopPropagation();
+                playClickSound();
+
+                photoIsClassified = !photoIsClassified;
+                
+                let cleanNote = displayNoteText ? displayNoteText : "";
+                let newNote = "";
+
+                if (photoIsClassified) {
+                    newNote = encryptNoteText("classified" + (cleanNote ? " - " + cleanNote : ""));
+                } else {
+                    newNote = encryptNoteText(cleanNote);
+                }
+
+                photo.note = newNote;
+
+                if (isUsingCloud && !photo.id.startsWith('local_')) {
+                    try {
+                        await supabase.from('vault_photos').update({ note: newNote }).eq('id', photo.id);
+                    } catch (error) { console.error("Lock/Classify sync failed", error); }
+                } else {
+                    photos = photos.map(p => p.id === photo.id ? { ...p, note: newNote } : p);
+                    const targetedPhoto = photos.find(p => p.id === photo.id);
+                    if (targetedPhoto) {
+                        await savePhotoToIDB(targetedPhoto);
+                    }
+                    renderGalleryFast();
+                }
+
+                updateLightboxLockUI(photoIsClassified);
+                showCustomAlert(photoIsClassified ? "Foto berhasil disembunyikan! Hanya bisa dilihat saat Classified Mode aktif." : "Foto berhasil ditampilkan kembali di galeri utama.");
+                
+                if (cleanNote) {
+                    noteDisplay.classList.remove('opacity-0', 'translate-y-2');
+                    noteDisplay.classList.add('opacity-100', 'translate-y-0');
+                    runNoteTypewriter(cleanNote);
+                } else {
+                    clearInterval(privateNoteInterval);
+                    privateNoteText.innerHTML = `<span class="opacity-40 text-xs tracking-wide block py-1 font-sans">+ Tambah Catatan Privat</span>`;
+                }
+            };
+
+            safeCreateIcons();
+        }
+
+        function closeLightbox() {
+            playClickSound();
+            const lb = document.getElementById('lightbox');
+            const controls = document.getElementById('lightboxControls');
+            clearInterval(privateNoteInterval);
+            currentOpenPhoto = null;
+            
+            controls.classList.add('translate-y-8', 'opacity-0');
+            controls.classList.remove('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                lb.classList.remove('visible');
+            }, 300);
+        }
+
+        let activeEditingPhoto = null;
+
+        function openNoteEditor(photo, currentText) {
+            playClickSound();
+            activeEditingPhoto = photo;
+            
+            const dialog = document.getElementById('noteEditorDialog');
+            const box = document.getElementById('noteEditorBox');
+            const input = document.getElementById('noteEditorInput');
+            
+            input.value = currentText || "";
+            
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+            setTimeout(() => { 
+                box.classList.remove('scale-95'); 
+                box.classList.add('scale-100'); 
+                input.focus();
+            }, 50);
+        }
+
+        function closeNoteEditor() {
+            playClickSound();
+            const dialog = document.getElementById('noteEditorDialog');
+            const box = document.getElementById('noteEditorBox');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                dialog.classList.add('hidden');
+                dialog.classList.remove('flex');
+                activeEditingPhoto = null;
+            }, 150);
+        }
+
+        document.getElementById('noteEditorBtnCancel').onclick = () => {
+            closeNoteEditor();
+        };
+
+        document.getElementById('noteEditorBtnSave').onclick = async () => {
+            if (!activeEditingPhoto) return;
+            playSuccessSound();
+            
+            const inputVal = document.getElementById('noteEditorInput').value.trim();
+            const photo = activeEditingPhoto;
+            
+            const rawNote = photo.note ? decryptNoteText(photo.note) : "";
+            const isClassified = rawNote.toLowerCase().includes('classified');
+            
+            let finalNote = "";
+            if (isClassified) {
+                finalNote = "classified" + (inputVal ? " - " + inputVal : "");
+            } else {
+                finalNote = inputVal;
+            }
+            
+            const encrypted = encryptNoteText(finalNote);
+            photo.note = encrypted;
+
+            if (isUsingCloud && !photo.id.startsWith('local_')) {
+                try {
+                    await supabase.from('vault_photos').update({ note: encrypted }).eq('id', photo.id);
+                } catch (error) { console.error("Note save sync failed", error); }
+            } else {
+                photos = photos.map(p => p.id === photo.id ? { ...p, note: encrypted } : p);
+                const targetedPhoto = photos.find(p => p.id === photo.id);
+                if (targetedPhoto) {
+                    await savePhotoToIDB(targetedPhoto);
+                }
+                renderGalleryFast();
+            }
+
+            closeNoteEditor();
+            
+            if (currentOpenPhoto && currentOpenPhoto.id === photo.id) {
+                const noteDisplay = document.getElementById('privateNoteDisplay');
+                const privateNoteText = document.getElementById('privateNoteText');
+                
+                if (inputVal) {
+                    runNoteTypewriter(inputVal);
+                } else {
+                    clearInterval(privateNoteInterval);
+                    privateNoteText.innerHTML = `<span class="opacity-40 text-xs tracking-wide block py-1 font-sans">+ Tambah Catatan Privat</span>`;
+                }
+
+                noteDisplay.onclick = (e) => {
+                    e.stopPropagation();
+                    openNoteEditor(photo, inputVal);
+                };
+            }
+        };
+
+        let slideshowTimer;
+        let slideshowIndex = 0;
+        let favoritePhotos = [];
+
+        function playAestheticSlideshow() {
+            playClickSound();
+            favoritePhotos = photos.filter(p => p.liked);
+            if (favoritePhotos.length === 0) {
+                showCustomAlert("Silakan sukai (Love) beberapa foto terlebih dahulu untuk mengaktifkan Slideshow.");
+                return;
+            }
+            
+            const modal = document.getElementById('slideshowModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            slideshowIndex = 0;
+            
+            runSlideshowCycle();
+        }
+
+        function runSlideshowCycle() {
+            const imgEl = document.getElementById('slideshowImg');
+            const counterEl = document.getElementById('slideshowCounter');
+            
+            if (!imgEl) return;
+            
+            imgEl.classList.remove('opacity-100', 'scale-100');
+            imgEl.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                const currentPhoto = favoritePhotos[slideshowIndex];
+                imgEl.src = currentPhoto.image;
+                counterEl.innerText = `${slideshowIndex + 1} / ${favoritePhotos.length}`;
+                
+                imgEl.classList.remove('opacity-0', 'scale-95');
+                imgEl.classList.add('opacity-100', 'scale-100');
+                
+                slideshowIndex = (slideshowIndex + 1) % favoritePhotos.length;
+                
+                slideshowTimer = setTimeout(runSlideshowCycle, 4000);
+            }, 1000);
+        }
+
+        function stopAestheticSlideshow() {
+            playClickSound();
+            clearTimeout(slideshowTimer);
+            const modal = document.getElementById('slideshowModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('fileInput').onchange = async (e) => {
+            const files = e.target.files;
+            if (!files.length) return;
+            
+            document.getElementById('uploadLoader').classList.remove('hidden');
+            
+            for (let file of files) {
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 50)); 
+                    const base64 = await convertAndCompressAsync(file);
+                    
+                    const secureNote = encryptNoteText("Moment captured on " + new Date().toLocaleDateString('id-ID'));
+
+                    if (isUsingCloud) {
+                        await supabase.from('vault_photos').insert([
+                            {
+                                image: base64,
+                                liked: false,
+                                note: secureNote
+                            }
+                        ]);
+                    } else {
+                        const localId = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                        const newPhoto = {
+                            id: localId,
+                            image: base64,
+                            liked: false,
+                            note: secureNote,
+                            created_at: new Date().toISOString()
+                        };
+                        photos.unshift(newPhoto);
+                        await savePhotoToIDB(newPhoto);
+                        renderGalleryFast();
+                    }
+                } catch (err) { console.error("Upload error:", err); }
+            }
+            
+            setTimeout(() => {
+                document.getElementById('uploadLoader').classList.add('hidden');
+            }, 500);
+            e.target.value = "";
+        };
+
+        function convertAndCompressAsync(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        requestAnimationFrame(() => {
+                            setTimeout(() => {
+                                const canvas = document.createElement('canvas');
+                                
+                                let MAX_W = 1200;
+                                if (storageCompressionMode === 'ultra') {
+                                    MAX_W = 2048;
+                                }
+                                
+                                let w = img.width, h = img.height;
+                                if (w > MAX_W) { h *= MAX_W / w; w = MAX_W; }
+                                
+                                canvas.width = w; canvas.height = h;
+                                const ctx = canvas.getContext('2d');
+                                ctx.imageSmoothingEnabled = true;
+                                ctx.imageSmoothingQuality = 'high';
+                                ctx.drawImage(img, 0, 0, w, h);
+                                
+                                const qualityFactor = storageCompressionMode === 'luxury' ? 0.82 : 0.94;
+                                resolve(canvas.toDataURL('image/jpeg', qualityFactor));
+                            }, 10);
+                        });
+                    };
+                    img.onerror = reject;
+                };
+                reader.onerror = reject;
+            });
+        }
+
+        function switchTab(tab) {
+            playClickSound(); 
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            const activeTab = document.getElementById(`tab-${tab}`);
+            if (activeTab) activeTab.classList.add('active');
+            
+            ['gallery', 'love', 'profile'].forEach(t => {
+                const el = document.getElementById(`nav-${t}`);
+                if (el) {
+                    if (t === tab) el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            });
+            
+            const app = document.getElementById('appContent');
+            if (app) app.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        let lastMinute = -1;
+        function updateTime() {
+            const now = new Date();
+            const min = now.getMinutes();
+            if (min !== lastMinute) {
+                const timeEl = document.getElementById('timeDisplay');
+                const dateEl = document.getElementById('dateDisplay');
+                if (timeEl) timeEl.innerText = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                if (dateEl) dateEl.innerText = now.toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' });
+                lastMinute = min;
+            }
+            requestAnimationFrame(updateTime);
+        }
+
+        requestAnimationFrame(updateTime);
+        safeCreateIcons();
+    </script>
 </body>
 </html>
